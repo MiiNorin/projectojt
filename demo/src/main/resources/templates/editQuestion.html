@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Product</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto rounded border p-4 m-4">
+            <h2 class="text-center mb-5">Edit Question</h2>
+            <form method="post" enctype="multipart/form-data" th:object="${questionDto}">
+                <div class="form-group">
+                    <label>Question Id</label>
+                    <div>
+                        <input readonly class="form-control-plaintext" th:field="${question.questionId}"></input>
+                    </div>
+                    <label>Question Context</label>
+                    <div>
+                        <input class="form-control" th:field="${questionDto.questionContext}"></input>
+                        <p th:if="${#fields.hasErrors('questionContext')}" th:errorclass="text-danger" th:errors="${questionDto.questionContext}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Option A</label>
+                    <div>
+                        <input class="form-control" th:field="${questionDto.optionA}"></input>
+                        <p th:if="${#fields.hasErrors('optionA')}" th:errorclass="text-danger" th:errors="${questionDto.optionA}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Option B</label>
+                    <div>
+                        <input class="form-control" th:field="${questionDto.optionB}"></input>
+                        <p th:if="${#fields.hasErrors('optionB')}" th:errorclass="text-danger" th:errors="${questionDto.optionB}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Option C</label>
+                    <div>
+                        <input class="form-control" th:field="${questionDto.optionC}"></input>
+                        <p th:if="${#fields.hasErrors('optionC')}" th:errorclass="text-danger" th:errors="${questionDto.optionC}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Option D</label>
+                    <div>
+                        <input class="form-control" th:field="${questionDto.optionD}"></input>
+                        <p th:if="${#fields.hasErrors('optionD')}" th:errorclass="text-danger" th:errors="${questionDto.optionD}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <img th:src="@{'../images/'+${question.image}}" alt="..." width="150">
+                </div>
+
+                <div class="form-group">
+                    <label>Browse Image</label>
+                    <div>
+                        <input class="form-control" type="file" th:field="${questionDto.image}"></input>
+                        <p th:if="${#fields.hasErrors('image')}" th:errorclass="text-danger" th:errors="${questionDto.image}"></p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Solution</label>
+                    <div>
+                        <input class="form-control" th:field="${questionDto.solution}"></input>
+                        <p th:if="${#fields.hasErrors('solution')}" th:errorclass="text-danger" th:errors="${questionDto.solution}"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>
