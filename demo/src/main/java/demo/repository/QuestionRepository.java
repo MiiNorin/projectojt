@@ -11,4 +11,6 @@ public interface QuestionRepository extends JpaRepository<Questions, Integer> {
     List<Questions> findByQuestionContextContaining(String keyword);
 
     List<Questions> findByCreateDate(Date date);
+
+    List<Questions> findAllByStatus(String status);
 }

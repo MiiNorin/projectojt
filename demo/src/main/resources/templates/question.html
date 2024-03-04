@@ -56,7 +56,9 @@
         <td th:text="${question.optionC}"></td>
         <td th:text="${question.optionD}"></td>
         <td th:text="${question.status}"></td>
-        <td><img th:src="@{/images/{imageName}(imageName=${question.image})}" style="max-width: 100px; max-height: 100px;"></td>
+        <td>
+            <img th:if="${question.image != null}" th:src="@{'../images/' + ${question.image}}" onerror='this.style.display="none"' style="max-width: 100px; max-height: 100px;">
+        </td>
         <td th:text="${question.solution}"></td>
         <td>
 
@@ -68,11 +70,23 @@
     </tr>
     </tbody>
     <a th:href="@{/questions/createQuestion}" class="btn btn-success mb-3">Add Question</a>
-    <form action="/questions/searchQuestion" method="get">
-        <input type="text" name="character" placeholder="Search by character...">
-        <button type="submit">Search</button>
-    </form>
 
+    <a th:href="@{/questions/showQuestion}" class="btn btn-info mb-3">Back to Question List</a>
+    <div class="float-right">
+        <form  action="/questions/searchQuestion" method="get">
+            <input type="text" name="character" placeholder="Search by character...">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    <div class="float-right">
+        <form action="/questions/searchByStatus" method="get">
+            <select name="status">
+                <option value="hard">Hard</option>
+                <option value="easy">Easy</option>
+            </select>
+            <button type="submit">Search</button>
+        </form>
+    </div>
 </table>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

@@ -29,6 +29,7 @@ public class QuestionController {
     @GetMapping("/showQuestion")
     public String getListQuestion(Model model)
     {
+
         List<Questions> questions = questionService.getQuestion();
         model.addAttribute("questions", questions);
         return "question";
@@ -60,30 +61,38 @@ public class QuestionController {
     @PostMapping("/createQuestion")
     public String createQuestion(
             @Valid @ModelAttribute QuestionDto questionDto,
-            BindingResult result){
-        if(questionDto.getQuestionContext().isEmpty()){
+            BindingResult result) {
+        if(questionDto.getQuestionContext().isEmpty()) {
             result.addError(new FieldError("questionDto", "questionContext", "The question context is required"));
         }
+        if(questionDto.getSolution().isEmpty()) {
+            result.addError(new FieldError("questionDto", "solution", "You must fill the solution"));
+        }
+
         if(result.hasErrors()){
             return "createQuestion";
         }
         MultipartFile image = questionDto.getImage();
-        Date createDate = new Date();
-        String storageFile = createDate.getTime() + "_" + image.getOriginalFilename();
-        try{
-            String uploadDir = "public/images/";
-            Path uploadPath = Paths.get(uploadDir);
-            if(!Files.exists(uploadPath)){
-                Files.createDirectories(uploadPath);
-            }
-            try(InputStream inputStream = image.getInputStream()){
-                Files.copy(inputStream, Paths.get(uploadDir + storageFile),
-                        StandardCopyOption.REPLACE_EXISTING);
+        String storageFile = "";
+
+        if(image != null && !image.isEmpty()) {
+            try {
+                String uploadDir = "public/images/";
+                Path uploadPath = Paths.get(uploadDir);
+                if(!Files.exists(uploadPath)){
+                    Files.createDirectories(uploadPath);
+                }
+                Date createDate = new Date();
+                storageFile = createDate.getTime() + "_" + image.getOriginalFilename();
+                try(InputStream inputStream = image.getInputStream()){
+                    Files.copy(inputStream, Paths.get(uploadDir + storageFile),
+                            StandardCopyOption.REPLACE_EXISTING);
+                } catch (Exception ex){
+                    System.out.println("Exception: "+ex.getMessage());
+                }
             } catch (Exception ex){
-                System.out.println("Exception: "+ex.getMessage());
+                System.out.println("Exception: " + ex.getMessage());
             }
-        } catch (Exception ex){
-            System.out.println("Exception: " + ex.getMessage());
         }
 
         Questions questions = new Questions();
@@ -94,7 +103,7 @@ public class QuestionController {
         questions.setOptionD(questionDto.getOptionD());
         questions.setSolution(questionDto.getSolution());
         questions.setImage(storageFile);
-
+        questions.setStatus(questionDto.getStatus());
         questionRepository.save(questions);
 
         return "redirect:/questions/showQuestion";
@@ -111,6 +120,7 @@ public class QuestionController {
             questionDto.setOptionB(questions.getOptionB());
             questionDto.setOptionC(questions.getOptionC());
             questionDto.setOptionD(questions.getOptionD());
+            questionDto.setStatus(questions.getStatus());
             questionDto.setSolution(questions.getSolution());
             model.addAttribute("questionDto", questionDto);
         } catch(Exception ex){
@@ -153,6 +163,7 @@ public class QuestionController {
             questions.setOptionC(questionDto.getOptionC());
             questions.setOptionD(questionDto.getOptionD());
             questions.setSolution(questionDto.getSolution());
+            questions.setStatus(questionDto.getStatus());
             questionRepository.save(questions);
         } catch(Exception ex){
             System.out.println("Exception: " + ex.getMessage());
@@ -175,5 +186,18 @@ public class QuestionController {
         return "question";
     }
 
+
+
+    @GetMapping("/searchByStatus")
+    public String searchByStatus(Model model, @RequestParam("status") String status) {
+        List<Questions> questions;
+        if (status.equals("hard") || status.equals("easy")) {
+            questions = questionRepository.findAllByStatus(status);
+        } else {
+            questions = questionService.getQuestion();
+        }
+        model.addAttribute("questions", questions);
+        return "question";
+    }
 
 }
