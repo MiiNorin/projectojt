@@ -186,8 +186,6 @@ public class QuestionController {
         return "question";
     }
 
-
-
     @GetMapping("/searchByStatus")
     public String searchByStatus(Model model, @RequestParam("status") String status) {
         List<Questions> questions;
