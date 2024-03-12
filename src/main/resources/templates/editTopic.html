@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Topic</title>
+</head>
+<body>
+<h1>Edit Topic</h1>
+
+<form action="#" th:action="@{'/editTopic/' + ${topic.topicId}}" th:object="${topic}" method="post">
+    <!-- Add form fields corresponding to your TopicsEntity properties -->
+    <label>Topic Name: <input type="text" th:field="*{topicName}" /></label><br/>
+    <label>Duration: <input type="text" th:field="*{duration}" /></label><br/>
+    <!-- Add other form fields as needed -->
+    <input type="submit" value="Save Changes" />
+</form>
+
+<a href="/listTopics">Back to List</a>
+</body>
+</html>

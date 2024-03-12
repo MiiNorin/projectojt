@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Information</title>
+</head>
+<body>
+<h2>Account Information</h2>
+<table border="1">
+    <tr>
+        <th>Account ID</th>
+        <th>Role ID</th>
+        <th>Email</th>
+        <!-- Add other columns as needed -->
+    </tr>
+    <!-- Use Thymeleaf syntax to loop through the accounts -->
+    <tr th:each="account : ${accounts}">
+        <td th:text="${account.accountId}"></td>
+        <td th:text="${account.roleId}
+"></td>
+        <td th:text="${account.email}"></td>
+        <!-- Add other columns as needed -->
+    </tr>
+</table>
+</body>
+</html>

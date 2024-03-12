@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List of Topics</title>
+</head>
+<body>
+<h1>List of Topics</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Topic ID</th>
+        <th>Topic Name</th>
+        <th>Duration</th>
+        <!-- Add other columns as needed -->
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="topic : ${topics}">
+        <td th:text="${topic.topicId}"></td>
+        <td th:text="${topic.topicName}"></td>
+        <td th:text="${topic.duration}"></td>
+        <!-- Add other columns as needed -->
+        <td><a th:href="@{'/editTopic/' + ${topic.topicId}}">Edit</a></td>
+        <td><a th:href="@{'/deleteTopic/' + ${topic.topicId}}">Delete</a></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/addTopic">Add New Topic</a>
+</body>
+</html>
