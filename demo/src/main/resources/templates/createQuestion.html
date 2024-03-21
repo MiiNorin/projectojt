@@ -89,9 +89,15 @@
                     <input id="file-input" type="file" style="display: none;">
                 </div>
 
-
             </form>
         </div>
+        <div class="import-and-export">
+            <form th:action="@{/questions/import}" method="post" enctype="multipart/form-data">
+                <input type="file" th:name="file" />
+                <input th:type="submit" value="Import" />
+            </form>
+        </div><hr>
+        <a href="/excel/download">Download Template Here</a>
     </div>
     <script>
         document.querySelector('form').addEventListener('submit', function(event) {

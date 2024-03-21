@@ -4,15 +4,20 @@ import demo.persistence.entity.Questions;
 import demo.repository.QuestionRepository;
 import demo.service.ExcelUploadService;
 import demo.service.QuestionService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
+import java.io.File;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ResourceUtils;
+import org.springframework.util.StreamUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.*;
 import java.util.Date;
 import java.util.List;
@@ -26,8 +31,9 @@ public class QuestionController {
     private QuestionService questionService;
     @Autowired
     private QuestionRepository questionRepository;
+
     @Autowired
-    private ExcelUploadService excelUploadService;
+    private ResourceLoader resourceLoader;
     @GetMapping("/showQuestion")
     public String getListQuestion(Model model) {
         List<Questions> questions = questionService.getQuestion();
@@ -206,7 +212,8 @@ public class QuestionController {
     @PostMapping("/import")
     public String uploadQuestionData(@RequestParam("file") MultipartFile file){
         this.questionService.saveQuestionToDatabase(file);
-        return "question";
+        return "redirect:/questions/showQuestion";
     }
+
 
 }

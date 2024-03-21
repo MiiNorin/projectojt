@@ -79,16 +79,12 @@
 
 
 <a th:href="@{/questions/showQuestion}" class="btn btn-info mb-3">Back to Question List</a>
-<form th:action="@{/questions/import}" method="post" enctype="multipart/form-data">
-    <input type="file" th:name="file" />
-    <input th:type="submit" value="Import" />
-</form>
-<div th:if="${successMessage}">
-    <p th:text="${successMessage}" class="success-message"></p>
-</div>
-<div th:if="${errorMessage}">
-    <p th:text="${errorMessage}" class="error-message"></p>
-</div>
+
+
+
+
+
+
 
 <div class="float-right">
     <form action="/questions/searchQuestion" method="get">
