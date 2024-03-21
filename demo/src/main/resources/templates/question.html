@@ -35,6 +35,7 @@
 <table>
     <thead>
     <tr>
+        <th>ID</th>
         <th>Question Context</th>
         <th>Option A</th>
         <th>Option B</th>
@@ -47,9 +48,10 @@
     </tr>
     </thead>
     <tbody>
-
-    <tr th:each="question : ${questions}">
-
+    <tr th:each="question, questionIndex : ${questions}">
+        <td>
+            <button onclick="showQuestionDetail('${question.questionId}', '${question.questionContext}', '${question.optionA}', '${question.optionB}', '${question.optionC}', '${question.optionD}', '${question.status}', '${question.image}', '${question.solution}')" th:text="${questionIndex.index + 1}" >Show Details</button>
+        </td>
         <td th:text="${question.questionContext}"></td>
         <td th:text="${question.optionA}"></td>
         <td th:text="${question.optionB}"></td>
@@ -69,27 +71,41 @@
         </td>
     </tr>
     </tbody>
-    <a th:href="@{/questions/createQuestion}" class="btn btn-success mb-3">Add Question</a>
-
-    <a th:href="@{/questions/showQuestion}" class="btn btn-info mb-3">Back to Question List</a>
-    <div class="float-right">
-        <form  action="/questions/searchQuestion" method="get">
-            <input type="text" name="character" placeholder="Search by character...">
-            <button type="submit">Search</button>
-        </form>
-    </div>
-    <div class="float-right">
-        <form action="/questions/searchByStatus" method="get">
-            <select name="status">
-                <option value="hard">Hard</option>
-                <option value="easy">Easy</option>
-            </select>
-            <button type="submit">Search</button>
-        </form>
-    </div>
 </table>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+<div id="questionDetails"></div>
+
+<a th:href="@{/questions/createQuestionList}" class="btn btn-success mb-3">Add Question</a>
+
+
+<a th:href="@{/questions/showQuestion}" class="btn btn-info mb-3">Back to Question List</a>
+<form th:action="@{/questions/import}" method="post" enctype="multipart/form-data">
+    <input type="file" th:name="file" />
+    <input th:type="submit" value="Import" />
+</form>
+<div th:if="${successMessage}">
+    <p th:text="${successMessage}" class="success-message"></p>
+</div>
+<div th:if="${errorMessage}">
+    <p th:text="${errorMessage}" class="error-message"></p>
+</div>
+
+<div class="float-right">
+    <form action="/questions/searchQuestion" method="get">
+        <input type="text" name="character" placeholder="Search by character...">
+        <button type="submit">Search</button>
+    </form>
+</div>
+<div class="float-right">
+    <form action="/questions/searchByStatus" method="get">
+        <select name="status">
+            <option value="hard">Hard</option>
+            <option value="easy">Easy</option>
+        </select>
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+
 </body>
 </html>

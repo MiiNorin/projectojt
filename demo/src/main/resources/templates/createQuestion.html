@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>New Product</title>
 </head>
+<style>
+    .multiple-context{
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
 <body>
 <div class="container">
     <div class="row">
@@ -16,35 +22,35 @@
                     <label>Question Context</label>
                     <div>
                           <input class="form-control" th:field="${questionDto.questionContext}"></input>
-                          <p th:if="${#fields.hasErrors('questionContext')}" th:errorclass="text-danger" th:errors="${questionDto.questionContext}"></p>
+                          <p th:if="${#fields.hasErrors('questionContext')}" th:errorclass="text-danger" th:errors="*{questionContext}"></p>
                     </div>
+
                 </div>
                 <div class="form-group">
                     <label>Option A</label>
                     <div>
                         <input class="form-control" th:field="${questionDto.optionA}"></input>
-                        <p th:if="${#fields.hasErrors('optionA')}" th:errorclass="text-danger" th:errors="${questionDto.optionA}"></p>
+
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Option B</label>
                     <div>
                         <input class="form-control" th:field="${questionDto.optionB}"></input>
-                        <p th:if="${#fields.hasErrors('optionB')}" th:errorclass="text-danger" th:errors="${questionDto.optionB}"></p>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Option C</label>
                     <div>
                         <input class="form-control" th:field="${questionDto.optionC}"></input>
-                        <p th:if="${#fields.hasErrors('optionC')}" th:errorclass="text-danger" th:errors="${questionDto.optionC}"></p>
+<!--                        <p th:if="${#fields.hasErrors('optionC')}" th:errorclass="text-danger" th:errors="${questionDto.optionC}"></p>-->
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Option D</label>
                     <div>
                         <input class="form-control" th:field="${questionDto.optionD}"></input>
-                        <p th:if="${#fields.hasErrors('optionD')}" th:errorclass="text-danger" th:errors="${questionDto.optionD}"></p>
+<!--                        <p th:if="${#fields.hasErrors('optionD')}" th:errorclass="text-danger" th:errors="${questionDto.optionD}"></p>-->
                     </div>
                 </div>
                 <small id="optionError" class="text-danger" style="display: none;">Please fill at least one option.</small>
@@ -73,13 +79,16 @@
                     <label>Solution</label>
                     <div>
                         <input class="form-control" th:field="${questionDto.solution}"></input>
-                        <p th:if="${#fields.hasErrors('solution')}" th:errorclass="text-danger" th:errors="${questionDto.solution}">You must fill the solution</p>
+                        <p th:if="${#fields.hasErrors('solution')}" th:errorclass="text-danger" th:errors="*{solution}">You must fill the solution</p>
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row multiple-context">
                     <button type="submit" class="btn btn-primary">Add</button>
+                    <label for="file-input" class="btn btn-success">Import File</label>
+                    <input id="file-input" type="file" style="display: none;">
                 </div>
+
 
             </form>
         </div>

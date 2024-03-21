@@ -1,14 +1,13 @@
 package demo.controller;
-
-import demo.entity.QuestionDto;
-import demo.entity.Questions;
+import demo.persistence.dto.QuestionDto;
+import demo.persistence.entity.Questions;
 import demo.repository.QuestionRepository;
+import demo.service.ExcelUploadService;
 import demo.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,79 +17,78 @@ import java.nio.file.*;
 import java.util.Date;
 import java.util.List;
 
+
 @RequestMapping("/questions")
 @Controller
 public class QuestionController {
+
     @Autowired
     private QuestionService questionService;
     @Autowired
     private QuestionRepository questionRepository;
-
+    @Autowired
+    private ExcelUploadService excelUploadService;
     @GetMapping("/showQuestion")
-    public String getListQuestion(Model model)
-    {
-
+    public String getListQuestion(Model model) {
         List<Questions> questions = questionService.getQuestion();
         model.addAttribute("questions", questions);
         return "question";
 
     }
-    @GetMapping("/questionDetail")
-    public String showQuestionDetail(Model model, @RequestParam("id") int questionId){
+
+    @GetMapping("/getQuestionDetails")
+    public String getQuestionDetails(Model model, @RequestParam("questionId") int questionId) {
         try {
             Questions question = questionRepository.findById(questionId).orElse(null);
             if (question == null) {
                 return "redirect:/questions/showQuestion";
             }
             model.addAttribute("question", question);
-            return "readonlyQuestion";
-        } catch(Exception ex){
+            return "createTestPage";
+        } catch (Exception ex) {
             System.out.println("Exception: " + ex.getMessage());
             return "redirect:/questions/showQuestion";
         }
     }
 
 
-    @GetMapping("/createQuestion")
-    public String showCreateQuestionPage(Model model){
+    @GetMapping("/createQuestionList")
+    public String showCreateQuestionPage(Model model) {
         QuestionDto questionDto = new QuestionDto();
         model.addAttribute("questionDto", questionDto);
         return "createQuestion";
     }
 
-    @PostMapping("/createQuestion")
+    @PostMapping("/createQuestionList")
     public String createQuestion(
             @Valid @ModelAttribute QuestionDto questionDto,
             BindingResult result) {
-        if(questionDto.getQuestionContext().isEmpty()) {
-            result.addError(new FieldError("questionDto", "questionContext", "The question context is required"));
-        }
-        if(questionDto.getSolution().isEmpty()) {
-            result.addError(new FieldError("questionDto", "solution", "You must fill the solution"));
-        }
-
-        if(result.hasErrors()){
+//        if(questionDto.getQuestionContext().isEmpty()) {
+//            result.addError(new FieldError("questionDto", "questionContext", "The question context is required"));
+//        }
+        if (result.hasErrors()) {
+//            result.addError(new FieldError());
             return "createQuestion";
         }
         MultipartFile image = questionDto.getImage();
         String storageFile = "";
 
-        if(image != null && !image.isEmpty()) {
+        if (image != null && !image.isEmpty()) {
             try {
                 String uploadDir = "public/images/";
                 Path uploadPath = Paths.get(uploadDir);
-                if(!Files.exists(uploadPath)){
+                if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);
                 }
                 Date createDate = new Date();
                 storageFile = createDate.getTime() + "_" + image.getOriginalFilename();
-                try(InputStream inputStream = image.getInputStream()){
+                try (InputStream inputStream = image.getInputStream()) {
                     Files.copy(inputStream, Paths.get(uploadDir + storageFile),
                             StandardCopyOption.REPLACE_EXISTING);
-                } catch (Exception ex){
-                    System.out.println("Exception: "+ex.getMessage());
+                } catch (Exception ex) {
+                    System.out.println("Exception: " + ex.getMessage());
                 }
-            } catch (Exception ex){
+            } catch (Exception ex) {
                 System.out.println("Exception: " + ex.getMessage());
             }
         }
@@ -110,8 +108,8 @@ public class QuestionController {
     }
 
     @GetMapping("/editQuestion")
-    public String showEditPage(Model model, @RequestParam("id") int questionId){
-        try{
+    public String showEditPage(Model model, @RequestParam("id") int questionId) {
+        try {
             Questions questions = questionRepository.findById(questionId).get();
             model.addAttribute("question", questions);
             QuestionDto questionDto = new QuestionDto();
@@ -123,7 +121,7 @@ public class QuestionController {
             questionDto.setStatus(questions.getStatus());
             questionDto.setSolution(questions.getSolution());
             model.addAttribute("questionDto", questionDto);
-        } catch(Exception ex){
+        } catch (Exception ex) {
             System.out.println("Exception: " + ex.getMessage());
             return "redirect:/questions";
         }
@@ -131,29 +129,29 @@ public class QuestionController {
     }
 
     @PostMapping("/editQuestion")
-    public String editQuestion(Model model, @RequestParam("id") int id, @Valid @ModelAttribute QuestionDto questionDto, BindingResult result){
-        try{
+    public String editQuestion(Model model, @RequestParam("id") int id, @Valid @ModelAttribute QuestionDto questionDto, BindingResult result) {
+        try {
             Questions questions = questionRepository.findById(id).get();
             model.addAttribute(questions);
-            if(result.hasErrors()){
+            if (result.hasErrors()) {
                 return "/editQuestion";
             }
-            if(!questionDto.getImage().isEmpty()){
+            if (!questionDto.getImage().isEmpty()) {
                 String uploadDir = "public/images/";
-                Path oldImagePath = Paths.get(uploadDir+questions.getImage());
-                try{
+                Path oldImagePath = Paths.get(uploadDir + questions.getImage());
+                try {
                     Files.delete(oldImagePath);
-                } catch(Exception ex){
+                } catch (Exception ex) {
                     System.out.println("Exception: " + ex.getMessage());
                 }
                 MultipartFile image = questionDto.getImage();
                 Date createDate = new Date();
                 String storageFile = createDate.getTime() + "_" + image.getOriginalFilename();
-                try(InputStream inputStream = image.getInputStream()){
+                try (InputStream inputStream = image.getInputStream()) {
                     Files.copy(inputStream, Paths.get(uploadDir + storageFile),
                             StandardCopyOption.REPLACE_EXISTING);
-                } catch (Exception ex){
-                    System.out.println("Exception: "+ex.getMessage());
+                } catch (Exception ex) {
+                    System.out.println("Exception: " + ex.getMessage());
                 }
                 questions.setImage(storageFile);
             }
@@ -165,7 +163,7 @@ public class QuestionController {
             questions.setSolution(questionDto.getSolution());
             questions.setStatus(questionDto.getStatus());
             questionRepository.save(questions);
-        } catch(Exception ex){
+        } catch (Exception ex) {
             System.out.println("Exception: " + ex.getMessage());
         }
 
@@ -177,6 +175,13 @@ public class QuestionController {
     public String deleteQuestion(@RequestParam("id") int id) {
         questionService.deleteQuestionById(id);
         return "redirect:/questions/showQuestion";
+    }
+
+    @GetMapping("/showQuestionById")
+    public String showQuestionById(Model model, @RequestParam("id") int questionId) {
+        Questions questions = questionRepository.findById(questionId).get();
+        model.addAttribute("question", questions);
+        return "questionForCreateTest";
     }
 
     @GetMapping("/searchQuestion")
@@ -195,6 +200,12 @@ public class QuestionController {
             questions = questionService.getQuestion();
         }
         model.addAttribute("questions", questions);
+        return "question";
+    }
+
+    @PostMapping("/import")
+    public String uploadQuestionData(@RequestParam("file") MultipartFile file){
+        this.questionService.saveQuestionToDatabase(file);
         return "question";
     }
 
