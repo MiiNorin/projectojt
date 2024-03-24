@@ -4,6 +4,9 @@ import demo.persistence.entity.Questions;
 import demo.repository.QuestionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +27,10 @@ public class QuestionService{
     public Optional<Questions> getQuestionById(int id) {
         return questionRepository.findById(id);
     }
-
+    public Page<Questions> findProductsWithPagination(int offset,int pageSize){
+        Page<Questions> products = questionRepository.findAll(PageRequest.of(offset, pageSize));
+        return  products;
+    }
 
     public void deleteQuestionById(int id) {
         Questions questions = questionRepository.findById(id).orElse(null);

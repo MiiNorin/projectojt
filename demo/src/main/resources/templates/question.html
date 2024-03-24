@@ -26,12 +26,83 @@
             padding: 5px 10px;
             margin: 20px 0px;
         }
+        .pagination {
+            float: right;
+            margin: 0 0 5px;
+        }
+        .pagination li a {
+            border: none;
+            font-size: 13px;
+            min-width: 30px;
+            min-height: 30px;
+            color: #999;
+            margin: 0 2px;
+            line-height: 30px;
+            border-radius: 2px !important;
+            text-align: center;
+            padding: 0 6px;
+        }
+        .pagination li a.prev-next {
+            min-width: 80px;
+            min-height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            padding: 0 6px;
+        }
+        .pagination li a:hover {
+            color: #666;
+        }
+        .pagination li.active a, .pagination li.active a.page-link {
+            background: #03A9F4;
+        }
+        .pagination li.active a:hover {
+            background: #0397d6;
+        }
+        .pagination li.disabled i {
+            color: #ccc;
+        }
+        .pagination li i {
+            font-size: 16px;
+            padding-top: 6px
+        }
+        .page{
+            display: flex;
+            justify-content: space-between;
+        }
     </style>
 </head>
 <body>
+<div class="container">
+    <div class="row page">
+        <div class="clearfix">
+            <h2>Question Table</h2>
+        </div>
 
-<h2>Question Table</h2>
+        <div class="clearfix">
+            <ul class="pagination">
+                <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
+                    <a th:if="${currentPage > 0}" th:href="@{/questions/showQuestion(page=${currentPage - 1})}" class="page-link">Previous</a>
+                    <span th:if="${currentPage == 0}" class="page-link">Previous</span>
+                </li>
+                <li th:each="pageNumber : ${#numbers.sequence(0, totalPages)}" th:class="${pageNumber == currentPage} ? 'page-item active' : 'page-item'">
+                    <a th:href="@{/questions/showQuestion(page=${pageNumber})}" class="page-link" th:text="${pageNumber + 1}"></a>
+                </li>
+                <li th:class="${currentPage == totalPages} ? 'page-item disabled' : 'page-item'">
+                    <a th:if="${currentPage < totalPages}" th:href="@{/questions/showQuestion(page=${currentPage + 1})}" class="page-link">Next</a>
+                    <span th:if="${currentPage == totalPages}" class="page-link">Next</span>
+                </li>
+            </ul>
+        </div>
 
+    </div>
+
+</div>
+
+
+<div class="container">
+    <div class="row">
 <table>
     <thead>
     <tr>
@@ -72,7 +143,9 @@
     </tr>
     </tbody>
 </table>
-
+<!-- Thêm phần phân trang vào cuối table -->
+    </div>
+</div>
 <div id="questionDetails"></div>
 
 <a th:href="@{/questions/createQuestionList}" class="btn btn-success mb-3">Add Question</a>

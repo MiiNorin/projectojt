@@ -22,7 +22,6 @@ public class ExcelDownloadController {
             File file = ResourceUtils.getFile("classpath:file/question.xlsx");
             byte[] data = Files.readAllBytes(file.toPath());
 
-            // Thiết lập thông tin trả về
             response.setContentType("application/octet-stream");
             response.setHeader("Content-disposition", "attachment; filename=" + file.getName());
             response.setContentLength(data.length);

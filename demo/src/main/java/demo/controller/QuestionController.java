@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import java.io.File;
+
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
@@ -35,12 +37,16 @@ public class QuestionController {
     @Autowired
     private ResourceLoader resourceLoader;
     @GetMapping("/showQuestion")
-    public String getListQuestion(Model model) {
-        List<Questions> questions = questionService.getQuestion();
+    public String getListQuestion(Model model, @RequestParam(defaultValue = "0") int page) {
+        int pageSize = 4; // Số lượng câu hỏi trên mỗi trang
+        Page<Questions> questionPage = questionService.findProductsWithPagination(page, pageSize);
+        List<Questions> questions = questionPage.getContent();
         model.addAttribute("questions", questions);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", questionPage.getTotalPages() - 1); // Số trang bắt đầu từ 0
         return "question";
-
     }
+
 
     @GetMapping("/getQuestionDetails")
     public String getQuestionDetails(Model model, @RequestParam("questionId") int questionId) {
