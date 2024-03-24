@@ -1,6 +1,8 @@
 package WebApplication.Controller;
 
+import WebApplication.Entity.QuestionsEntity;
 import WebApplication.Entity.TopicsEntity;
+import WebApplication.Services.QuestionService;
 import WebApplication.Services.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,5 +49,20 @@ public class TopicController {
     public String deleteTopic(@PathVariable int id) {
         topicService.deleteTopicById(id);
         return "redirect:/listTopics";
+    }
+
+//    @GetMapping("/test/{topicId}")
+//    public String getTestForTopic(@PathVariable Integer topicId, Model model) {
+//
+//        List<QuestionsEntity> selectedQuestions = topicService.selectRandomQuestions();
+//        model.addAttribute("questions", selectedQuestions);
+//        return "test";
+//    }
+
+    @GetMapping("test/{topicId}")
+    public String getTestForTopic(@PathVariable Integer topicId, Model model) {
+        List<QuestionsEntity> selectedQuestions = topicService.getRandomQuestionsByTopicId(topicId);
+        model.addAttribute("questions", selectedQuestions);
+        return "test";
     }
 }

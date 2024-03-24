@@ -1,9 +1,14 @@
 package WebApplication.Services;
 
+import WebApplication.Entity.QuestionsEntity;
 import WebApplication.Entity.TopicsEntity;
+import WebApplication.Repositories.QuestionRepository;
 import WebApplication.Repositories.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -52,5 +57,21 @@ public class TopicService {
             // Nếu không tồn tại, có thể xử lý tùy ý, ví dụ ném một exception hoặc trả về null
             return null;
         }
+    }
+
+
+    @Autowired
+    private QuestionRepository questionRepository;
+
+    public List<QuestionsEntity> getQuestionsByTopicId(Integer topicId) {
+        return questionRepository.findByTopicId(topicId);
+    }
+
+    public List<QuestionsEntity> selectRandomQuestions() {
+        return questionRepository.selectRandomQuestions();
+    }
+
+    public List<QuestionsEntity> getRandomQuestionsByTopicId(Integer topicId) {
+        return questionRepository.findRandomQuestionsByTopicId(topicId);
     }
 }

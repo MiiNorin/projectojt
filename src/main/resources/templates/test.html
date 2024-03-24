@@ -1,27 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Information</title>
+    <title>Random Questions Test</title>
 </head>
 <body>
-<h2>Account Information</h2>
-<table border="1">
-    <tr>
-        <th>Account ID</th>
-        <th>Role ID</th>
-        <th>Email</th>
-        <!-- Add other columns as needed -->
-    </tr>
-    <!-- Use Thymeleaf syntax to loop through the accounts -->
-    <tr th:each="account : ${accounts}">
-        <td th:text="${account.accountId}"></td>
-        <td th:text="${account.roleId}
-"></td>
-        <td th:text="${account.email}"></td>
-        <!-- Add other columns as needed -->
-    </tr>
-</table>
+<h1>Random Questions Test</h1>
+
+<div id="questionContainer">
+    <!-- Câu hỏi sẽ được thêm vào đây từ mã Thymeleaf -->
+    <div th:each="question : ${questions}">
+        <h2 th:text="${question.questionContext}"></h2>
+        <ul>
+            <li th:text="${question.optionA}"></li>
+            <li th:text="${question.optionB}"></li>
+            <li th:text="${question.optionC}"></li>
+            <li th:text="${question.optionD}"></li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    // Không cần JavaScript trong trường hợp này vì dữ liệu được lấy từ cơ sở dữ liệu bằng Thymeleaf
+</script>
 </body>
 </html>
