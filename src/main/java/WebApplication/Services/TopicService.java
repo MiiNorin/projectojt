@@ -59,6 +59,16 @@ public class TopicService {
         }
     }
 
+    public Integer getTotalQuestionByTopicId(Integer id) {
+        Optional<TopicsEntity> topicOptional = topicRepository.findById(id);
+        if (topicOptional.isPresent()) {
+            TopicsEntity topic = topicOptional.get();
+            return topic.getTotalQuestion();
+        } else {
+            return null;
+        }
+    }
+
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -67,11 +77,12 @@ public class TopicService {
         return questionRepository.findByTopicId(topicId);
     }
 
-    public List<QuestionsEntity> selectRandomQuestions() {
-        return questionRepository.selectRandomQuestions();
+//    public List<QuestionsEntity> getRandomQuestionsByTopicId(Integer topicId) {
+//        return questionRepository.findRandomQuestionsByTopicId(topicId);
+//    }
+
+    public List<QuestionsEntity> findRandomQuestionsByTopicId(int topicId, int totalQuestion) {
+        return questionRepository.findRandomQuestionsByTopicId(topicId, totalQuestion);
     }
 
-    public List<QuestionsEntity> getRandomQuestionsByTopicId(Integer topicId) {
-        return questionRepository.findRandomQuestionsByTopicId(topicId);
-    }
 }

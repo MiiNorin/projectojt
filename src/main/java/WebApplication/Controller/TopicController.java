@@ -59,10 +59,12 @@ public class TopicController {
 //        return "test";
 //    }
 
-    @GetMapping("test/{topicId}")
-    public String getTestForTopic(@PathVariable Integer topicId, Model model) {
-        List<QuestionsEntity> selectedQuestions = topicService.getRandomQuestionsByTopicId(topicId);
+
+    @GetMapping("test/{topicId}/{totalQuestion}")
+    public String getTestForTopic(@PathVariable Integer topicId, @PathVariable Integer totalQuestion, Model model) {
+        List<QuestionsEntity> selectedQuestions = topicService.findRandomQuestionsByTopicId(topicId, totalQuestion);
         model.addAttribute("questions", selectedQuestions);
         return "test";
     }
+
 }

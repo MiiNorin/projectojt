@@ -21,17 +21,18 @@
 <body>
 <h1>List of Topics</h1>
 
-<div id="topicContainer">
-    <div class="topic-card" th:each="topic : ${topics}" th:onclick="'/test/' + ${topic.topicId}">
+<div class="topic-card" th:each="topic : ${topics}">
+    <a th:href="@{'/test/' + ${topic.topicId} + '/' + ${topic.totalQuestion}}">
         <h3 th:text="${topic.topicName}"></h3>
         <p th:text="${topic.duration}"></p>
-    </div>
+    </a>
 </div>
 
 <script>
-    document.querySelectorAll('.topic-card').forEach(card => {
-        card.addEventListener('click', function() {
-            const url = this.getAttribute('onclick').replace('th:onclick="', '').replace('"', '');
+    document.querySelectorAll('.topic-card a').forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.stopPropagation(); // Ngăn chặn hành vi click mặc định
+            const url = this.getAttribute('href');
             window.location.href = url;
         });
     });
