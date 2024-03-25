@@ -6,6 +6,10 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -32,5 +36,15 @@ public class QuestionDto {
 
     @NotEmpty(message = "them status vao")
     private String status;
+
+    private LocalDateTime createDate;
+    public String getFormattedCreateDate() {
+        if (createDate != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return createDate.format(formatter);
+        } else {
+            return "";
+        }
+    }
 
 }

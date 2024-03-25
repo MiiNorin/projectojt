@@ -21,6 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.*;
 import java.nio.file.*;
+import java.security.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -38,8 +41,8 @@ public class QuestionController {
     private ResourceLoader resourceLoader;
     @GetMapping("/showQuestion")
     public String getListQuestion(Model model, @RequestParam(defaultValue = "0") int page) {
-        int pageSize = 4; // Số lượng câu hỏi trên mỗi trang
-        Page<Questions> questionPage = questionService.findProductsWithPagination(page, pageSize);
+        int pageSize = 5;
+        Page<Questions> questionPage = questionService.findProductsWithPaginationSortedByDate(page, pageSize);
         List<Questions> questions = questionPage.getContent();
         model.addAttribute("questions", questions);
         model.addAttribute("currentPage", page);
@@ -47,6 +50,12 @@ public class QuestionController {
         return "question";
     }
 
+//    @GetMapping("/searchByMonth")
+//    public String searchByMonth(Model model, @RequestParam("month") int month) {
+//        List<Questions> questions = questionService.searchQuestByMonth(month);
+//        model.addAttribute("questions", questions);
+//        return "question";
+//    }
 
     @GetMapping("/getQuestionDetails")
     public String getQuestionDetails(Model model, @RequestParam("questionId") int questionId) {
@@ -104,7 +113,6 @@ public class QuestionController {
                 System.out.println("Exception: " + ex.getMessage());
             }
         }
-
         Questions questions = new Questions();
         questions.setQuestionContext(questionDto.getQuestionContext());
         questions.setOptionA(questionDto.getOptionA());
@@ -114,6 +122,8 @@ public class QuestionController {
         questions.setSolution(questionDto.getSolution());
         questions.setImage(storageFile);
         questions.setStatus(questionDto.getStatus());
+        LocalDateTime createDate = LocalDateTime.now();
+        questions.setCreateDate(createDate);
         questionRepository.save(questions);
 
         return "redirect:/questions/showQuestion";
@@ -132,6 +142,9 @@ public class QuestionController {
             questionDto.setOptionD(questions.getOptionD());
             questionDto.setStatus(questions.getStatus());
             questionDto.setSolution(questions.getSolution());
+            questionDto.setStatus(questions.getStatus());
+            LocalDateTime createDate = LocalDateTime.now();
+            questionDto.setCreateDate(createDate);
             model.addAttribute("questionDto", questionDto);
         } catch (Exception ex) {
             System.out.println("Exception: " + ex.getMessage());

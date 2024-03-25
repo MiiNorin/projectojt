@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -40,6 +41,7 @@ public class ExcelUploadService {
 
     public static List<Questions> getQuestionDataFromExcel(InputStream inputStream) throws IOException {
         List<Questions> questionsList = new ArrayList<>();
+        LocalDateTime currentDate = LocalDateTime.now();
         try (XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
             XSSFSheet sheet = workbook.getSheet("questions");
             int rowIndex=0;
@@ -68,6 +70,7 @@ public class ExcelUploadService {
                     }
                     cellIndex++;
                 }
+                questions.setCreateDate(currentDate);
                 questionsList.add(questions);
             }
             }

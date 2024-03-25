@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<head>
+    <title>Subject List</title>
+</head>
+<body>
+<h2>Subject List</h2>
+
+<!-- Form để thêm mới môn học -->
+<form action="/addSubject" method="post">
+    <label for="subjectName">Subject Name:</label>
+    <input type="text" id="subjectName" name="subjectName" required>
+
+    <label for="imgLink">Image Link:</label>
+    <input type="text" id="imgLink" name="imgLink" required>
+
+    <label for="createDate">Create Date:</label>
+    <input type="text" id="createDate" name="createDate" required>
+
+    <label for="slot">Slot:</label>
+    <input type="number" id="slot" name="slot" required>
+
+    <button type="submit">Add Subject</button>
+</form>
+
+<!-- Table để hiển thị danh sách môn học -->
+<table border="1">
+    <tr>
+        <th>Subject ID</th>
+        <th>Subject Name</th>
+        <th>Image Link</th>
+        <th>Create Date</th>
+        <th>Slot</th>
+        <th>Action</th>
+    </tr>
+    <!-- Sử dụng Thymeleaf để lặp qua danh sách môn học -->
+    <tr th:each="subject : ${subjects}">
+        <td th:text="${subject.subjectId}"></td>
+        <td th:text="${subject.subjectName}"></td>
+        <td th:text="${subject.imgLink}"></td>
+        <td th:text="${subject.createDate}"></td>
+        <td th:text="${subject.slot}"></td>
+        <td>
+            <!-- Các nút thực hiện CRUD (Update và Delete) -->
+            <a th:href="'/editSubject/' + ${subject.subjectId}">Edit</a>
+            <a th:href="'/deleteSubject/' + ${subject.subjectId}">Delete</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

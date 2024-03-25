@@ -67,12 +67,21 @@
                         <th:block th:each="question: ${question}">
                             <div th:if="${question != null}">
                                 <h3>Câu hỏi: <span th:text="${question.questionContext}"></span></h3>
-                                <img th:if="${question.image != null}" th:src="'../images/' + ${question.image}" onerror='this.style.display="none"' style="max-width: 100px; max-height: 100px;">
-                                <p>Option A: <span th:text="${question.optionA}"></span></p>
-                                <p>Option B: <span th:text="${question.optionB}"></span></p>
-                                <p>Option C: <span th:text="${question.optionC}"></span></p>
-                                <p>Option D: <span th:text="${question.optionD}"></span></p>
-                                <p>Đáp án: <span th:text="${question.solution}"></span></p>
+                                <img th:if="${question.image != null}" th:src="@{'../public/images/' + ${question.image}}" onerror='this.style.display="none"' style="max-width: 100px; max-height: 100px;">
+                                <h6>Đã tạo: <span th:text="${question.formattedCreateDate}"></span></h6>
+                                <input type="radio" id="optionA" name="selectedOption" value="A" th:checked="${question.solution == 'A'}">
+                                <label for="optionA">Option A - <span th:text="${question.optionA}"></span></label><br>
+
+                                <input type="radio" id="optionB" name="selectedOption" value="B" th:checked="${question.solution == 'B'}">
+                                <label for="optionB">Option B - <span th:text="${question.optionB}"></span></label><br>
+
+                                <input type="radio" id="optionC" name="selectedOption" value="C" th:checked="${question.solution == 'C'}">
+                                <label for="optionC">Option C - <span th:text="${question.optionC}"></span></label><br>
+
+                                <input type="radio" id="optionD" name="selectedOption" value="D" th:checked="${question.solution == 'D'}">
+                                <label for="optionD">Option D - <span th:text="${question.optionD}"></span></label><br>
+
+<!--                                <p>Đáp án: <span th:text="${question.solution}"></span></p>-->
                             </div>
                         </th:block>
                     </div>

@@ -5,8 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -56,7 +61,14 @@ public class Questions {
     private String status;
     @Basic
     @Column(name = "create_date")
-    private Date createDate;
+    private LocalDateTime createDate;
 
-
+    public String getFormattedCreateDate() {
+        if (createDate != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return createDate.format(formatter);
+        } else {
+            return "";
+        }
+    }
 }
