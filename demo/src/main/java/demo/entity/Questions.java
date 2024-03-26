@@ -14,7 +14,7 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "QUESTIONS", schema = "dbo", catalog = "Db_ZOTSystem")
+@Table(name = "QUESTIONS")
 public class  Questions {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
