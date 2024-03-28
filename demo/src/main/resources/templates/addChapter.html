@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Chapter</title>
+</head>
+<body>
+<h2>Add Chapter</h2>
+
+<!-- Form để thêm mới chapter -->
+<form action="/addChapter/{subjectId}" method="post">
+    <input type="hidden" id="subjectId" name="subjectId" value="${subjectId}">
+
+    <label for="chapterName">Chapter Name:</label>
+    <input type="text" id="chapterName" name="chapterName" required>
+
+    <button type="submit">Add Chapter</button>
+</form>
+
+<br>
+<a href="/">Back to Subject List</a>
+</body>
+</html>
