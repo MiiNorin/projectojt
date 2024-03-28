@@ -19,4 +19,18 @@
             </basic>
         </attributes>
     </entity>
+    <entity class="demo.persistence.entity.ChaptersEntity">
+        <table name="CHAPTERS" schema="dbo" catalog="Db_ZOTSystem"/>
+        <attributes>
+            <id name="chapterId">
+                <column name="chapter_id"/>
+            </id>
+            <basic name="subjectId">
+                <column name="subject_id"/>
+            </basic>
+            <basic name="chapterName">
+                <column name="chapter_name"/>
+            </basic>
+        </attributes>
+    </entity>
 </entity-mappings>

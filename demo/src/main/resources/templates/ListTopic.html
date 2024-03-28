@@ -28,7 +28,6 @@
 <div id="topicContainer">
     <div class="topic-card" th:each="topic : ${topics}" th:onclick="'/test/' + ${topic.topicId}">
         <h3 th:text="${topic.topicName}"></h3>
-        <p th:text="${topic.duration}"></p>
     </div>
 </div>
 

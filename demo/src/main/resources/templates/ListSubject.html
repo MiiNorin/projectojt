@@ -43,8 +43,10 @@
             <!-- Các nút thực hiện CRUD (Update và Delete) -->
             <a th:href="'/editSubject/' + ${subject.subjectId}">Edit</a>
             <a th:href="'/deleteSubject/' + ${subject.subjectId}">Delete</a>
+            <a th:href="'/addChapter/' + ${subject.subjectId}">Thêm topic</a>
         </td>
     </tr>
 </table>
+
 </body>
 </html>

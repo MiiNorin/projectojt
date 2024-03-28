@@ -4,6 +4,7 @@ package demo.persistence.entity;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "SUBJECTS", schema = "dbo", catalog = "Db_ZOTSystem")
@@ -24,6 +25,9 @@ public class SubjectsEntity {
     @Basic
     @Column(name = "Slot")
     private Integer slot;
+    @OneToMany(mappedBy = "subjects",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "chapter_id")
+    private List<ChaptersEntity> chaptersEntityList;
 
     public int getSubjectId() {
         return subjectId;

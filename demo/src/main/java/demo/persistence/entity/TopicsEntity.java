@@ -37,7 +37,7 @@ public class TopicsEntity {
 
     @Basic
     @Column(name = "total_question")
-    private int totalQuestion; // Thay đổi kiểu dữ liệu
+    private int totalQuestion;
 
     @Basic
     @Column(name = "topic_type")
@@ -67,5 +67,8 @@ public class TopicsEntity {
     @Column(name = "subject_id")
     private Integer subjectId;
 
+    @Basic
+    @Column(name = "chapter_id")
+    private Integer chapterId;
     // hashCode và equals có thể sử dụng @Data hoặc lombok để tự động sinh
 }
