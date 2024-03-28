@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Topic</title>
+</head>
+<body>
+<h2>Create New Topic</h2>
+
+<form action="/listTopics/addTopic" method="post">
+    <label for="topicName">Topic Name:</label><br>
+    <input type="text" id="topicName" name="topicName"><br>
+
+    <label for="duration">Duration:</label><br>
+    <input type="text" id="duration" name="duration"><br>
+
+    <label for="totalQuestion">Total Question:</label><br>
+    <input type="number" id="totalQuestion" name="totalQuestion"><br>
+
+    <label for="topicType">Topic Type:</label><br>
+    <input type="number" id="topicType" name="topicType"><br>
+
+    <label for="status">Status:</label><br>
+    <input type="text" id="status" name="status"><br>
+
+    <input type="submit" value="Create Topic">
+</form>
+
+</body>
+</html>

@@ -4,6 +4,7 @@ package demo.controller;
 import demo.persistence.entity.Questions;
 import demo.repository.QuestionRepository;
 import demo.service.QuestionService;
+import demo.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -20,6 +21,8 @@ public class TestController {
     private QuestionService questionService;
     @Autowired
     private QuestionRepository questionRepository;
+    @Autowired
+    private TopicService topicService;
     @GetMapping("/manageTest")
     public String moveToShowQuestion(){
         return "createTestPage";
@@ -40,4 +43,11 @@ public class TestController {
         model.addAttribute("questionList", questionList);
         return "showDetailQuestion";
     }
+    @GetMapping("/test/{topicId}")
+    public String getTestForTopic(@PathVariable Integer topicId, Model model) {
+        List<Questions> selectedQuestions = topicService.selectRandomQuestions();
+        model.addAttribute("questions", selectedQuestions);
+        return "test";
+    }
+
 }

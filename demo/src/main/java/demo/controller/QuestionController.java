@@ -50,12 +50,6 @@ public class QuestionController {
         return "question";
     }
 
-//    @GetMapping("/searchByMonth")
-//    public String searchByMonth(Model model, @RequestParam("month") int month) {
-//        List<Questions> questions = questionService.searchQuestByMonth(month);
-//        model.addAttribute("questions", questions);
-//        return "question";
-//    }
 
     @GetMapping("/getQuestionDetails")
     public String getQuestionDetails(Model model, @RequestParam("questionId") int questionId) {
@@ -72,7 +66,6 @@ public class QuestionController {
         }
     }
 
-
     @GetMapping("/createQuestionList")
     public String showCreateQuestionPage(Model model) {
         QuestionDto questionDto = new QuestionDto();
@@ -84,11 +77,8 @@ public class QuestionController {
     public String createQuestion(
             @Valid @ModelAttribute QuestionDto questionDto,
             BindingResult result) {
-//        if(questionDto.getQuestionContext().isEmpty()) {
-//            result.addError(new FieldError("questionDto", "questionContext", "The question context is required"));
-//        }
+
         if (result.hasErrors()) {
-//            result.addError(new FieldError());
             return "createQuestion";
         }
         MultipartFile image = questionDto.getImage();

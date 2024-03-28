@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="https://jakarta.ee/xml/ns/persistence/orm"
+                 version="3.0">
+
+    <entity class="demo.persistence.entity.QuestiontestsEntity">
+        <table name="QUESTIONTESTS" schema="dbo" catalog="Db_ZOTSystem"/>
+        <attributes>
+            <id name="testId">
+                <column name="test_id" precision="-1"/>
+            </id>
+            <basic name="testDetailId">
+                <column name="test_detail_id" nullable="false" precision="-1"/>
+            </basic>
+            <basic name="questionId">
+                <column name="question_id" nullable="false" precision="-1"/>
+            </basic>
+            <basic name="answerId">
+                <column name="answer_id" nullable="false" precision="-1"/>
+            </basic>
+        </attributes>
+    </entity>
+</entity-mappings>

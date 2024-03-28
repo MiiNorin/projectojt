@@ -54,7 +54,6 @@ public class QuestionService{
                     Path path = Paths.get(imagePath);
                     Files.deleteIfExists(path);
                 } catch (Exception e) {
-
                     e.printStackTrace();
                 }
             }

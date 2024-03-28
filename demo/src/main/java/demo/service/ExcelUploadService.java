@@ -65,7 +65,6 @@ public class ExcelUploadService {
                         case 6 -> questions.setStatus(cell.getStringCellValue());
                         case 7 -> questions.setSolution(cell.getStringCellValue());
                         default -> {
-
                         }
                     }
                     cellIndex++;

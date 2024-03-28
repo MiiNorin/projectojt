@@ -126,7 +126,14 @@
                 return true;
             }
         });
-
+        document.querySelector('form').addEventListener('submit', function(event) {
+            // Check if file is selected
+            var fileInput = document.querySelector('input[type="file"]');
+            if (fileInput.files.length === 0) {
+                event.preventDefault(); // Prevent form submission
+                document.getElementById('fileError').style.display = 'block'; // Show error message
+            }
+        });
     </script>
 </div>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
