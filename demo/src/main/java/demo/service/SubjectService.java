@@ -31,11 +31,9 @@ public class SubjectService {
     }
 
     public SubjectsEntity updateSubject(SubjectsEntity subject) {
-        // Kiểm tra xem entity có tồn tại trong database không
         Optional<SubjectsEntity> existingSubject = subjectRepository.findById(subject.getSubjectId());
 
         if (existingSubject.isPresent()) {
-            // Nếu tồn tại, cập nhật thông tin và lưu lại
             SubjectsEntity updatedSubject = existingSubject.get();
             updatedSubject.setSubjectName(subject.getSubjectName());
             updatedSubject.setImgLink(subject.getImgLink());
@@ -43,7 +41,18 @@ public class SubjectService {
             updatedSubject.setSlot(subject.getSlot());
             return subjectRepository.save(updatedSubject);
         } else {
-            // Nếu không tồn tại, có thể xử lý tùy ý, ví dụ ném một exception hoặc trả về null
+            return null;
+        }
+    }
+
+    public SubjectsEntity addChapterToSubject(int subjectId, String chapterName) {
+        Optional<SubjectsEntity> existingSubject = subjectRepository.findById(subjectId);
+
+        if (existingSubject.isPresent()) {
+            SubjectsEntity subject = existingSubject.get();
+            // Thêm logic để thêm chapter vào subject ở đây
+            return subjectRepository.save(subject);
+        } else {
             return null;
         }
     }

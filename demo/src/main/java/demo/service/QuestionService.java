@@ -36,13 +36,6 @@ public class QuestionService{
         return questionRepository.findAll(pageable);
     }
 
-//    public Optional<Questions> getQuestionById(int id) {
-//        return questionRepository.findById(id);
-//    }
-//    public Page<Questions> findProductsWithPagination(int offset,int pageSize){
-//        Page<Questions> products = questionRepository.findAll(PageRequest.of(offset, pageSize));
-//        return  products;
-//    }
 
     public void deleteQuestionById(int id) {
         Questions questions = questionRepository.findById(id).orElse(null);

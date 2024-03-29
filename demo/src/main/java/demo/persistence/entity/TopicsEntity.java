@@ -20,8 +20,9 @@ import java.util.Set;
 @Table(name = "TOPICS", schema = "dbo", catalog = "Db_ZOTSystem")
 public class TopicsEntity {
 
-    @OneToMany(mappedBy = "topicsEntity", cascade = CascadeType.ALL)
-    private List<Questions> questionList;
+    @ManyToOne
+    @JoinColumn(name="chapter_id", nullable = false)
+    private ChaptersEntity chapter;
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "topic_id")
@@ -67,8 +68,6 @@ public class TopicsEntity {
     @Column(name = "subject_id")
     private Integer subjectId;
 
-    @Basic
-    @Column(name = "chapter_id")
-    private Integer chapterId;
-    // hashCode và equals có thể sử dụng @Data hoặc lombok để tự động sinh
+
+
 }

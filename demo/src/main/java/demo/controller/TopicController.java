@@ -1,26 +1,17 @@
 package demo.controller;
 
-import demo.persistence.dto.QuestionDto;
+import demo.persistence.entity.ChaptersEntity;
 import demo.persistence.entity.Questions;
 import demo.persistence.entity.TopicsEntity;
+import demo.repository.ChapterRepository;
 import demo.repository.TopicRepository;
+import demo.service.ChapterService;
 import demo.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.jms.Topic;
-import javax.validation.Valid;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 @RequestMapping("/listTopics")
@@ -31,42 +22,52 @@ public class TopicController {
     private TopicRepository topicRepository;
     @Autowired
     private TopicService topicService;
-
-    @GetMapping("/showList")
-    public String getTopics(Model model) {
-        List<TopicsEntity> topics = topicService.getAllTopics();
-        model.addAttribute("topics", topics);
-        return "ListTopic";
-    }
-
-    @GetMapping("/addTopic")
-    public String showTopicPage(Model model) {
-        TopicsEntity topics = new TopicsEntity();
-        model.addAttribute("topic", topics);
+    @Autowired
+    private ChapterRepository chapterRepository;
+    @Autowired
+    private ChapterService chapterService;
+//    @GetMapping("/showList")
+//    public String getTopics(Model model) {
+//        List<TopicsEntity> topics = topicService.getAllTopics();
+//        model.addAttribute("topics", topics);
+//        return "shotListTopic";
+//    }
+    @GetMapping("/addTopic/{chapterId}")
+    public String showAddTopicForm(Model model, @PathVariable("chapterId") int chapterId) {
+        model.addAttribute("chapterId",chapterId);
         return "createListTopic";
     }
+
+    @GetMapping("/showListTopic/{chapterId}")
+    public String showTopicByChapterId(@PathVariable("chapterId") Integer chapterId, Model model) {
+        List<TopicsEntity> topics = topicRepository.findTopicsEntitiesByChapterChapterId(chapterId);
+        model.addAttribute("topics", topics);
+        return "showListTopic";
+    }
+    @PostMapping("/addTopic")
+    public String addTopicForChapter(@RequestParam("chapterId") int chapterId, @RequestParam String topicName,
+                                     @RequestParam String duration,
+                                     @RequestParam int totalQuestion,
+                                     @RequestParam int topicType,
+                                     @RequestParam String status) {
+        TopicsEntity topicsEntity = new TopicsEntity();
+        topicsEntity.setTopicName(topicName);
+        topicsEntity.setDuration(duration);
+        topicsEntity.setTotalQuestion(totalQuestion);
+        topicsEntity.setTopicType(topicType);
+        topicsEntity.setStatus(status);
+        topicsEntity.setChapter(chapterRepository.findById(chapterId).get());
+        topicRepository.save(topicsEntity);
+        return "addChapterSuccess";
+    }
+
     @GetMapping("/showListToAdd")
     public String getTopicsToAdd(Model model) {
         List<TopicsEntity> topics = topicService.getAllTopics();
         model.addAttribute("topics", topics);
         return "addQuestion";
     }
-    @PostMapping("/addTopic")
-    public String createTopic(
-            @Valid @ModelAttribute TopicsEntity topics,
-            BindingResult result) {
 
-        TopicsEntity topicsEntity = new TopicsEntity();
-        topicsEntity.setTopicName(topics.getTopicName());
-        topicsEntity.setDuration(topics.getDuration());
-        topicsEntity.setTotalQuestion(topics.getTotalQuestion());
-        topicsEntity.setTopicType(topics.getTopicType());
-        topicsEntity.setStatus(topics.getStatus());
-        LocalDateTime createDate = LocalDateTime.now();
-        topicsEntity.setCreateDate(createDate);
-        topicRepository.save(topicsEntity);
-        return "redirect:/listTopics/showList";
-    }
 
 
     @GetMapping("/editTopic/{id}")

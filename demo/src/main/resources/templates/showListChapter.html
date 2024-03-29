@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách các chương</title>
+</head>
+<body>
+<h2>Danh sách các chương</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Tên Chương</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="chapter : ${chapters}">
+        <td th:text="${chapter.chapterName}"></td>
+        <td>
+            <a th:href="@{/listTopics/addTopic/{chapterId}(chapterId = ${chapter.chapterId})}">Thêm test</a>
+            <a th:href="@{'/listTopics/showListTopic/' + ${chapter.chapterId}}">Hiển thị list test</a>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+
+<a href="/subject/listSubjects">Back to Subject List</a>
+</body>
+</html>

@@ -25,12 +25,18 @@
 <body>
 <h1>List of Topics</h1>
 
-<div id="topicContainer">
-    <div class="topic-card" th:each="topic : ${topics}" th:onclick="'/test/' + ${topic.topicId}">
-        <h3 th:text="${topic.topicName}"></h3>
-    </div>
-</div>
-
+<table border="1">
+    <thead>
+    <tr>
+        <th>Tên Chapter</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="topic : ${topics}">
+        <td th:text="${topic.topicName}"></td>
+    </tr>
+    </tbody>
+</table>
 <script>
     document.querySelectorAll('.topic-card').forEach(card => {
         card.addEventListener('click', function() {
@@ -39,10 +45,9 @@
         });
     });
 </script>
-<div class="container topic-service">
-    <a th:href="@{/listTopics/addTopic}">Add New Topic</a>
-    <a th:href="@{/listTopics/showListToAdd}">Add Question For Topic</a>
-</div>
+<!--<div class="container topic-service">-->
+<!--    <a th:href="@{/listTopics/showListToAdd}">Add Question For Topic</a>-->
+<!--</div>-->
 
 </body>
 </html>

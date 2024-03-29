@@ -7,21 +7,22 @@
 <body>
 <h2>Create New Topic</h2>
 
-<form action="/listTopics/addTopic" method="post">
+<form th:action="@{/listTopics/addTopic}" method="post">
+    <input type="hidden" id="chapterId" name="chapterId" th:value="${chapterId}">
     <label for="topicName">Topic Name:</label><br>
-    <input type="text" id="topicName" name="topicName"><br>
+    <input type="text" id="topicName" name="topicName" th:value="${topicName}"required><br>
 
     <label for="duration">Duration:</label><br>
-    <input type="text" id="duration" name="duration"><br>
+    <input type="text" id="duration" name="duration" th:value="${duration}"required><br>
 
     <label for="totalQuestion">Total Question:</label><br>
-    <input type="number" id="totalQuestion" name="totalQuestion"><br>
+    <input type="number" id="totalQuestion" name="totalQuestion" th:value="${totalQuestion}"required><br>
 
     <label for="topicType">Topic Type:</label><br>
-    <input type="number" id="topicType" name="topicType"><br>
+    <input type="number" id="topicType" name="topicType" th:value="${topicType}"required><br>
 
     <label for="status">Status:</label><br>
-    <input type="text" id="status" name="status"><br>
+    <input type="text" id="status" name="status" th:value="${status}"required><br>
 
     <input type="submit" value="Create Topic">
 </form>
