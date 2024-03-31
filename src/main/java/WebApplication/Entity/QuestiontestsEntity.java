@@ -10,7 +10,7 @@ public class QuestiontestsEntity {
     @Column(name = "TestId")
     private int testId;
     @Basic
-    @Column(name = "TestDetailID")
+    @Column(name = "testdetail_id")
     private Integer testDetailId;
     @Basic
     @Column(name = "QuestionId")

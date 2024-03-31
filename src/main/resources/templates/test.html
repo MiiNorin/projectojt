@@ -9,21 +9,46 @@
 <body>
 <h1>Random Questions Test</h1>
 
-<div id="questionContainer">
-    <!-- Câu hỏi sẽ được thêm vào đây từ mã Thymeleaf -->
-    <div th:each="question : ${questions}">
-        <h2 th:text="${question.questionContext}"></h2>
-        <ul>
-            <li th:text="${question.optionA}"></li>
-            <li th:text="${question.optionB}"></li>
-            <li th:text="${question.optionC}"></li>
-            <li th:text="${question.optionD}"></li>
-        </ul>
+<form id="quizForm" action="/submitAnswers" method="post">
+    <div id="questionContainer">
+        <!-- Câu hỏi sẽ được thêm vào đây từ mã Thymeleaf -->
+        <div th:each="question : ${questions}">
+            <h2 th:text="${question.questionContext}"></h2>
+            <ul>
+                <li><input type="radio" th:name="'answerId' + ${question.questionId}" value="1" /> <span th:text="${question.optionA}"></span></li>
+                <li><input type="radio" th:name="'answerId' + ${question.questionId}" value="2" /> <span th:text="${question.optionB}"></span></li>
+                <li><input type="radio" th:name="'answerId' + ${question.questionId}" value="3" /> <span th:text="${question.optionC}"></span></li>
+                <li><input type="radio" th:name="'answerId' + ${question.questionId}" value="4" /> <span th:text="${question.optionD}"></span></li>
+            </ul>
+            <input type="hidden" class="questionId" name="questionId" th:value="${question.questionId}" />
+            <!-- Thêm hidden input để lưu giá trị của input đã được chọn -->
+            <input type="hidden" class="selectedAnswer" name="selectedAnswer" />
+        </div>
     </div>
-</div>
+    <input type="submit" value="Submit">
+</form>
 
 <script>
-    // Không cần JavaScript trong trường hợp này vì dữ liệu được lấy từ cơ sở dữ liệu bằng Thymeleaf
+    document.getElementById('quizForm').addEventListener('submit', function(event) {
+        // Khởi tạo một mảng để lưu trữ các giá trị đã được chọn
+        var selectedAnswers = [];
+
+        // Lặp qua tất cả các input radio
+        document.querySelectorAll('input[type="radio"]').forEach(function(input) {
+            // Kiểm tra xem input nào đã được chọn
+            if (input.checked) {
+                // Lấy giá trị của input đã được chọn
+                var selectedAnswer = input.value;
+                // Lưu giá trị vào mảng selectedAnswers
+                selectedAnswers.push(selectedAnswer);
+            }
+        });
+
+        // Gán tất cả các giá trị đã được chọn vào hidden input
+        document.querySelector('.selectedAnswer').value = selectedAnswers.join(',');
+    });
+
 </script>
+
 </body>
 </html>
