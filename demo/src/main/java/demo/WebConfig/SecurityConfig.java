@@ -1,6 +1,7 @@
 package demo.WebConfig;
 
 
+import demo.entity.Account;
 import demo.repository.AccountRepository;
 import demo.service.AccountService;
 import jakarta.servlet.http.HttpSession;
@@ -26,10 +27,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.util.Map;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -48,9 +52,9 @@ public class SecurityConfig{
 //        http.csrf(AbstractHttpConfigurer::disable)
 //         .authorizeRequests()
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/FAcademy/loginPage",
-                        "/css/**", "/js/**", "/vendor/**",
-                        "/fonts/**", "/images/**", "/static/**","/static/assets/**", "/assets/**",
+                .requestMatchers("/FAcademy/loginPage", "/FAcademy/registration","/FAcademy/verify",
+                        "/css/**", "/js/**", "/vendor/**","/fonts/**", "/images/**",
+                        "/static/**","/static/assets/**", "/assets/**",
                         "/home/assets/**","/home/homePage", "/home/**")
                 .permitAll()
                 .anyRequest()
@@ -84,14 +88,18 @@ public class SecurityConfig{
                         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                         if (authentication != null && authentication.isAuthenticated()) {
                             Object principal = authentication.getPrincipal();
-//                            if (principal instanceof OAuth2User) {
-//                                OAuth2User oauth2User = (OAuth2User) principal;
-//                                String email = (String) oauth2User.getAttribute("email");
-//                                int id = userRepository.findAccountByEmail(email).getUserId();
-//                                session.setAttribute("user_id",id);
-//
-//                            } else
-                                if(principal instanceof UserDetails userDetails)
+                            if (principal instanceof OAuth2User) {
+                                OAuth2User oAuth2User = (OAuth2User) principal;
+                                Map<String, Object> attributes = oAuth2User.getAttributes();
+                                String email = (String) oAuth2User.getAttribute("email");
+                                if(!userRepository.existsAccountByEmail((String) attributes.get("email"))){
+                                    var user =  Account.builder().fullName("newuser")
+                                            .email((String) attributes.get("email")).password("").roleId(4).build();
+                                    userRepository.save(user);
+                                    int id = userRepository.findAccountByEmail(email).getUserId();
+                                    session.setAttribute("user_id", id);
+                                }
+                            } else if(principal instanceof UserDetails userDetails)
                             {
                                 String email = userDetails.getUsername();
                                 int id = userRepository.findAccountByEmail(email).getUserId();

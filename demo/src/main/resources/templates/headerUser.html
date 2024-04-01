@@ -82,12 +82,8 @@
                 <!-- Div chứa tên người đăng nhập và dropdown menu -->
                 <div class="dropdown-content" id="dropdownMenu">
                         <span class="username" th:text="${user.fullName}">Tên Người Đăng Nhập</span>
-                    <div class="dropdown-menu">
-                        <a href="#">Thao tác 1</a>
-                        <a href="#">Thao tác 2</a>
-                        <a href="#">Thao tác 3</a>
-                    </div>
                 </div>
+                <a th:href="@{/logout}">Logout</a>
             </div>
         </div>
 

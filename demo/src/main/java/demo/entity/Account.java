@@ -1,19 +1,20 @@
 package demo.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.Locale;
 
 @Getter
 @Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "ACCOUNT")
 public class Account implements Serializable {
@@ -32,13 +33,13 @@ public class Account implements Serializable {
     private String password;
     @Basic
     @Column(name = "create_date")
-    private Date createDate;
+    private LocalDate createDate;
     @Basic
     @Column(name = "full_name")
     private String fullName;
     @Basic
     @Column(name = "birth_day")
-    private Date birthDay;
+    private LocalDate birthDay;
     @Basic
     @Column(name = "phone")
     private String phone;
@@ -55,6 +56,17 @@ public class Account implements Serializable {
     @Column(name = "status")
     private String status;
 
-
-
+    public Account(int roleId, String email, String password, LocalDate createDate, String fullName, LocalDate birthDay, String phone, String schoolName, String avatar, String gender, String status) {
+        this.roleId = roleId;
+        this.email = email;
+        this.password = password;
+        this.createDate = createDate;
+        this.fullName = fullName;
+        this.birthDay = birthDay;
+        this.phone = phone;
+        this.schoolName = schoolName;
+        this.avatar = avatar;
+        this.gender = gender;
+        this.status = status;
+    }
 }

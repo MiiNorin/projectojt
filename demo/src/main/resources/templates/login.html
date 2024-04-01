@@ -10,10 +10,17 @@
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
 
     <title>Đăng Nhập</title>
+    <!-- Favicons -->
+    <link href="/assets/img/FPTLOGO.png" rel="icon">
+    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 </head>
 
 <body>
 <div id="wrapper">
+    <!--Success message-->
+    <div th:if="${param.registerSuccess}">
+        <div style="color: greenyellow; text-align: center;" class="alert alert-info"> You are successfull registered to our awsome app!</div>
+    </div>
     <form th:action="@{/FAcademy/login}" id="form-login" method="post">
         <h1 class="form-heading">Đăng Nhập</h1>
         <div class="form-group">
@@ -28,15 +35,17 @@
             </div>
         </div>
         <a style="color:white;" href="ForgotPassword.html">Forgot Password?</a>
-        <a style="color: white; margin-left: 152px;" href="/registration">Register</a>
+        <a style="color: white; margin-left: 152px;" th:href="@{/FAcademy/registration}">Register</a>
         <button type="submit" class="form-submit">Đăng nhập</button>
         <br>
         <br>
         <div style="display:flex; justify-content: center;">
             <p style="color:white; text-align: center; ">Or Login With</p>
-            <a style="margin-left: 10px;"href="https://accounts.google.com/o/oauth2/auth?scope=profile email&redirect_uri=http://localhost:8080/FAQuestion/LoginGoogleServlet&response_type=code
-                                           &client_id=357909169797-n5m8ikaahjv1at1qblloaksu6asm2ijh.apps.googleusercontent.com&approval_prompt=force" ><img src="/assets/img/googoo.png" width="25px" height="25px" alt="alt"/></a>
+            <a th:href="@{/oauth2/authorization/google}" style="margin-left: 10px;" >
+                <img src="/assets/img/googoo.png" width="25px" height="25px" alt="alt"/>
+            </a>
         </div>
+        <p style="color: red; text-align: center;" th:text="${session.errorMessage}"></p>
     </form>
 
 </div>
