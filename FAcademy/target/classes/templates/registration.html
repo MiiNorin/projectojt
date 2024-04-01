@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/assets/css/style_1.css" rel="stylesheet" type="text/css"/>
+    <link href="/assets/css/style_2.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+    <title>Đăng Kí</title>
+</head>
+
+<body>
+
+<div id="wrapper">
+    <form th:action="@{/FAcademy/registration}" method="post" th:object="${accountdto}" id="form-login">
+        <h1 class="form-heading">Đăng Kí</h1>
+        <div class="form-group">
+            <i class="far fa-user"></i>
+            <input type="text" class="form-input" placeholder="Username" th:field="*{fullName}">
+        </div>
+        <div class="form-group">
+            <i class="far fa-envelope"></i>
+            <input type="text" class="form-input" placeholder="Your Email" th:field="*{email}">
+        </div>
+        <div th:if="${param.emailexist}">
+            <div style="color: red; text-align: center;" class="alert alert-info"> You email have exist please register other email</div>
+        </div>
+        <div class="form-group">
+            <i class="fas fa-key"></i>
+            <input type="password" class="form-input" placeholder="Password" th:field="*{password}" >
+            <div id="eye">
+                <i class="far fa-eye"></i>
+            </div>
+        </div>
+        <div class="form-group">
+            <i class="fas fa-key"></i>
+            <input type="password" class="form-input" placeholder="Repeat your password" th:field="*{checkPass}">
+            <div id="eye">
+                <i class="far fa-eye"></i>
+            </div>
+            <div th:if="${param.checkpass}">
+                <div style="color: red; text-align: center;" class="alert alert-info">  You password and checkpass not same! Please checkout it!</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <i class="far fa-lock"></i>
+            <input type="text" class="form-input" placeholder="Contact no" th:field="*{phone}">
+        </div>
+        <a  style=" color:white; " href="/FAcademy/login" >I am already a member</a>
+        <input type="submit" value="Đăng Kí" class="form-submit">
+        <p style="color: red; text-align: center;" th:text="${error}"></p>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const passwordField = document.querySelector("input[name='password']");
+        const togglePassword = document.getElementById("eye");
+
+        togglePassword.addEventListener("click", function() {
+            const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+            passwordField.setAttribute("type", type);
+            this.querySelector("i").classList.toggle("fa-eye");
+            this.querySelector("i").classList.toggle("fa-eye-slash");
+        });
+    });
+</script>
+
+
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script src="/assets/js/app.js.js"></script>
+</html>

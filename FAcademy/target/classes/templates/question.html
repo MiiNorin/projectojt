@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Table</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+            width: 10%; /* Thiết lập kích thước cố định cho mỗi cột */
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+        .main{
+            background-color: orange;
+            padding: 5px 10px;
+            margin: 20px 0px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Question Table</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>Question Context</th>
+        <th>Option A</th>
+        <th>Option B</th>
+        <th>Option C</th>
+        <th>Option D</th>
+        <th>Status</th>
+        <th>Image</th>
+        <th>Solution</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:each="question : ${questions}">
+
+        <td th:text="${question.questionContext}"></td>
+        <td th:text="${question.optionA}"></td>
+        <td th:text="${question.optionB}"></td>
+        <td th:text="${question.optionC}"></td>
+        <td th:text="${question.optionD}"></td>
+        <td th:text="${question.status}"></td>
+        <td><img th:src="@{/images/{imageName}(imageName=${question.image})}" style="max-width: 100px; max-height: 100px;"></td>
+        <td th:text="${question.solution}"></td>
+        <td>
+
+            <a th:href="@{'/questions/editQuestion?id=' + ${question.questionId}}" class="btn btn-primary">Edit</a>
+
+            <a th:href="@{'/questions/deleteQuestion?id=' + ${question.questionId}}" onclick="return confirm('Are you sure you want to delete this question?')" class="btn btn-danger">Delete</a>
+
+        </td>
+    </tr>
+    </tbody>
+    <a th:href="@{/questions/createQuestion}" class="btn btn-success mb-3">Add Question</a>
+    <form action="/questions/searchQuestion" method="get">
+        <input type="text" name="character" placeholder="Search by character...">
+        <button type="submit">Search</button>
+    </form>
+
+</table>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>
