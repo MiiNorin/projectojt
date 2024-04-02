@@ -1,6 +1,8 @@
 package demo.service;
 
+import demo.persistence.entity.Questions;
 import demo.persistence.entity.SubjectsEntity;
+import demo.repository.QuestionRepository;
 import demo.repository.SubjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,4 +58,12 @@ public class SubjectService {
             return null;
         }
     }
+
+    @Autowired
+    QuestionRepository questionRepository;
+
+    public List<Questions> findRandQuestionByChapterId(Integer chapterId, Integer totalQ){
+        return questionRepository.findRandomQuestionsByChapterId(chapterId, totalQ);
+    }
+
 }

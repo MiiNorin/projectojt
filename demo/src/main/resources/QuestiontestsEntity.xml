@@ -47,4 +47,85 @@
             </basic>
         </attributes>
     </entity>
+    <entity class="demo.persistence.entity.ChaptersEntity">
+        <table name="CHAPTERS" schema="dbo" catalog="Db_ZOTSystem"/>
+        <attributes>
+            <id name="chapterId">
+                <column name="chapter_id"/>
+            </id>
+            <basic name="subjectId">
+                <column name="subject_id"/>
+            </basic>
+            <basic name="chapterName">
+                <column name="chapter_name"/>
+            </basic>
+        </attributes>
+    </entity>
+    <entity class="demo.persistence.entity.ChaptersEntity">
+        <table name="CHAPTERS" schema="dbo" catalog="Db_ZOTSystem"/>
+        <attributes>
+            <id name="chapterId">
+                <column name="chapter_id"/>
+            </id>
+            <basic name="subjectId">
+                <column name="subject_id"/>
+            </basic>
+            <basic name="chapterName">
+                <column name="chapter_name"/>
+            </basic>
+            <basic name="totalQuestion">
+                <column name="total_question"/>
+            </basic>
+        </attributes>
+    </entity>
+    <entity class="demo.persistence.entity.QuestionsEntity">
+        <table name="QUESTIONS" schema="dbo" catalog="Db_ZOTSystem"/>
+        <attributes>
+            <id name="questionId">
+                <column name="question_id"/>
+            </id>
+            <basic name="subjectId">
+                <column name="subject_id"/>
+            </basic>
+            <basic name="accountId">
+                <column name="account_id"/>
+            </basic>
+            <basic name="answerId">
+                <column name="answer_id"/>
+            </basic>
+            <basic name="topicId">
+                <column name="topic_id"/>
+            </basic>
+            <basic name="image">
+                <column name="image"/>
+            </basic>
+            <basic name="questionContext">
+                <column name="question_context"/>
+            </basic>
+            <basic name="optionA">
+                <column name="option_A"/>
+            </basic>
+            <basic name="optionB">
+                <column name="option_B"/>
+            </basic>
+            <basic name="optionC">
+                <column name="option_C"/>
+            </basic>
+            <basic name="optionD">
+                <column name="option_D"/>
+            </basic>
+            <basic name="solution">
+                <column name="solution"/>
+            </basic>
+            <basic name="status">
+                <column name="status"/>
+            </basic>
+            <basic name="createDate">
+                <column name="create_date"/>
+            </basic>
+            <basic name="chapterId">
+                <column name="chapter_id"/>
+            </basic>
+        </attributes>
+    </entity>
 </entity-mappings>

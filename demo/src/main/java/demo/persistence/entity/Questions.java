@@ -27,9 +27,9 @@ public class Questions {
     @Column(name = "question_id")
     private int questionId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "topic_id")
-    private TopicsEntity topicsEntity;
+    @Basic
+    @Column (name="topic_id")
+    private  Integer topicId;
 
     @Basic
     @Column(name = "subject_id")
@@ -75,10 +75,14 @@ public class Questions {
     @Column(name = "status")
     private String status;
 
+
     @Basic
     @Column(name = "create_date")
     private LocalDateTime createDate;
 
+    @ManyToOne
+    @JoinColumn(name="chapter_id", nullable = false)
+    private ChaptersEntity chapters;
     public String getFormattedCreateDate() {
         if (createDate != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -87,4 +91,5 @@ public class Questions {
             return "";
         }
     }
+
 }

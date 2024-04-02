@@ -12,6 +12,9 @@
     <tr>
         <th>Tên Chương</th>
         <th>Action</th>
+        <th>Làm bài test tổng</th>
+        <th>Tạo câu hỏi</th>
+        <th>Show list câu hỏi</th>
     </tr>
     </thead>
     <tbody>
@@ -20,7 +23,12 @@
         <td>
             <a th:href="@{/listTopics/addTopic/{chapterId}(chapterId = ${chapter.chapterId})}">Thêm test</a>
             <a th:href="@{'/listTopics/showListTopic/' + ${chapter.chapterId}}">Hiển thị list test</a>
+            <a href="">Sửa</a>
+            <a href="">Xóa</a>
         </td>
+        <td><a th:href="@{'/listTopics/test/' + ${chapter.chapterId}}">Do test</a></td>
+        <td><a th:href="@{'/questions/createQuestionList/' + ${chapter.chapterId}}">Create Question</a></td>
+        <td><a th:href="@{'/questions/showQuestion/' + ${chapter.chapterId}}">Show List Question</a></td>
 
     </tr>
     </tbody>

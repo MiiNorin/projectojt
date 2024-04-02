@@ -1,6 +1,7 @@
 package demo.controller;
 
 
+import demo.persistence.entity.Questions;
 import demo.persistence.entity.SubjectsEntity;
 import demo.persistence.entity.TopicsEntity;
 import demo.repository.SubjectRepository;
@@ -61,4 +62,27 @@ public class SubjectController {
         return "redirect:/subject/listSubjects";
     }
 
+//    @GetMapping("/test/{chapterId}/{totalQ}")
+//    public String showTestByChapter(@PathVariable Integer chapterId, @PathVariable Integer totalQ, Model model) {
+//        List<Questions> selectedQuestion = subjectService.findRandQuestionByChapterId(chapterId, totalQ);
+//        model.addAttribute("question", selectedQuestion);
+//        return "test";
+//    }
+
+//    @GetMapping("/test/{chapterId}/{totalQ}")
+//    public String showTestByChapter(@PathVariable Integer chapterId, @PathVariable Integer totalQ, Model model) {
+//        List<Questions> selectedQuestion = subjectService.findRandQuestionByChapterId(chapterId, totalQ);
+//
+//        // In ra thông tin của các câu hỏi đã được chọn
+//        for (Questions question : selectedQuestion) {
+//            System.out.println("Question ID: " + question.getChapterId());
+//
+//            // Tiếp tục in ra các trường thông tin khác tùy thuộc vào đối tượng Questions
+//
+//            System.out.println(); // In ra một dòng trống để phân biệt giữa các câu hỏi
+//        }
+//
+//        model.addAttribute("question", selectedQuestion);
+//        return "test1";
+//    }
 }

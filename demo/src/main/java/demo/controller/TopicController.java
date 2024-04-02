@@ -4,6 +4,7 @@ import demo.persistence.entity.ChaptersEntity;
 import demo.persistence.entity.Questions;
 import demo.persistence.entity.TopicsEntity;
 import demo.repository.ChapterRepository;
+import demo.repository.QuestionRepository;
 import demo.repository.TopicRepository;
 import demo.service.ChapterService;
 import demo.service.TopicService;
@@ -18,6 +19,8 @@ import java.util.Optional;
 @Controller
 public class TopicController {
 
+    @Autowired
+    private QuestionRepository questionRepository;
     @Autowired
     private TopicRepository topicRepository;
     @Autowired
@@ -43,6 +46,12 @@ public class TopicController {
         List<TopicsEntity> topics = topicRepository.findTopicsEntitiesByChapterChapterId(chapterId);
         model.addAttribute("topics", topics);
         return "showListTopic";
+    }
+    @GetMapping("/test/{chapterId}")
+    public String showQuestionByChapterId(@PathVariable("chapterId") Integer chapterId, Model model) {
+        List<Questions> questions = questionRepository.findQuestionsByChaptersChapterId(chapterId);
+        model.addAttribute("questions", questions);
+        return "test";
     }
     @PostMapping("/addTopic")
     public String addTopicForChapter(@RequestParam("chapterId") int chapterId, @RequestParam String topicName,
@@ -91,10 +100,4 @@ public class TopicController {
     }
 
 
-    @GetMapping("test/{topicId}")
-    public String getTestForTopic(@PathVariable Integer topicId, Model model) {
-        List<Questions> selectedQuestions = topicService.getRandomQuestionsByTopicId(topicId);
-        model.addAttribute("questions", selectedQuestions);
-        return "test";
-    }
 }

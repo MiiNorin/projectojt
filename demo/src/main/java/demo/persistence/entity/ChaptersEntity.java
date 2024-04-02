@@ -24,4 +24,9 @@ public class ChaptersEntity {
     private String chapterName;
     @OneToMany(mappedBy = "chapter",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<TopicsEntity> topicsEntityList;
+    @OneToMany(mappedBy = "chapters",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Questions> questions;
+    @Basic
+    @Column(name = "total_question")
+    private Integer totalQuestion;
 }

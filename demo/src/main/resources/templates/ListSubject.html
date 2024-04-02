@@ -30,6 +30,7 @@
         <th>Create Date</th>
         <th>Slot</th>
         <th>Action</th>
+
     </tr>
     <!-- Sử dụng Thymeleaf để lặp qua danh sách môn học -->
     <tr th:each="subject : ${subjects}">
@@ -49,6 +50,7 @@
 
             <!--            <a th:href="@{'/questions/deleteQuestion?id=' + ${question.questionId}}" onclick="return confirm('Are you sure you want to delete this question?')" class="btn btn-danger">Delete</a>-->
         </td>
+
     </tr>
 </table>
 

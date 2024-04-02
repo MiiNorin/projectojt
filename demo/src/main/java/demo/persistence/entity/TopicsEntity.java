@@ -28,6 +28,7 @@ public class TopicsEntity {
     @Column(name = "topic_id")
     private int topicId;
 
+
     @Basic
     @Column(name = "topic_name")
     private String topicName;

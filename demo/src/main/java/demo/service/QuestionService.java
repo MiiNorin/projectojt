@@ -31,9 +31,10 @@ public class QuestionService{
     }
 
 
-    public Page<Questions> findProductsWithPaginationSortedByDate(int page, int size) {
+
+    public Page<Questions> findProductsWithPaginationSortedByDate(int page, int size, int chapterId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
-        return questionRepository.findAll(pageable);
+        return questionRepository.findByChaptersChapterId(chapterId, pageable);
     }
 
 

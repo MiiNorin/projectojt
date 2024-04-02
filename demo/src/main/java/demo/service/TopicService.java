@@ -60,15 +60,16 @@ public class TopicService {
     @Autowired
     private QuestionRepository questionRepository;
 
-    public List<Questions> getQuestionsByTopicId(Integer topicId) {
-        return questionRepository.findByTopicsEntity_TopicId(topicId);
-    }
+
 
     public List<Questions> selectRandomQuestions() {
         return questionRepository.selectRandomQuestions();
     }
 
-    public List<Questions> getRandomQuestionsByTopicId(Integer topicId) {
-        return questionRepository.findRandomQuestionsByTopicId(topicId);
+    public List<Questions> findRandomQuestionsByTopicId(Integer topicId, Integer totalQuestion) {
+        return questionRepository.findRandomQuestionsByTopicId(topicId, totalQuestion);
     }
+//    public List<Questions> getQuestionsByTopicId(Integer topicId) {
+//        return questionRepository.findByTopicsEntity_TopicId(topicId);
+//    }
 }
