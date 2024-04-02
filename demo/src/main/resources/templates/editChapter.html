@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Question</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto rounded border p-4 m-4">
+            <h2 class="text-center mb-5">Edit Question</h2>
+            <form action="/chapters/editChapter" method="post">
+                <input type="hidden" id="chapterId" name="chapterId" th:value="${chapter.chapterId}"/>
+                <input type="hidden" name="subjectId" th:value="${subjectId}"/>
+<!--                <div>-->
+<!--                    <label>Tên Chương:</label>-->
+<!--                    <input type="text" th:field="*{chapterName}" />-->
+<!--                    <input type="number" th:field="*{totalQuestion}"/>-->
+<!--                </div>-->
+                <label>Tên chương</label>
+                <div>
+                    <input class="form-control" type="text" id="chapterName" name="chapterName" th:value="${chapter.chapterName}" required />
+                </div>
+                <label>Tổng câu hỏi</label>
+                <div>
+                    <input class="form-control" type="number" id="totalQuestion" name="totalQuestion" th:value="${chapter.totalQuestion}" required />
+                </div>
+                <button type="submit">Lưu</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    document.querySelector('form').addEventListener('submit', function(event) {
+        var hardRadio = document.getElementById('hardRadio');
+        var easyRadio = document.getElementById('easyRadio');
+        var statusError = document.getElementById('statusError');
+
+        if (!hardRadio.checked && !easyRadio.checked) {
+            event.preventDefault();
+            statusError.style.display = 'block';
+        } else {
+            statusError.style.display = 'none';
+        }
+    });
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+</body>
+</html>

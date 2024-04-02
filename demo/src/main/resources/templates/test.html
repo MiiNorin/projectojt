@@ -16,6 +16,8 @@
         <!-- Loop through each question and display -->
         <div th:each="question : ${questions}">
             <h2 th:text="${question.questionContext}"></h2>
+
+            <img th:if="${question.image != null}" th:src="@{'/public/images/' + ${question.image}}" onerror='this.style.display="none"' style="max-width: 100px; max-height: 100px;">
             <ul>
                 <li><input type="radio" th:name="'answerId' + ${question.questionId}" value="1" /> <span th:text="${question.optionA}"></span></li>
                 <li><input type="radio" th:name="'answerId' + ${question.questionId}" value="2" /> <span th:text="${question.optionB}"></span></li>

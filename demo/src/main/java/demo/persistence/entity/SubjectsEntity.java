@@ -35,6 +35,6 @@ public class SubjectsEntity {
     private Integer slot;
     @OneToMany(mappedBy = "subjects",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ChaptersEntity> chaptersEntityList;
-
-
+    @OneToMany(mappedBy = "subject",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Questions> questions;
 }

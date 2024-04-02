@@ -1,5 +1,6 @@
 package demo.persistence.entity;
 
+import demo.repository.SubjectRepository;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,10 +31,6 @@ public class Questions {
     @Basic
     @Column (name="topic_id")
     private  Integer topicId;
-
-    @Basic
-    @Column(name = "subject_id")
-    private Integer subjectId;
 
     @Basic
     @Column(name = "account_id")
@@ -79,7 +76,9 @@ public class Questions {
     @Basic
     @Column(name = "create_date")
     private LocalDateTime createDate;
-
+    @ManyToOne
+    @JoinColumn(name="subject_id", nullable = false)
+    private SubjectsEntity subject;
     @ManyToOne
     @JoinColumn(name="chapter_id", nullable = false)
     private ChaptersEntity chapters;

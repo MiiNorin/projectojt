@@ -15,6 +15,7 @@ public interface QuestionRepository extends JpaRepository<Questions, Integer> {
     List<Questions> findByCreateDateBetween(LocalDateTime startOfMonth, LocalDateTime endOfMonth);
 
 
+
     List<Questions> findQuestionsByChaptersChapterId(Integer chapterId);
     List<Questions> findAllByStatus(String status);
 //    List<Questions> findByTopicsEntity_TopicId(Integer topicId);
@@ -29,4 +30,5 @@ public interface QuestionRepository extends JpaRepository<Questions, Integer> {
     List<Questions> findRandomQuestionsByChapterId(Integer topicId, Integer topN);
 
     Page<Questions> findByChaptersChapterId(Integer chapterId, Pageable pageable);
+    Page<Questions> findBySubjectSubjectId(Integer subjectId, Pageable pageable);
 }

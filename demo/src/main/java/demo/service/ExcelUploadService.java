@@ -70,7 +70,9 @@ public class ExcelUploadService {
                     cellIndex++;
                 }
                 questions.setCreateDate(currentDate);
-                questionsList.add(questions);
+                if((questions.getQuestionId() != 0) && (questions.getQuestionContext() != "")) {
+                    questionsList.add(questions);
+                }
             }
             }
         catch(IOException exception){

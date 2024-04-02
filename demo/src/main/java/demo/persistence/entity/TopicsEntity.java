@@ -35,7 +35,7 @@ public class TopicsEntity {
 
     @Basic
     @Column(name = "Duration")
-    private String duration;
+    private int duration;
 
     @Basic
     @Column(name = "total_question")

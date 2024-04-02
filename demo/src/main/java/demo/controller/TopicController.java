@@ -55,20 +55,19 @@ public class TopicController {
     }
     @PostMapping("/addTopic")
     public String addTopicForChapter(@RequestParam("chapterId") int chapterId, @RequestParam String topicName,
-                                     @RequestParam String duration,
+                                     @RequestParam int duration,
                                      @RequestParam int totalQuestion,
-                                     @RequestParam int topicType,
                                      @RequestParam String status) {
         TopicsEntity topicsEntity = new TopicsEntity();
         topicsEntity.setTopicName(topicName);
         topicsEntity.setDuration(duration);
         topicsEntity.setTotalQuestion(totalQuestion);
-        topicsEntity.setTopicType(topicType);
         topicsEntity.setStatus(status);
         topicsEntity.setChapter(chapterRepository.findById(chapterId).get());
         topicRepository.save(topicsEntity);
         return "addChapterSuccess";
     }
+
 
     @GetMapping("/showListToAdd")
     public String getTopicsToAdd(Model model) {

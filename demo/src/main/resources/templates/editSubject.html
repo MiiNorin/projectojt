@@ -5,29 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Subject</title>
 </head>
+<style>
+    .image-container {
+        position: relative;
+        display: inline-block;
+    }
+    .remove-button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background-color: red;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+</style>
 <body>
 <h2>Edit Subject</h2>
 
 <!-- Form for editing a subject -->
-<form th:action="@{'/editSubject/' + ${subject.subjectId}}" method="post">
-    <input type="hidden" th:field="*{subject.subjectId}" />
+
+<!--<form action="/subject/editSubject" method="post" enctype="multipart/form-data">-->
+<!--    <input type="hidden" id="subjectId" name="subjectId" th:value="${subject.subjectId}"/>-->
+
+<!--    <label for="subjectName">Subject Name: </label>-->
+<!--    <input type="text" id="subjectName" name="subjectName" th:value="${subject.subjectName}" required/><br/>-->
+
+<!--    <label for="imgLink">Image Link: </label>-->
+<!--    <input type="text" id="imgLink" name="imgLink" th:value="${subject.imgLink}" required/><br/>-->
+
+<!--    <label for="slot">Slot: </label>-->
+<!--    <input type="number" id="slot" name="slot" th:value="${subject.slot}" required/><br/>-->
+<!--    <button type="submit">Lưu</button>-->
+<!--</form>-->
+<form action="/subject/editSubject" method="post" enctype="multipart/form-data">
+    <input type="hidden" id="subjectId" name="subjectId" th:value="${subject.subjectId}"/>
 
     <label for="subjectName">Subject Name: </label>
-    <input type="text" id="subjectName" name="subjectName" th:field="*{subject.subjectName}" required/><br/>
+    <input type="text" id="subjectName" name="subjectName" th:value="${subject.subjectName}" required/><br/>
 
-    <label for="imgLink">Image Link: </label>
-    <input type="text" id="imgLink" name="imgLink" th:field="*{subject.imgLink}" required/><br/>
+    <!-- Display current image -->
+    <div class="image-container">
+        <img th:src="@{'/public/' + ${subject.imgLink}}" alt="Current Image" style="max-width: 300px; max-height: 300px;">
+        <button type="button" class="remove-button" onclick="removeImage()">X</button>
+    </div>
+    <br/>
 
-    <label for="createDate">Create Date: </label>
-    <input type="text" id="createDate" name="createDate" th:field="*{subject.createDate}" required/><br/>
+    <label>Browse Image</label>
+    <div>
+        <input type="file" class="form-control-file" name="newImage" id="newImage" accept="image/*">
+    </div>
 
     <label for="slot">Slot: </label>
-    <input type="number" id="slot" name="slot" th:field="*{subject.slot}" required/><br/>
-
-    <button type="submit">Save Changes</button>
+    <input type="number" id="slot" name="slot" th:value="${subject.slot}" required/><br/>
+    <button type="submit">Lưu</button>
 </form>
-
 <!-- Link back to the subject list -->
 <a th:href="@{/listSubjects}">Back to Subject List</a>
+<script>
+    function removeImage() {
+        var imageContainer = document.querySelector('.image-container');
+        imageContainer.innerHTML = '';
+    }
+</script>
+
 </body>
 </html>

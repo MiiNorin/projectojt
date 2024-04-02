@@ -1,23 +1,28 @@
 package demo.controller;
+
 import demo.persistence.dto.QuestionDto;
 import demo.persistence.entity.Questions;
 import demo.repository.ChapterRepository;
 import demo.repository.QuestionRepository;
+import demo.repository.SubjectRepository;
 import demo.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.Valid;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/questions")
@@ -32,32 +37,41 @@ public class QuestionController {
     @Autowired
     private ChapterRepository chapterRepository;
 
+    @Autowired
+    private SubjectRepository subjectRepository;
     @GetMapping("/showQuestion/{chapterId}")
-    public String getListQuestion(Model model, @RequestParam(defaultValue = "0") int page, @PathVariable("chapterId") String chapterIdStr) {
-        int chapterId;
-        try {
-            chapterId = Integer.parseInt(chapterIdStr);
-        } catch (NumberFormatException e) {
-            return "error";
-        }
+    public String getListQuestion(Model model, @RequestParam(defaultValue = "0") int page, @PathVariable("chapterId") int chapterId) {
         int pageSize = 5;
         Page<Questions> questionPage = questionService.findProductsWithPaginationSortedByDate(page, pageSize, chapterId);
         model.addAttribute("questions", questionPage.getContent());
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", questionPage.getTotalPages()); // Số trang bắt đầu từ 0
-        return "question";
+        model.addAttribute("totalPages", questionPage.getTotalPages());
+        return "listQuestionByChapter";
     }
 
+    @GetMapping("subject/{subjectId}")
+    public String getListQuestionBySubject(Model model, @RequestParam(defaultValue = "0") int page, @PathVariable("subjectId") int subjectId){
+        int pageSize = 5;
+        Page<Questions> questionPage = questionService.findQuestionsWithPaginationSortByDate(page, pageSize, subjectId);
+        model.addAttribute("questions", questionPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", questionPage.getTotalPages());
+        model.addAttribute("subjectId", subjectId);
+        return "listQuestionBySubject";
+    }
 
-    @GetMapping("/createQuestionList/{chapterId}")
-    public String showCreateQuestionPage(Model model, @PathVariable("chapterId") int chapterId) {
+    @GetMapping("/createQuestionList/{subjectId}/{chapterId}")
+    public String showCreateQuestionPage(Model model, @PathVariable("subjectId") int subjectId, @PathVariable("chapterId") int chapterId) {
         model.addAttribute("questionDto", new QuestionDto());
         model.addAttribute("chapterId", chapterId);
+        model.addAttribute("subjectId", subjectId);
         return "createQuestion";
     }
-
     @PostMapping("/createQuestionList")
-    public String createQuestion(@Valid @ModelAttribute QuestionDto questionDto, @RequestParam("chapterId") int chapterId, @RequestParam("status") String status) throws IOException {
+    public String createQuestion(@Valid @ModelAttribute QuestionDto questionDto,
+                                 @RequestParam("chapterId") Integer chapterId,
+                                 @RequestParam("subjectId") Integer subjectId,
+                                 @RequestParam("status") String status) throws IOException {
 
         MultipartFile image = questionDto.getImage();
         String storageFile = "";
@@ -76,7 +90,6 @@ public class QuestionController {
                 e.printStackTrace();
             }
         }
-
         Questions questions = new Questions();
         questions.setQuestionContext(questionDto.getQuestionContext());
         questions.setOptionA(questionDto.getOptionA());
@@ -88,26 +101,78 @@ public class QuestionController {
         questions.setStatus(status);
         questions.setCreateDate(LocalDateTime.now());
         questions.setChapters(chapterRepository.findById(chapterId).orElse(null));
+        questions.setSubject(subjectRepository.findById(subjectId).orElse(null));
         questionRepository.save(questions);
 
         return "redirect:/questions/showQuestion/" + chapterId;
     }
 
-    @GetMapping("/deleteQuestion")
-    public String deleteQuestion(@RequestParam("id") int id, @RequestParam("chapterId") int chapterId) {
+
+    @GetMapping("/deleteQuestionInChapter")
+    public String deleteQuestionInChapter(@RequestParam("id") int id, @RequestParam("chapterId") int chapterId) {
         questionService.deleteQuestionById(id);
         return "redirect:/questions/showQuestion/" + chapterId;
+    }
+    @GetMapping("/deleteQuestionInSubject")
+    public String deleteQuestionInSubject(@RequestParam("id") int id, @RequestParam("subjectId") int subjectId) {
+        questionService.deleteQuestionById(id);
+        return "redirect:/questions/subject/" + subjectId;
     }
 
     @GetMapping("/searchByStatus")
     public String searchByStatus(Model model, @RequestParam("status") String status) {
         model.addAttribute("questions", questionRepository.findAllByStatus(status));
-        return "question";
+        return "listQuestionByChapter";
     }
 
-    @PostMapping("/import")
-    public String uploadQuestionData(@RequestParam("file") MultipartFile file) {
-        questionService.saveQuestionToDatabase(file);
-        return "redirect:/questions/showQuestion/1";
+
+    @PostMapping("/import/{subjectId}/{chapterId}")
+    public String uploadQuestionData(@PathVariable("subjectId") int subjectId, @PathVariable("chapterId") int chapterId, @RequestParam("file") MultipartFile file) {
+        questionService.saveQuestionToDatabase(file, subjectId, chapterId);
+        return "redirect:/questions/showQuestion/" + chapterId;
     }
+
+    @GetMapping("/editQuestion")
+    public String showEditQuestionForm(Model model, @RequestParam("id") int questionId, @RequestParam("chapterId") int chapterId) {
+        try {
+            Questions question = questionRepository.findById(questionId).orElse(null);
+            if (question != null) {
+                model.addAttribute("question", question);
+                model.addAttribute("questionId", questionId);
+                model.addAttribute("chapterId", chapterId);
+                return "editQuestion";
+            } else {
+                return "redirect:/questions/showQuestion/" + chapterId;
+            }
+        } catch (Exception ex) {
+            // Xử lý ngoại lệ
+            return "redirect:/questions/showQuestion/" + chapterId;
+        }
+    }
+
+    @PostMapping("/editQuestion")
+    public String editQuestion(@RequestParam("id") int questionId,
+                               @RequestParam("chapterId") int chapterId,
+                               @ModelAttribute QuestionDto questionDto) {
+        try {
+            Questions question = questionRepository.findById(questionId).orElse(null);
+            if (question != null) {
+                // Cập nhật thông tin câu hỏi
+                question.setQuestionContext(questionDto.getQuestionContext());
+                question.setOptionA(questionDto.getOptionA());
+                question.setOptionB(questionDto.getOptionB());
+                question.setOptionC(questionDto.getOptionC());
+                question.setOptionD(questionDto.getOptionD());
+                question.setSolution(questionDto.getSolution());
+                question.setStatus(questionDto.getStatus());
+                questionRepository.save(question);
+            }
+            return "redirect:/questions/showQuestion/" + chapterId;
+        } catch (Exception ex) {
+            // Xử lý ngoại lệ
+            return "redirect:/questions/showQuestion/" + chapterId;
+        }
+    }
+
+
 }

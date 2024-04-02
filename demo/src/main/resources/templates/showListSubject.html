@@ -6,13 +6,16 @@
 <h2>Subject List</h2>
 
 <!-- Form để thêm mới môn học -->
-<form action="/subject/addSubject" method="post">
+<form action="/subject/addSubject" method="post" enctype="multipart/form-data">
     <label for="subjectName">Subject Name:</label>
     <input type="text" id="subjectName" name="subjectName" required>
 
-    <label for="imgLink">Image Link:</label>
-    <input type="text" id="imgLink" name="imgLink" required>
-
+    <div class="form-group">
+        <label for="imgLink">Browse Image</label>
+        <div>
+            <input type="file" id="imgLink" class="form-control-file" name="imageFile">
+        </div>
+    </div>
 
     <label for="slot">Slot:</label>
     <input type="number" id="slot" name="slot" required>
@@ -30,6 +33,7 @@
         <th>Create Date</th>
         <th>Slot</th>
         <th>Action</th>
+        <th>Show Question</th>
 
     </tr>
     <!-- Sử dụng Thymeleaf để lặp qua danh sách môn học -->
@@ -40,16 +44,13 @@
         <td th:text="${subject.createDate}"></td>
         <td th:text="${subject.slot}"></td>
         <td>
-            <!-- Các nút thực hiện CRUD (Update và Delete) -->
-
-            <a th:href="'/subject/editSubject/' + ${subject.subjectId}" >Edit</a>
-            <a th:href="@{'/subject/deleteSubject?id=' + ${subject.subjectId}}">Delete</a>
+            <a th:href="@{'/subject/editSubject?subjectId=' + ${subject.subjectId}}">Sửa subject</a>
+<!--            <a th:href="@{'/subject/editSubject?subjectId=' + '&subjectId=' + ${subjectId}}">Sửa</a>-->
+            <a th:href="@{'/subject/deleteSubject?id=' + ${subject.subjectId}}" onclick="return confirm('Are you sure you want to delete this question?')">Delete</a>
             <a th:href="@{/chapters/addChapter/{subjectId}(subjectId = ${subject.subjectId})}">Thêm chapter</a>
-            <a th:href="@{'/chapters/showListChapter/' + ${subject.subjectId}}">Hiển thị chapter</a>
-
-
-            <!--            <a th:href="@{'/questions/deleteQuestion?id=' + ${question.questionId}}" onclick="return confirm('Are you sure you want to delete this question?')" class="btn btn-danger">Delete</a>-->
+            <a th:href="@{'/chapters/showListChapter?subjectId=' + ${subject.subjectId}}">Hiển thị chapter</a>
         </td>
+        <td><a th:href="@{'/questions/subject/' + ${subject.subjectId}}">Show list thuộc subject</a></td>
 
     </tr>
 </table>
