@@ -41,8 +41,8 @@
         <td th:text="${topic.topicName}"></td>
         <td>
             <a th:href="@{/questions/createQuestionList/{subjectId}/{chapterId}/{topicId}(subjectId=${subjectId}, chapterId=${chapterId}, topicId=${topic.topicId})}">Tạo question</a>
-<!--            <a th:href="@{'/chapters/editChapter?chapterId=' + ${chapter.chapterId} + '&subjectId=' + ${subjectId}}">Sửa Test</a>-->
-<!--            <a th:href="@{'/chapters/deleteChapter/' + ${chapter.chapterId} + '/' + ${subjectId}}" onclick="return confirm('Are you sure you want to delete this question?')">Xóa Test</a>-->
+            <a th:href="@{'/listTopics/editTopic?subjectId=' + ${subjectId} + '&chapterId=' + ${chapterId} + '&topicId=' + ${topic.topicId}}">Sửa Test</a>
+            <a th:href="@{'/listTopics/deleteTopic?id=' + ${topicId}}" onclick="return confirm('Are you sure you want to delete this question?')">Xóa Test</a>
 
         </td>
         <td><a th:href="@{'/test/' + ${topic.topicId} + '/' + ${topic.totalQuestion}}" th:text="${topic.topicName}"></a></td>

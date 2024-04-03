@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 import java.util.Optional;
+
 @RequestMapping("/listTopics")
 @Controller
 public class TopicController {
@@ -29,7 +31,8 @@ public class TopicController {
     private ChapterRepository chapterRepository;
     @Autowired
     private ChapterService chapterService;
-//    @GetMapping("/showList")
+
+    //    @GetMapping("/showList")
 //    public String getTopics(Model model) {
 //        List<TopicsEntity> topics = topicService.getAllTopics();
 //        model.addAttribute("topics", topics);
@@ -38,7 +41,7 @@ public class TopicController {
     @GetMapping("/addTopic/{chapterId}")
     public String showAddTopicForm(Model model, @PathVariable("chapterId") int chapterId,
                                    @RequestParam(value = "errorMessage", required = false) String errorMessage) {
-        model.addAttribute("chapterId",chapterId);
+        model.addAttribute("chapterId", chapterId);
         model.addAttribute("errorMessage", errorMessage);
         return "createListTopic";
     }
@@ -51,12 +54,14 @@ public class TopicController {
         model.addAttribute("topics", topics);
         return "showListTopic";
     }
+
     @GetMapping("/test/{chapterId}")
     public String showQuestionByChapterId(@PathVariable("chapterId") Integer chapterId, Model model) {
         List<Questions> questions = questionRepository.findQuestionsByChaptersChapterId(chapterId);
         model.addAttribute("questions", questions);
         return "test";
     }
+
     @PostMapping("/addTopic")
     public String addTopicForChapter(@RequestParam("chapterId") int chapterId, @RequestParam String topicName,
                                      @RequestParam int duration,
@@ -64,24 +69,22 @@ public class TopicController {
                                      @RequestParam String status,
                                      Model model) {
         ChaptersEntity chapter = chapterRepository.findById(chapterId).orElse(null);
-        if ((chapter != null) && (totalQuestion <= chapter.getTotalQuestion())) {
+        if ((chapter != null) && (totalQuestion > chapter.getTotalQuestion())) {
+            model.addAttribute("error", "Total question of the topic should not exceed the total question of the chapter.");
+            model.addAttribute("chapterId", chapterId);
+            return "createListTopic";
+        } else {
             TopicsEntity topicsEntity = new TopicsEntity();
             topicsEntity.setTopicName(topicName);
             topicsEntity.setDuration(duration);
             topicsEntity.setTotalQuestion(totalQuestion);
             topicsEntity.setStatus(status);
             topicsEntity.setChapter(chapter);
+
             topicRepository.save(topicsEntity);
             return "addChapterSuccess";
-        } else {
-            String errorMessage = "Total question cannot exceed the total question of the chapter.";
-            System.out.println(errorMessage);
-            model.addAttribute("errorMessage", errorMessage);
-            model.addAttribute("chapterId", chapterId);
-            return "redirect:addTopic/" + chapterId;
         }
     }
-
 
 
     @GetMapping("/showListToAdd")
@@ -93,19 +96,49 @@ public class TopicController {
 
 
 
-    @GetMapping("/editTopic/{id}")
-    public String editTopicForm(@PathVariable int id, Model model) {
-        Optional<TopicsEntity> topic = topicService.getTopicById(id);
-        topic.ifPresent(value -> model.addAttribute("topic", value));
-        return "editTopic";
+    @GetMapping("/editTopic")
+    public String showEditTopicForm(Model model, @RequestParam("subjectId") int subjectId, @RequestParam("chapterId") int chapterId, @RequestParam("topicId") int topicId) {
+        try {
+            TopicsEntity topic = topicRepository.findById(topicId).orElse(null);
+            if (topic != null) {
+                model.addAttribute("topic", topic);
+                model.addAttribute("subjectId", subjectId);
+                model.addAttribute("chapterId", chapterId);
+                return "editTopic";
+            } else {
+                return "redirect:/listTopics/showListTopic/" + subjectId + "/" + chapterId;
+            }
+        } catch (Exception ex) {
+            return "error";
+        }
     }
 
-    @PostMapping("/editTopic/{id}")
-    public String editTopic(@PathVariable int id, @ModelAttribute TopicsEntity updatedTopic) {
-        updatedTopic.setTopicId(id);
-        topicService.updateTopic(updatedTopic);
-        return "redirect:/listTopics";
+    @PostMapping("/editTopic")
+    public String editTopic(@RequestParam("chapterId") int chapterId,
+                            @RequestParam("subjectId") int subjectId,
+                            @RequestParam("topicId") int topicId,
+                            @ModelAttribute TopicsEntity topic) {
+        try {
+            TopicsEntity topics = topicRepository.findById(topicId).orElse(null);
+            if (topics != null) {
+                topics.setTopicName(topic.getTopicName());
+                topics.setDuration(topic.getDuration());
+                topics.setTotalQuestion(topic.getTotalQuestion());
+                topics.setStatus(topic.getStatus());
+                topicRepository.save(topics);
+            }
+            return "redirect:/listTopics/showListTopic/" + subjectId + "/" + chapterId;
+        } catch (Exception ex) {
+            return "redirect:/chapters/showListChapter/" + subjectId;
+        }
     }
+
+//    @PostMapping("/editTopic/{id}")
+//    public String editTopic(@PathVariable int id, @ModelAttribute TopicsEntity updatedTopic) {
+//        updatedTopic.setTopicId(id);
+//        topicService.updateTopic(updatedTopic);
+//        return "redirect:/listTopics";
+//    }
 
     @GetMapping("/deleteTopic/{id}")
     public String deleteTopic(@PathVariable int id) {

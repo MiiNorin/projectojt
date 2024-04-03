@@ -22,6 +22,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
 @RequestMapping("/subject")
 @Controller
 public class SubjectController {
@@ -38,7 +39,7 @@ public class SubjectController {
         return "showListSubject";
     }
 
-//    @PostMapping("/addSubject")
+    //    @PostMapping("/addSubject")
 //    public String addSubject(@ModelAttribute SubjectsEntity newSubject) {
 //        SubjectsEntity subjectsEntity = new SubjectsEntity();
 //        subjectsEntity.setSubjectName(newSubject.getSubjectName());
@@ -52,33 +53,7 @@ public class SubjectController {
     @PostMapping("/addSubject")
     public String addSubject(@ModelAttribute SubjectsEntity newSubject,
                              @RequestParam("imageFile") MultipartFile imageFile) {
-//        try {
-//            // Lưu file ảnh vào thư mục trên máy chủ
-//            String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
-//            String uploadDir = "public/subject images/";
-//            Path uploadPath = Paths.get(uploadDir);
-//            if (!Files.exists(uploadPath)) {
-//                Files.createDirectories(uploadPath);
-//            }
-//            try (InputStream inputStream = imageFile.getInputStream()) {
-//                Path filePath = uploadPath.resolve(fileName);
-//                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-//                newSubject.setImgLink(filePath.toString()); // Lưu đường dẫn của file vào cơ sở dữ liệu
-//            } catch (IOException e) {
-//                throw new RuntimeException("Could not save the file: " + e.getMessage());
-//            }
-//            SubjectsEntity subjectsEntity = new SubjectsEntity();
-//            subjectsEntity.setSubjectName(newSubject.getSubjectName());
-//            subjectsEntity.setImgLink(newSubject.getImgLink());
-//            LocalDateTime createDate = LocalDateTime.now();
-//            subjectsEntity.setCreateDate(createDate);
-//            subjectsEntity.setSlot(newSubject.getSlot());
-//            newSubject.setCreateDate(LocalDateTime.now());
-//            subjectRepository.save(newSubject);
-//            return "addSubjectSuccess";
-//        } catch (Exception ex) {
-//            return "error";
-//        }
+
         try {
             if (!imageFile.isEmpty()) {
                 String fileName = StringUtils.cleanPath(imageFile.getOriginalFilename());
@@ -109,25 +84,13 @@ public class SubjectController {
             return "error";
         }
     }
-//    @GetMapping("/subject/editSubject/{id}")
-//    public String editSubjectForm(@PathVariable int id, Model model) {
-//        Optional<SubjectsEntity> subject = subjectService.getSubjectById(id);
-//        subject.ifPresent(value -> model.addAttribute("subject", value));
-//        return "editSubject";
-//    }
-//
-//    @PostMapping("/subject/editSubject/{id}")
-//    public String editSubject(@PathVariable int id, @ModelAttribute SubjectsEntity updatedSubject) {
-//        updatedSubject.setSubjectId(id);
-//        subjectService.updateSubject(updatedSubject);
-//        return "redirect:/listSubjects";
-//    }
 
     @GetMapping("/deleteSubject")
     public String deleteSubject(@RequestParam("id") int id) {
         subjectRepository.deleteById(id);
         return "redirect:/subject/listSubjects";
     }
+
     @GetMapping("/editSubject")
     public String showEditSubjectForm(@RequestParam("subjectId") int subjectId, Model model) {
         Optional<SubjectsEntity> subjectOptional = subjectService.getSubjectById(subjectId);
@@ -138,33 +101,35 @@ public class SubjectController {
             return "redirect:/subject/listSubjects";
         }
     }
+
     @PostMapping("/editSubject")
     public String editSubject(@RequestParam("subjectId") int subjectId,
                               @RequestParam(value = "newImage", required = false) MultipartFile newImage,
                               @ModelAttribute SubjectsEntity subject) {
         try {
-            // Kiểm tra xem môn học có tồn tại hay không
             Optional<SubjectsEntity> optionalExistingSubject = subjectService.getSubjectById(subjectId);
             if (!optionalExistingSubject.isPresent()) {
-                // Nếu môn học không tồn tại, xử lý trường hợp này một cách phù hợp
-                // Ví dụ: hiển thị thông báo lỗi hoặc chuyển hướng người dùng đến trang khác
                 return "redirect:/subject/listSubjects";
             }
 
             SubjectsEntity existingSubject = optionalExistingSubject.get();
-
-            // Xóa hình ảnh cũ nếu người dùng không tải lên hình ảnh mới
+//            if (questions.getImage() != null) {
+//                String imagePath = "public/images/" + questions.getImage();
+//                try {
+//                    Path path = Paths.get(imagePath);
+//                    Files.deleteIfExists(path);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
             if (newImage == null || newImage.isEmpty()) {
                 String oldImagePath = existingSubject.getImgLink();
                 if (oldImagePath != null && !oldImagePath.isEmpty()) {
                     try {
-                        Files.deleteIfExists(Paths.get(oldImagePath));
+                        Files.deleteIfExists(Paths.get("public" + oldImagePath));
                     } catch (IOException e) {
-                        // Xử lý ngoại lệ xóa hình ảnh cũ
-                        // Ví dụ: ghi log hoặc hiển thị thông báo lỗi cho người dùng
                         System.out.println("Error deleting old image: " + e.getMessage());
                     }
-                    // Đặt đường dẫn hình ảnh của môn học thành null sau khi xóa
                     existingSubject.setImgLink(null);
                 }
             } else {
@@ -187,8 +152,6 @@ public class SubjectController {
             // Cập nhật thông tin môn học
             existingSubject.setSubjectName(subject.getSubjectName());
             existingSubject.setSlot(subject.getSlot());
-
-            // Lưu thông tin môn học vào cơ sở dữ liệu
             subjectService.saveSubject(existingSubject);
 
             return "redirect:/subject/listSubjects";
@@ -199,7 +162,5 @@ public class SubjectController {
             return "error";
         }
     }
-
-
 
 }

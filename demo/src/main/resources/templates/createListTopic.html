@@ -20,8 +20,9 @@
 
     <label for="totalQuestion">Total Question:</label><br>
     <input type="number" id="totalQuestion" name="totalQuestion" th:value="${totalQuestion}" required><br>
-<!--    <input type="hidden" id="errorMessage" name="errorMessage" th:value="${errorMessage}"/>-->
-    <p style="color: red;" th:if="${errorMessage}" th:text="${errorMessage}"></p>
+    <div th:if="${error!=null}" class="error-message">
+        <p th:text="${error}"></p>
+    </div>
     <input type="submit" value="Create Topic">
 </form>
 

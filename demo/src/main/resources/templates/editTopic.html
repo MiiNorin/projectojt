@@ -8,14 +8,30 @@
 </head>
 <body>
 <h1>Edit Topic</h1>
+<form action="/listTopics/editTopic" method="post">
 
-<form action="#" th:action="@{'/editTopic/' + ${topic.topicId}}" th:object="${topic}" method="post">
-    <!-- Add form fields corresponding to your TopicsEntity properties -->
-    <label>Topic Name: <input type="text" th:field="*{topicName}" /></label><br/>
-    <label>Duration: <input type="text" th:field="*{duration}" /></label><br/>
-    <!-- Add other form fields as needed -->
+    <input type="hidden" id="topicId" name="topicId" th:value="${topic.topicId}"/>
+    <input type="hidden" name="subjectId" th:value="${subjectId}"/>
+    <input type="hidden" name="chapterId" th:value="${chapterId}"/>
+    <label>Tên topic:</label>
+    <div>
+        <input class="form-control" type="text" id="topicName" name="topicName" th:value="${topic.topicName}" required />
+    </div>
+    <label>Duration:</label>
+    <div>
+        <input class="form-control" type="number" id="duration" name="duration" th:value="${topic.duration}" required />
+    </div>
+    <label>Total:</label>
+    <div>
+        <input class="form-control" type="number" id="totalQuestion" name="totalQuestion" th:value="${topic.totalQuestion}" required />
+    </div>
+    <label>Status:</label>
+    <div>
+        <input class="form-control" type="text" id="status" name="status" th:value="${topic.status}" required />
+    </div>
     <input type="submit" value="Save Changes" />
 </form>
+
 <div class="container">
     <a href="/listTopics">Back to List</a>
 

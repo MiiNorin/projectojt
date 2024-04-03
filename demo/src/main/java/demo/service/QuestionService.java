@@ -48,7 +48,6 @@ public class QuestionService{
     public void deleteQuestionById(int id) {
         Questions questions = questionRepository.findById(id).orElse(null);
         if (questions != null) {
-
             if (questions.getImage() != null) {
                 String imagePath = "public/images/" + questions.getImage();
                 try {
@@ -58,7 +57,6 @@ public class QuestionService{
                     e.printStackTrace();
                 }
             }
-
             questionRepository.deleteById(id);
         }
     }
