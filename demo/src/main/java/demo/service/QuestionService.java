@@ -4,6 +4,7 @@ import demo.persistence.entity.Questions;
 import demo.repository.ChapterRepository;
 import demo.repository.QuestionRepository;
 import demo.repository.SubjectRepository;
+import demo.repository.TopicRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,8 @@ public class QuestionService{
     public List<Questions> getQuestion(){
         return questionRepository.findAll();
     }
-
+    @Autowired
+    private TopicRepository topicRepository;
     @Autowired
     private ChapterRepository chapterRepository;
 
@@ -74,13 +76,14 @@ public class QuestionService{
         return questionRepository.findByCreateDateBetween(startOfMonth, endOfMonth);
     }
 
-    public void saveQuestionToDatabase(MultipartFile file, int subjectId, int chapterId) {
+    public void saveQuestionToDatabase(MultipartFile file, int subjectId, int chapterId, int topicId) {
         if (ExcelUploadService.isValidExcelFile(file)) {
             try {
                 List<Questions> questionsList = ExcelUploadService.getQuestionDataFromExcel(file.getInputStream());
                 for (Questions question : questionsList) {
                     question.setChapters(chapterRepository.findById(chapterId).orElse(null));
                     question.setSubject(subjectRepository.findById(subjectId).orElse(null));
+                    question.setTopics(topicRepository.findById(topicId).orElse(null));
                 }
                 this.questionRepository.saveAll(questionsList);
             } catch (IOException e) {

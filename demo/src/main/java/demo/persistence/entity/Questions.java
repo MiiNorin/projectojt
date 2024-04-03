@@ -29,10 +29,6 @@ public class Questions {
     private int questionId;
 
     @Basic
-    @Column (name="topic_id")
-    private  Integer topicId;
-
-    @Basic
     @Column(name = "account_id")
     private Integer accountId;
 
@@ -82,6 +78,9 @@ public class Questions {
     @ManyToOne
     @JoinColumn(name="chapter_id", nullable = false)
     private ChaptersEntity chapters;
+    @ManyToOne
+    @JoinColumn(name="topic_id", nullable = false)
+    private TopicsEntity topics;
     public String getFormattedCreateDate() {
         if (createDate != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

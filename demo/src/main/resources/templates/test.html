@@ -13,7 +13,7 @@
 
 <form id="quizForm" action="/submitAnswers" method="post">
     <div id="questionContainer">
-        <!-- Loop through each question and display -->
+
         <div th:each="question : ${questions}">
             <h2 th:text="${question.questionContext}"></h2>
 

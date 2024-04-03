@@ -49,5 +49,12 @@ public class TestController {
         model.addAttribute("questions", selectedQuestions);
         return "test";
     }
-
+    @GetMapping("/{topicId}/{totalQuestion}")
+    public String getTestForSingleTopic(@PathVariable Integer topicId, @PathVariable Integer totalQuestion, Model model){
+        List<Questions> questions = topicService.findRandomQuestionsByTopicId(topicId, totalQuestion);
+        System.out.println(questions);
+        System.out.println(topicId + " "+ totalQuestion);
+        model.addAttribute("questions", questions);
+        return "test";
+    }
 }

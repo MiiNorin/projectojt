@@ -20,7 +20,7 @@
             <form action="/questions/createQuestionList" method="post" enctype="multipart/form-data">
                 <input type="hidden" id="chapterId" name="chapterId" th:value="${chapterId}"/>
                 <input type="hidden" id="subjectId" name="subjectId" th:value="${subjectId}"/>
-
+                <input type="hidden" id="topicId" name="topicId" th:value="${topicId}"/>
                 <div class="form-group">
                     <label>Question Context</label>
                     <div>
@@ -85,10 +85,11 @@
         </div>
         <div class="import-and-export">
             <!-- Sửa action của form này -->
-            <form th:action="@{/questions/import/{subjectId}/{chapterId}(subjectId=${subjectId}, chapterId=${chapterId})}" method="post" enctype="multipart/form-data">
+            <form th:action="@{/questions/import/{subjectId}/{chapterId}/{topicId}(subjectId=${subjectId}, chapterId=${chapterId}, topic=${topicId})}" method="post" enctype="multipart/form-data">
                 <input type="file" name="file"/>
                 <input type="hidden" name="chapterId" th:value="${chapterId}"/>
                 <input type="hidden" id="subjectId" name="subjectId" th:value="${subjectId}"/>
+                <input type="hidden" id="topicId" name="topicId" th:value="${topicId}"/>
                 <input type="submit" value="Import" />
             </form>
         </div>

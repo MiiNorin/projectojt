@@ -27,7 +27,8 @@ public class TopicsEntity {
     @Id
     @Column(name = "topic_id")
     private int topicId;
-
+    @OneToMany(mappedBy = "topics",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Questions> questions;
 
     @Basic
     @Column(name = "topic_name")

@@ -29,6 +29,8 @@ public interface QuestionRepository extends JpaRepository<Questions, Integer> {
     @Query(value = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY NEWID()) AS RowNum FROM QUESTIONS WHERE chapter_id = ?1) AS SubQuery WHERE RowNum <= ?2", nativeQuery = true)
     List<Questions> findRandomQuestionsByChapterId(Integer topicId, Integer topN);
 
+//    @Query(value="")
+//    List<Questions>
     Page<Questions> findByChaptersChapterId(Integer chapterId, Pageable pageable);
     Page<Questions> findBySubjectSubjectId(Integer subjectId, Pageable pageable);
 }

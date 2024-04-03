@@ -5,6 +5,7 @@ import demo.persistence.entity.Questions;
 import demo.repository.ChapterRepository;
 import demo.repository.QuestionRepository;
 import demo.repository.SubjectRepository;
+import demo.repository.TopicRepository;
 import demo.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,6 +40,9 @@ public class QuestionController {
 
     @Autowired
     private SubjectRepository subjectRepository;
+
+    @Autowired
+    private TopicRepository topicRepository;
     @GetMapping("/showQuestion/{chapterId}")
     public String getListQuestion(Model model, @RequestParam(defaultValue = "0") int page, @PathVariable("chapterId") int chapterId) {
         int pageSize = 5;
@@ -60,17 +64,19 @@ public class QuestionController {
         return "listQuestionBySubject";
     }
 
-    @GetMapping("/createQuestionList/{subjectId}/{chapterId}")
-    public String showCreateQuestionPage(Model model, @PathVariable("subjectId") int subjectId, @PathVariable("chapterId") int chapterId) {
+    @GetMapping("/createQuestionList/{subjectId}/{chapterId}/{topicId}")
+    public String showCreateQuestionPage(Model model, @PathVariable("subjectId") int subjectId, @PathVariable("chapterId") int chapterId, @PathVariable("topicId") int topicId) {
         model.addAttribute("questionDto", new QuestionDto());
         model.addAttribute("chapterId", chapterId);
         model.addAttribute("subjectId", subjectId);
+        model.addAttribute("topicId", topicId);
         return "createQuestion";
     }
     @PostMapping("/createQuestionList")
     public String createQuestion(@Valid @ModelAttribute QuestionDto questionDto,
                                  @RequestParam("chapterId") Integer chapterId,
                                  @RequestParam("subjectId") Integer subjectId,
+                                 @RequestParam("topicId") Integer topicId,
                                  @RequestParam("status") String status) throws IOException {
 
         MultipartFile image = questionDto.getImage();
@@ -102,12 +108,11 @@ public class QuestionController {
         questions.setCreateDate(LocalDateTime.now());
         questions.setChapters(chapterRepository.findById(chapterId).orElse(null));
         questions.setSubject(subjectRepository.findById(subjectId).orElse(null));
+        questions.setTopics(topicRepository.findById(topicId).orElse(null));
         questionRepository.save(questions);
 
         return "redirect:/questions/showQuestion/" + chapterId;
     }
-
-
     @GetMapping("/deleteQuestionInChapter")
     public String deleteQuestionInChapter(@RequestParam("id") int id, @RequestParam("chapterId") int chapterId) {
         questionService.deleteQuestionById(id);
@@ -126,9 +131,12 @@ public class QuestionController {
     }
 
 
-    @PostMapping("/import/{subjectId}/{chapterId}")
-    public String uploadQuestionData(@PathVariable("subjectId") int subjectId, @PathVariable("chapterId") int chapterId, @RequestParam("file") MultipartFile file) {
-        questionService.saveQuestionToDatabase(file, subjectId, chapterId);
+    @PostMapping("/import/{subjectId}/{chapterId}/{topicId}")
+    public String uploadQuestionData(@PathVariable("subjectId") int subjectId,
+                                     @PathVariable("chapterId") int chapterId,
+                                     @PathVariable("topicId") int topicId,
+                                     @RequestParam("file") MultipartFile file) {
+        questionService.saveQuestionToDatabase(file, subjectId, chapterId, topicId);
         return "redirect:/questions/showQuestion/" + chapterId;
     }
 
@@ -173,6 +181,5 @@ public class QuestionController {
             return "redirect:/questions/showQuestion/" + chapterId;
         }
     }
-
 
 }

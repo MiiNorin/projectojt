@@ -36,13 +36,17 @@ public class TopicController {
 //        return "shotListTopic";
 //    }
     @GetMapping("/addTopic/{chapterId}")
-    public String showAddTopicForm(Model model, @PathVariable("chapterId") int chapterId) {
+    public String showAddTopicForm(Model model, @PathVariable("chapterId") int chapterId,
+                                   @RequestParam(value = "errorMessage", required = false) String errorMessage) {
         model.addAttribute("chapterId",chapterId);
+        model.addAttribute("errorMessage", errorMessage);
         return "createListTopic";
     }
 
-    @GetMapping("/showListTopic/{chapterId}")
-    public String showTopicByChapterId(@PathVariable("chapterId") Integer chapterId, Model model) {
+    @GetMapping("/showListTopic/{subjectId}/{chapterId}")
+    public String showTopicByChapterId(@PathVariable("chapterId") Integer chapterId,
+                                       @PathVariable("subjectId") Integer subjectId,
+                                       Model model) {
         List<TopicsEntity> topics = topicRepository.findTopicsEntitiesByChapterChapterId(chapterId);
         model.addAttribute("topics", topics);
         return "showListTopic";
@@ -57,16 +61,27 @@ public class TopicController {
     public String addTopicForChapter(@RequestParam("chapterId") int chapterId, @RequestParam String topicName,
                                      @RequestParam int duration,
                                      @RequestParam int totalQuestion,
-                                     @RequestParam String status) {
-        TopicsEntity topicsEntity = new TopicsEntity();
-        topicsEntity.setTopicName(topicName);
-        topicsEntity.setDuration(duration);
-        topicsEntity.setTotalQuestion(totalQuestion);
-        topicsEntity.setStatus(status);
-        topicsEntity.setChapter(chapterRepository.findById(chapterId).get());
-        topicRepository.save(topicsEntity);
-        return "addChapterSuccess";
+                                     @RequestParam String status,
+                                     Model model) {
+        ChaptersEntity chapter = chapterRepository.findById(chapterId).orElse(null);
+        if ((chapter != null) && (totalQuestion <= chapter.getTotalQuestion())) {
+            TopicsEntity topicsEntity = new TopicsEntity();
+            topicsEntity.setTopicName(topicName);
+            topicsEntity.setDuration(duration);
+            topicsEntity.setTotalQuestion(totalQuestion);
+            topicsEntity.setStatus(status);
+            topicsEntity.setChapter(chapter);
+            topicRepository.save(topicsEntity);
+            return "addChapterSuccess";
+        } else {
+            String errorMessage = "Total question cannot exceed the total question of the chapter.";
+            System.out.println(errorMessage);
+            model.addAttribute("errorMessage", errorMessage);
+            model.addAttribute("chapterId", chapterId);
+            return "redirect:addTopic/" + chapterId;
+        }
     }
+
 
 
     @GetMapping("/showListToAdd")
