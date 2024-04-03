@@ -72,12 +72,24 @@ public class AccountService {
         if (users == null){
             throw new RuntimeException("User not found");
         } else if (otp.equals(session.getAttribute("otp"))) {
+//            System.out.println(users);
+            accountRepository.save(users);
+        }else {
+            throw new RuntimeException("Internal Server error");
+        }
+    }
+    public void verifyChangePass(String email, String otp, HttpSession session) {
+        Account users = accountRepository.findAccountByEmail(email);
+        if (users == null){
+            throw new RuntimeException("User not found");
+        } else if (otp.equals(session.getAttribute("otp"))) {
             System.out.println(users);
             accountRepository.save(users);
         }else {
             throw new RuntimeException("Internal Server error");
         }
     }
+
 
 
     private String generateOTP(){

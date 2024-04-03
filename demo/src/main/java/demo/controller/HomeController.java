@@ -2,7 +2,9 @@ package demo.controller;
 
 
 import demo.entity.Account;
+import demo.entity.Role;
 import demo.repository.AccountRepository;
+import demo.repository.RoleRepository;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 public class HomeController {
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private RoleRepository roleRepository;
     @GetMapping("/manageQuestion")
     public String moveToShowQuestion(){
         return "mainPage";
@@ -27,8 +31,10 @@ public class HomeController {
         if (userId != null) {
             // Nếu có user_id, lấy thông tin user từ cơ sở dữ liệu
             Account user = accountRepository.findById(userId).orElse(null);
+            Role role = roleRepository.getRoleByRoleId(user.getRoleId());
             if (user != null) {
                 model.addAttribute("user", user);
+                model.addAttribute("role", role);
             }
         }
         return "homePage";
@@ -40,24 +46,69 @@ public class HomeController {
         if (userId != null) {
             // Nếu có user_id, lấy thông tin user từ cơ sở dữ liệu
             Account user = accountRepository.findById(userId).orElse(null);
+            Role role = roleRepository.getRoleByRoleId(user.getRoleId());
             if (user != null) {
                 model.addAttribute("user", user);
+                model.addAttribute("role", role);
             }
         }
         return "headerUser";
     }
-
-//    @GetMapping("/homePage")
-//    public String moveToHomePage(){
-//        return "homePage";
-//    }
     @GetMapping("/About")
-    public String moveToAboutPage(){
+    public String moveToAboutPage(Model model, HttpSession session){
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userId != null) {
+            // Nếu có user_id, lấy thông tin user từ cơ sở dữ liệu
+            Account user = accountRepository.findById(userId).orElse(null);
+            Role role = roleRepository.getRoleByRoleId(user.getRoleId());
+            if (user != null) {
+                model.addAttribute("user", user);
+                model.addAttribute("role", role);
+            }
+        }
         return "about";
     }
+    @GetMapping("/Trainers")
+    String Trainers(Model model, HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userId != null) {
+            // Nếu có user_id, lấy thông tin user từ cơ sở dữ liệu
+            Account user = accountRepository.findById(userId).orElse(null);
+            Role role = roleRepository.getRoleByRoleId(user.getRoleId());
+            if (user != null) {
+                model.addAttribute("user", user);
+                model.addAttribute("role", role);
+            }
+        }
+        return "trainers";
+    }
     @GetMapping("/Contact")
-    public String moveToContactPage(){
+    public String moveToContactPage(Model model, HttpSession session){
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userId != null) {
+            // Nếu có user_id, lấy thông tin user từ cơ sở dữ liệu
+            Account user = accountRepository.findById(userId).orElse(null);
+            Role role = roleRepository.getRoleByRoleId(user.getRoleId());
+            if (user != null) {
+                model.addAttribute("user", user);
+                model.addAttribute("role", role);
+            }
+        }
         return "contact";
+    }
+    @GetMapping("/Profile")
+    public String moveToProfilePage(Model model, HttpSession session){
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userId != null) {
+            // Nếu có user_id, lấy thông tin user từ cơ sở dữ liệu
+            Account user = accountRepository.findById(userId).orElse(null);
+            Role role = roleRepository.getRoleByRoleId(user.getRoleId());
+            if (user != null) {
+                model.addAttribute("user", user);
+                model.addAttribute("role", role);
+            }
+        }
+        return "user-profile";
     }
 
 }

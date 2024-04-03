@@ -28,8 +28,5 @@ public class AccountController {
         return "userList";
 
     }
-    @GetMapping("/Trainers")
-    String Trainers() {
-        return "trainers";
-    }
+
 }

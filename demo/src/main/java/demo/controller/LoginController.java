@@ -38,12 +38,26 @@ public class LoginController {
 
         Optional<Account> user = accountRepository.findByEmail(username);
         if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
-            // auth successful, redirect to the product page
             return "redirect:/home/homePage";
         } else {
             // auth failed, set error message and return to login page
-            model.addAttribute("errorlogin", "zInvalid username or password");
+            model.addAttribute("errorlogin", "Invalid username or password");
             return "login";
+        }
+    }
+    @GetMapping("/forgotPassPage")
+    String fogotPass() {
+        return "forgotPass";
+    }
+    @PostMapping("/forgotPassPage")
+    public String fogotPass(@RequestParam String username, Model model) {
+        Optional<Account> user = accountRepository.findByEmail(username);
+        if (user.isPresent() ) {
+            return "redirect:/home/homePage";
+        } else {
+            // auth failed, set error message and return to login page
+            model.addAttribute("errorlogin", "Invalid username");
+            return "forgotPass";
         }
     }
 //    @GetMapping("/signingoogle")
