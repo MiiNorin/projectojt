@@ -22,11 +22,14 @@
         <td>
             <a th:href="@{/listTopics/addTopic/{chapterId}(chapterId = ${chapter.chapterId})}">Thêm test</a>
             <a th:href="@{'/listTopics/showListTopic/' + ${subjectId} + '/' + ${chapter.chapterId}}">Quản lý câu hỏi</a>
-            <a th:href="@{'/chapters/editChapter?chapterId=' + ${chapter.chapterId} + '&subjectId=' + ${subjectId}}">Sửa Chapter</a>
-            <a th:href="@{'/chapters/deleteChapter/' + ${chapter.chapterId} + '/' + ${subjectId}}" onclick="return confirm('Are you sure you want to delete this question?')">Xóa</a>
+            <a th:href="@{'/chapters/editChapter?chapterId=' + ${chapter.chapterId} + '&subjectId=' + ${subjectId}}">Sửa
+                Chapter</a>
+            <a th:href="@{'/chapters/deleteChapter/' + ${chapter.chapterId} + '/' + ${subjectId}}"
+               onclick="return confirm('Are you sure you want to delete this question?')">Xóa</a>
         </td>
         <td><a th:href="@{'/listTopics/test/' + ${chapter.chapterId}}">Do test</a></td>
-        <td><a th:href="@{'/questions/showQuestion/' + ${chapter.chapterId}}">Show List Question</a></td>
+        <td><a th:href="@{'/questions/showQuestion/' +${subjectId} + '/'+${chapter.chapterId}}">Show List Question</a>
+        </td>
 
     </tr>
     </tbody>

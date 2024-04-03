@@ -16,8 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -35,7 +33,7 @@ public class QuestionService{
     @Autowired
     private ChapterRepository chapterRepository;
 
-    public Page<Questions> findProductsWithPaginationSortedByDate(int page, int size, int chapterId) {
+    public Page<Questions> findProductsWithPaginationSortedByDate(int page, int size, int chapterId, int subjectId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createDate").descending());
         return questionRepository.findByChaptersChapterId(chapterId, pageable);
     }
@@ -68,11 +66,10 @@ public class QuestionService{
         return questionRepository.findByQuestionContextContaining(character);
     }
 
-    public List<Questions> searchQuestByMonth(int month) {
-        LocalDateTime startOfMonth = LocalDateTime.of(LocalDate.now().getYear(), month, 1, 0, 0, 0);
-        LocalDateTime endOfMonth = startOfMonth.plusMonths(1).minusSeconds(1);
-        return questionRepository.findByCreateDateBetween(startOfMonth, endOfMonth);
+    public List<Questions> findQuestionsByName(String name) {
+        return questionRepository.findByQuestionContextContaining(name);
     }
+
 
     public void saveQuestionToDatabase(MultipartFile file, int subjectId, int chapterId, int topicId) {
         if (ExcelUploadService.isValidExcelFile(file)) {
@@ -90,5 +87,7 @@ public class QuestionService{
         }
     }
 
-
+//    public Page<Questions> searchQuestionsByName(Pageable pageable, String name, int chapterId) {
+//        return questionRepository.findByQuestionContextContaining(name, pageable);
+//    }
 }

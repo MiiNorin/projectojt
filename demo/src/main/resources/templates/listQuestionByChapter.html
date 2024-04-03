@@ -21,15 +21,18 @@
         th {
             background-color: #f2f2f2;
         }
-        .main{
+
+        .main {
             background-color: orange;
             padding: 5px 10px;
             margin: 20px 0px;
         }
+
         .pagination {
             float: right;
             margin: 0 0 5px;
         }
+
         .pagination li a {
             border: none;
             font-size: 13px;
@@ -42,6 +45,7 @@
             text-align: center;
             padding: 0 6px;
         }
+
         .pagination li a.prev-next {
             min-width: 80px;
             min-height: 30px;
@@ -51,23 +55,29 @@
             box-sizing: border-box;
             padding: 0 6px;
         }
+
         .pagination li a:hover {
             color: #666;
         }
+
         .pagination li.active a, .pagination li.active a.page-link {
             background: #03A9F4;
         }
+
         .pagination li.active a:hover {
             background: #0397d6;
         }
+
         .pagination li.disabled i {
             color: #ccc;
         }
+
         .pagination li i {
             font-size: 16px;
             padding-top: 6px
         }
-        .page{
+
+        .page {
             display: flex;
             justify-content: space-between;
         }
@@ -81,17 +91,23 @@
             <h2>Question Table</h2>
         </div>
 
-        <div class="clearfix">
+        <div class="clearfix" th:if="${currentPage != null}">
             <ul class="pagination">
                 <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
-                    <a th:if="${currentPage > 0}" th:href="@{/questions/showQuestion/{chapterId}(chapterId=${chapterId}, page=${currentPage - 1})}" class="page-link">Previous</a>
+                    <a th:if="${currentPage > 0}"
+                       th:href="@{/questions/showQuestion/{subjectId}/{chapterId}(subjectId=${subjectId},chapterId=${chapterId}, page=${currentPage - 1})}"
+                       class="page-link">Previous</a>
                     <span th:if="${currentPage == 0}" class="page-link">Previous</span>
                 </li>
-                <li th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}" th:class="${pageNumber == currentPage} ? 'page-item active' : 'page-item'">
-                    <a th:href="@{/questions/showQuestion/{chapterId}(chapterId=${chapterId}, page=${pageNumber})}" class="page-link" th:text="${pageNumber + 1}"></a>
+                <li th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:class="${pageNumber == currentPage} ? 'page-item active' : 'page-item'">
+                    <a th:href="@{/questions/showQuestion/{subjectId}/{chapterId}(subjectId=${subjectId},chapterId=${chapterId}, page=${pageNumber})}"
+                       class="page-link" th:text="${pageNumber + 1}"></a>
                 </li>
                 <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">
-                    <a th:if="${currentPage < totalPages - 1}" th:href="@{/questions/showQuestion/{chapterId}(chapterId=${chapterId}, page=${currentPage + 1})}" class="page-link">Next</a>
+                    <a th:if="${currentPage < totalPages - 1}"
+                       th:href="@{/questions/showQuestion/{subjectId}/{chapterId}(subjectId=${subjectId},chapterId=${chapterId}, page=${currentPage + 1})}"
+                       class="page-link">Next</a>
                     <span th:if="${currentPage == totalPages - 1}" class="page-link">Next</span>
                 </li>
             </ul>
@@ -103,61 +119,72 @@
 
 <div class="container">
     <div class="row">
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Question Context</th>
-        <th>Option A</th>
-        <th>Option B</th>
-        <th>Option C</th>
-        <th>Option D</th>
-        <th>Status</th>
-        <th>Image</th>
-        <th>Solution</th>
-        <th>Date</th>
-        <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="question, questionIndex : ${questions}">
-        <td>
-            <button onclick="showQuestionDetail('${question.questionId}', '${question.questionContext}', '${question.optionA}', '${question.optionB}', '${question.optionC}', '${question.optionD}', '${question.status}', '${question.image}', '${question.solution}')" th:text="${questionIndex.index + 1}" >Show Details</button>
-        </td>
-        <td th:text="${question.questionContext}"></td>
-        <td th:text="${question.optionA}"></td>
-        <td th:text="${question.optionB}"></td>
-        <td th:text="${question.optionC}"></td>
-        <td th:text="${question.optionD}"></td>
-        <td th:text="${question.status}"></td>
-        <td>
-            <img th:if="${question.image != null}" th:src="@{'/public/images/' + ${question.image}}" onerror='this.style.display="none"' style="max-width: 100px; max-height: 100px;">
-        </td>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Question Context</th>
+                <th>Option A</th>
+                <th>Option B</th>
+                <th>Option C</th>
+                <th>Option D</th>
+                <th>Status</th>
+                <th>Image</th>
+                <th>Solution</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="question, questionIndex : ${questions}">
+                <td>
+                    <button onclick="showQuestionDetail('${question.questionId}', '${question.questionContext}', '${question.optionA}', '${question.optionB}', '${question.optionC}', '${question.optionD}', '${question.status}', '${question.image}', '${question.solution}')"
+                            th:text="${questionIndex.index + 1}">Show Details
+                    </button>
+                </td>
+                <td th:text="${question.questionContext}"></td>
+                <td th:text="${question.optionA}"></td>
+                <td th:text="${question.optionB}"></td>
+                <td th:text="${question.optionC}"></td>
+                <td th:text="${question.optionD}"></td>
+                <td th:text="${question.status}"></td>
+                <td>
+                    <img th:if="${question.image != null}" th:src="@{'/public/images/' + ${question.image}}"
+                         onerror='this.style.display="none"' style="max-width: 100px; max-height: 100px;">
+                </td>
 
-        <td th:text="${question.solution}"></td>
-        <td th:text="${question.formattedCreateDate}"></td>
-        <td>
-            <a th:href="@{'/questions/editQuestion?id=' + ${question.questionId} + '&chapterId=' + ${chapterId}}" class="btn btn-primary">Edit</a>
-            <a th:href="@{'/questions/deleteQuestionInChapter?id=' + ${question.questionId} + '&chapterId=' + ${chapterId}}" onclick="return confirm('Are you sure you want to delete this question?')" class="btn btn-danger">Delete</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<!-- Thêm phần phân trang vào cuối table -->
+                <td th:text="${question.solution}"></td>
+                <td th:text="${question.formattedCreateDate}"></td>
+                <td>
+                    <a th:href="@{'/questions/editQuestion?id=' + ${question.questionId} + '&subjectId=' + ${subjectId} + '&chapterId=' + ${chapterId}}"
+                       class="btn btn-primary">Edit</a>
+                    <a th:href="@{'/questions/deleteQuestionInChapter?id=' + ${question.questionId} +'&subjectId=' + ${subjectId} + '&chapterId=' + ${chapterId}}"
+                       onclick="return confirm('Are you sure you want to delete this question?')"
+                       class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            </tbody>
+
+
+        </table>
+        <!-- Thêm phần phân trang vào cuối table -->
     </div>
 </div>
 <div class="container-fluid">
-<div id="questionDetails"></div>
-    <a th:href="@{/subject/listSubjects}" class="btn btn-info mb-3">Back to Question List</a>
-    <div class="float-right">
-    <form action="/questions/searchQuestion" method="get">
-        <input type="text" name="character" placeholder="Search by character...">
+
+    <div id="questionDetails"></div>
+    <a th:href="@{'/chapters/showListChapter?subjectId=' + ${subjectId}}" class="btn btn-info mb-3">Back to Chapter List
+        List</a>
+
+    <!--    <a th:href="@{'/chapters/showListChapter/subjectId?=' + ${subjectId}}" class="btn btn-info mb-3">Back to Question List</a>-->
+</div>
+
+<div class="float-right">
+    <form action="/questions/searchByName" method="get">
+        <input type="text" name="searchName" placeholder="Search by name" th:value="${searchName}">
+        <input type="hidden" id="chapterId" name="chapterId" th:value="${chapterId}"/>
         <button type="submit">Search</button>
     </form>
 </div>
-
-
-</div>
-
 </body>
 </html>

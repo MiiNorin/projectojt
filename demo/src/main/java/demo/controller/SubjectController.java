@@ -39,17 +39,6 @@ public class SubjectController {
         return "showListSubject";
     }
 
-    //    @PostMapping("/addSubject")
-//    public String addSubject(@ModelAttribute SubjectsEntity newSubject) {
-//        SubjectsEntity subjectsEntity = new SubjectsEntity();
-//        subjectsEntity.setSubjectName(newSubject.getSubjectName());
-//        subjectsEntity.setImgLink(newSubject.getImgLink());
-//        LocalDateTime createDate = LocalDateTime.now();
-//        subjectsEntity.setCreateDate(createDate);
-//        subjectsEntity.setSlot(newSubject.getSlot());
-//        subjectRepository.save(subjectsEntity);
-//        return "addSubjectSuccess";
-//    }
     @PostMapping("/addSubject")
     public String addSubject(@ModelAttribute SubjectsEntity newSubject,
                              @RequestParam("imageFile") MultipartFile imageFile) {
@@ -65,7 +54,7 @@ public class SubjectController {
                 try (InputStream inputStream = imageFile.getInputStream()) {
                     Path filePath = uploadPath.resolve(fileName);
                     Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                    newSubject.setImgLink("/subject_images/" + fileName); // Lưu đường dẫn của file trong thư mục
+                    newSubject.setImgLink(fileName);
                 } catch (IOException e) {
                     throw new RuntimeException("Could not save the file: " + e.getMessage());
                 }
@@ -111,22 +100,12 @@ public class SubjectController {
             if (!optionalExistingSubject.isPresent()) {
                 return "redirect:/subject/listSubjects";
             }
-
             SubjectsEntity existingSubject = optionalExistingSubject.get();
-//            if (questions.getImage() != null) {
-//                String imagePath = "public/images/" + questions.getImage();
-//                try {
-//                    Path path = Paths.get(imagePath);
-//                    Files.deleteIfExists(path);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
             if (newImage == null || newImage.isEmpty()) {
                 String oldImagePath = existingSubject.getImgLink();
                 if (oldImagePath != null && !oldImagePath.isEmpty()) {
                     try {
-                        Files.deleteIfExists(Paths.get("public" + oldImagePath));
+                        Files.deleteIfExists(Paths.get("public/subject_images/" + oldImagePath));
                     } catch (IOException e) {
                         System.out.println("Error deleting old image: " + e.getMessage());
                     }
@@ -143,21 +122,18 @@ public class SubjectController {
                 try (InputStream inputStream = newImage.getInputStream()) {
                     Path filePath = uploadPath.resolve(fileName);
                     Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-                    existingSubject.setImgLink("/subject_images/" + fileName);
+                    existingSubject.setImgLink(fileName);
                 } catch (IOException e) {
                     throw new RuntimeException("Could not save the file: " + e.getMessage());
                 }
             }
 
-            // Cập nhật thông tin môn học
             existingSubject.setSubjectName(subject.getSubjectName());
             existingSubject.setSlot(subject.getSlot());
             subjectService.saveSubject(existingSubject);
 
             return "redirect:/subject/listSubjects";
         } catch (Exception ex) {
-            // Xử lý lỗi nếu có
-            // Ví dụ: ghi log hoặc hiển thị thông báo lỗi cho người dùng
             System.out.println("Error editing subject: " + ex.getMessage());
             return "error";
         }

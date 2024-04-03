@@ -67,8 +67,6 @@ public class Questions {
     @Basic
     @Column(name = "status")
     private String status;
-
-
     @Basic
     @Column(name = "create_date")
     private LocalDateTime createDate;

@@ -17,8 +17,6 @@ public interface QuestionRepository extends JpaRepository<Questions, Integer> {
 
 
     List<Questions> findQuestionsByChaptersChapterId(Integer chapterId);
-    List<Questions> findAllByStatus(String status);
-//    List<Questions> findByTopicsEntity_TopicId(Integer topicId);
 
     @Query(value = "SELECT TOP (40) * FROM [Db_ZOTSystem].[dbo].[QUESTIONS] ORDER BY NEWID()", nativeQuery = true)
     List<Questions> selectRandomQuestions();
@@ -28,9 +26,9 @@ public interface QuestionRepository extends JpaRepository<Questions, Integer> {
 
     @Query(value = "SELECT * FROM (SELECT *, ROW_NUMBER() OVER (ORDER BY NEWID()) AS RowNum FROM QUESTIONS WHERE chapter_id = ?1) AS SubQuery WHERE RowNum <= ?2", nativeQuery = true)
     List<Questions> findRandomQuestionsByChapterId(Integer topicId, Integer topN);
+    Page<Questions> findByQuestionContextContainingAndChaptersChapterId(String name, int chapterId, Pageable pageable);
 
-//    @Query(value="")
-//    List<Questions>
+    Page<Questions> findByQuestionContextContainingAndSubjectSubjectId(String name, int subjectId, Pageable pageable);
     Page<Questions> findByChaptersChapterId(Integer chapterId, Pageable pageable);
     Page<Questions> findBySubjectSubjectId(Integer subjectId, Pageable pageable);
 }

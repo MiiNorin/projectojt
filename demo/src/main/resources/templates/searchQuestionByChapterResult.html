@@ -85,33 +85,41 @@
 </head>
 <body>
 <div class="container">
+
     <div class="row page">
         <div class="clearfix">
             <h2>Question Table</h2>
         </div>
 
-        <div class="clearfix">
+        <div class="clearfix" th:if="${currentPage != null}">
             <ul class="pagination">
-                <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
-                    <a th:if="${currentPage > 0}"
-                       th:href="@{/questions/subject/{subjectId}(subjectId=${subjectId}, page=${currentPage - 1})}"
-                       class="page-link">Previous</a>
-                    <span th:if="${currentPage == 0}" class="page-link">Previous</span>
-                </li>
-                <li th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
-                    th:class="${pageNumber == currentPage} ? 'page-item active' : 'page-item'">
-                    <a th:href="@{/questions/subject/{subjectId}(subjectId=${subjectId}, page=${pageNumber})}"
-                       class="page-link" th:text="${pageNumber + 1}"></a>
-                </li>
-                <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">
-                    <a th:if="${currentPage < totalPages - 1}"
-                       th:href="@{/questions/subject/{subjectId}(subjectId=${subjectId}, page=${currentPage + 1})}"
-                       class="page-link">Next</a>
-                    <span th:if="${currentPage == totalPages - 1}" class="page-link">Next</span>
-                </li>
+                <!-- Liên kết trang trước -->
+                <a th:href="@{'/questions/searchByName?searchName=' + ${searchName} + '&chapterId=' + ${chapterId} + '&page=' + ${currentPage - 1}}"
+                   th:if="${currentPage > 0}">Trang trước</a>
+
+                <!-- Liên kết trang tiếp theo -->
+                <a th:href="@{'/questions/searchByName?searchName=' + ${searchName} + '&chapterId=' + ${chapterId} + '&page=' + ${currentPage + 1}}"
+                   th:if="${currentPage < totalPages - 1}">Trang tiếp theo</a>
+
+<!--                <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">-->
+<!--                    <a th:if="${currentPage > 0}"-->
+<!--                       th:href="@{/questions/showQuestion/{chapterId}(chapterId=${chapterId}, page=${currentPage - 1})}"-->
+<!--                       class="page-link">Previous</a>-->
+<!--                    <span th:if="${currentPage == 0}" class="page-link">Previous</span>-->
+<!--                </li>-->
+<!--                <li th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"-->
+<!--                    th:class="${pageNumber == currentPage} ? 'page-item active' : 'page-item'">-->
+<!--                    <a th:href="@{/questions/showQuestion/{chapterId}(chapterId=${chapterId}, page=${pageNumber})}"-->
+<!--                       class="page-link" th:text="${pageNumber + 1}"></a>-->
+<!--                </li>-->
+<!--                <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">-->
+<!--                    <a th:if="${currentPage < totalPages - 1}"-->
+<!--                       th:href="@{/questions/showQuestion/{chapterId}(chapterId=${chapterId}, page=${currentPage + 1})}"-->
+<!--                       class="page-link">Next</a>-->
+<!--                    <span th:if="${currentPage == totalPages - 1}" class="page-link">Next</span>-->
+<!--                </li>-->
             </ul>
         </div>
-
     </div>
 
 </div>
@@ -156,29 +164,42 @@
                 <td th:text="${question.solution}"></td>
                 <td th:text="${question.formattedCreateDate}"></td>
                 <td>
-                    <a th:href="@{'/questions/deleteQuestionInSubject?id=' + ${question.questionId} + '&subjectId=' + ${subjectId}}"
+                    <a th:href="@{'/questions/editQuestion?id=' + ${question.questionId} + '&chapterId=' + ${chapterId}}"
+                       class="btn btn-primary">Edit</a>
+                    <a th:href="@{'/questions/deleteQuestionInChapter?id=' + ${question.questionId} + '&chapterId=' + ${chapterId}}"
                        onclick="return confirm('Are you sure you want to delete this question?')"
                        class="btn btn-danger">Delete</a>
                 </td>
             </tr>
             </tbody>
+            <div class="float-right">
+                <form action="/questions/searchByStatus" method="get">
+                    <select name="status">
+                        <option value="hard">Hard</option>
+                        <option value="easy">Easy</option>
+                    </select>
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+
         </table>
         <!-- Thêm phần phân trang vào cuối table -->
     </div>
 </div>
 <div class="container-fluid">
     <div id="questionDetails"></div>
+    <a th:href="@{'/questions/showQuestion/' + ${chapterId}}" class="btn btn-info mb-3">Back to Question List</a>
+</div>
 
+<div class="float-right">
 
-    <a th:href="@{/subject/listSubjects}" class="btn btn-info mb-3">Back to Subject List</a>
-
-    <form action="/questions/searchByNameInSubject" method="get">
+    <form action="/questions/searchByNameInsubject" method="get">
         <input type="text" name="searchName" placeholder="Search by name" th:value="${searchName}">
-        <input type="hidden" id="subjectId" name="subjectId" th:value="${subjectId}"/>
+        <input type="hidden" id="chapterId" name="chapterId" th:value="${chapterId}"/>
         <button type="submit">Search</button>
     </form>
 
-</div>
 
+</div>
 </body>
 </html>
