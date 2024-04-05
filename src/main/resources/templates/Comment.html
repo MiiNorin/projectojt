@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comments</title>
+</head>
+<body>
+<h1>Comments</h1>
+
+<!-- Comment Form -->
+<h2>Add a New Comment</h2>
+<form action="/comments" method="post">
+    <label for="comment">Comment:</label><br>
+    <textarea id="comment" name="commentcontext" rows="4" cols="50"></textarea><br><br>
+    <input type="submit" value="Submit">
+</form>
+<!-- Display Existing Comments -->
+<h2>Existing Comments</h2>
+<ul>
+    <li th:each="comment : ${comments}">
+        <span th:text="${comment.commentcontext}"></span>
+        <button th:onclick="'toggleEditForm(' + ${comment.commentId} + ')'">Edit</button>
+        <!-- Edit Form (Initially Hidden) -->
+        <form th:id="'editForm_' + ${comment.commentId}" th:action="'/comments/' + ${comment.commentId} + '/edit'" method="post" style="display: none;">
+            <textarea name="commentcontext" rows="4" cols="50" th:text="${comment.commentcontext}"></textarea>
+            <input type="submit" value="Save">
+            <button type="button" th:onclick="'toggleEditForm(' + ${comment.commentId} + ')'">Cancel</button>
+        </form>
+    </li>
+</ul>
+
+<script>
+    function toggleEditForm(commentId) {
+        var editForm = document.getElementById('editForm_' + commentId);
+        if (editForm.style.display === 'none') {
+            editForm.style.display = 'block';
+        } else {
+            editForm.style.display = 'none';
+        }
+    }
+</script>
+
+</body>
+</html>

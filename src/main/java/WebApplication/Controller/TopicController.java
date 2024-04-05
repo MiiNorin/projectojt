@@ -5,6 +5,7 @@ import WebApplication.Entity.TopicsEntity;
 import WebApplication.Services.QuestionService;
 import WebApplication.Services.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -51,13 +52,6 @@ public class TopicController {
         return "redirect:/listTopics";
     }
 
-//    @GetMapping("/test/{topicId}")
-//    public String getTestForTopic(@PathVariable Integer topicId, Model model) {
-//
-//        List<QuestionsEntity> selectedQuestions = topicService.selectRandomQuestions();
-//        model.addAttribute("questions", selectedQuestions);
-//        return "test";
-//    }
 
 
     @GetMapping("test/{topicId}/{totalQuestion}")

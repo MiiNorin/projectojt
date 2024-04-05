@@ -106,6 +106,7 @@
     <table>
       <thead>
       <tr>
+        <th>Select</th>
         <th>ID</th>
         <th>Question Context</th>
         <th>Option A</th>
@@ -121,28 +122,27 @@
       <tbody>
       <tr th:each="question, questionIndex : ${questions}">
         <td>
-          <button onclick="showQuestionDetail('${question.questionId}', '${question.questionContext}', '${question.optionA}', '${question.optionB}', '${question.optionC}', '${question.optionD}', '${question.status}', '${question.image}', '${question.solution}')" th:text="${questionIndex.index + 1}" >Show Details</button>
+          <input type="checkbox" th:id="'selectQuestion' + ${question.questionId}" th:value="${question.questionId}">
+          <label th:for="'selectQuestion' + ${question.questionId}">Select</label>
         </td>
-        <td th:text="${question.questionContext}"></td>
-        <td th:text="${question.optionA}"></td>
-        <td th:text="${question.optionB}"></td>
-        <td th:text="${question.optionC}"></td>
-        <td th:text="${question.optionD}"></td>
-        <td th:text="${question.status}"></td>
+        <td th:text="${questionIndex.index + 1}">1</td>
+        <td th:text="${question.questionContext}">Question context</td>
+        <td th:text="${question.optionA}">Option A</td>
+        <td th:text="${question.optionB}">Option B</td>
+        <td th:text="${question.optionC}">Option C</td>
+        <td th:text="${question.optionD}">Option D</td>
+        <td th:text="${question.status}">Status</td>
         <td>
           <img th:if="${question.image != null}" th:src="@{'../images/' + ${question.image}}" onerror='this.style.display="none"' style="max-width: 100px; max-height: 100px;">
         </td>
-        <td th:text="${question.solution}"></td>
+        <td th:text="${question.solution}">Solution</td>
         <td>
-
-          <a th:href="@{'/questions/editQuestion?id=' + ${question.questionId}}" class="btn btn-primary">Edit</a>
-
-          <a th:href="@{'/questions/deleteQuestion?id=' + ${question.questionId}}" onclick="return confirm('Are you sure you want to delete this question?')" class="btn btn-danger">Delete</a>
-
+          <!-- Actions buttons -->
         </td>
       </tr>
       </tbody>
     </table>
+
     <!-- Thêm phần phân trang vào cuối table -->
   </div>
 </div>

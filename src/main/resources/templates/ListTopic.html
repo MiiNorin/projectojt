@@ -26,6 +26,8 @@
         <h3 th:text="${topic.topicName}"></h3>
         <p th:text="${topic.duration}"></p>
     </a>
+    <!-- Thêm nút Edit Test -->
+    <a th:href="@{'/editTest/' + ${topic.topicId}}" class="edit-button">Edit Test</a>
 </div>
 
 <script>
