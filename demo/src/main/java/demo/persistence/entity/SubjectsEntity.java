@@ -17,6 +17,8 @@ import java.util.List;
 @Entity
 @Table(name = "SUBJECTS", schema = "dbo", catalog = "Db_ZOTSystem")
 public class SubjectsEntity {
+
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "subject_id")
@@ -37,4 +39,7 @@ public class SubjectsEntity {
     private List<ChaptersEntity> chaptersEntityList;
     @OneToMany(mappedBy = "subject",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Questions> questions;
+    @ManyToOne
+    @JoinColumn(name="account_id", nullable = false)
+    private Account account;
 }

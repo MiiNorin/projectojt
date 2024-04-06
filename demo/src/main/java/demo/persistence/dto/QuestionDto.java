@@ -37,6 +37,8 @@ public class QuestionDto {
     @NotEmpty(message = "them status vao")
     private String status;
 
+    private int answerId;
+
     private LocalDateTime createDate;
     public String getFormattedCreateDate() {
         if (createDate != null) {

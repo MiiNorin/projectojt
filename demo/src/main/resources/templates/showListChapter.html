@@ -6,12 +6,13 @@
     <title>Danh sách các chương</title>
 </head>
 <body>
-<h2>Danh sách các chương</h2>
+<h2>Danh sách các chương của <span th:text="${subject.subjectName}"></span></h2>
 <table border="1">
     <thead>
     <tr>
         <th>Tên Chương</th>
         <th>Action</th>
+        <th>Tổng số câu hỏi</th>
         <th>Làm bài test tổng</th>
         <th>Show list câu hỏi</th>
     </tr>
@@ -20,13 +21,14 @@
     <tr th:each="chapter : ${chapters}">
         <td th:text="${chapter.chapterName}"></td>
         <td>
-            <a th:href="@{/listTopics/addTopic/{chapterId}(chapterId = ${chapter.chapterId})}">Thêm test</a>
+            <a th:href="@{/listTopics/addTopic/{subjectId}/{chapterId}(subjectId=${subjectId}, chapterId = ${chapter.chapterId})}">Thêm test</a>
             <a th:href="@{'/listTopics/showListTopic/' + ${subjectId} + '/' + ${chapter.chapterId}}">Quản lý câu hỏi</a>
             <a th:href="@{'/chapters/editChapter?chapterId=' + ${chapter.chapterId} + '&subjectId=' + ${subjectId}}">Sửa
                 Chapter</a>
             <a th:href="@{'/chapters/deleteChapter/' + ${chapter.chapterId} + '/' + ${subjectId}}"
                onclick="return confirm('Are you sure you want to delete this question?')">Xóa</a>
         </td>
+        <th><span th:text="${chapter.totalQuestion}" readonly></span></th>
         <td><a th:href="@{'/listTopics/test/' + ${chapter.chapterId}}">Do test</a></td>
         <td><a th:href="@{'/questions/showQuestion/' +${subjectId} + '/'+${chapter.chapterId}}">Show List Question</a>
         </td>
@@ -35,6 +37,6 @@
     </tbody>
 </table>
 
-<a href="/subject/listSubjects">Back to Subject List</a>
+<a th:href="@{/subject/listSubjects/{userId}(userId=${userId})}">Back to Subject List</a>
 </body>
 </html>

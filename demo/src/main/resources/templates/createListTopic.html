@@ -8,6 +8,7 @@
 <h2>Create New Topic</h2>
 
 <form th:action="@{/listTopics/addTopic}" method="post">
+    <input type="hidden" id="subjectId" name="subjectId" th:value="${subjectId}">
     <input type="hidden" id="chapterId" name="chapterId" th:value="${chapterId}">
     <label for="topicName">Topic Name:</label><br>
     <input type="text" id="topicName" name="topicName" th:value="${topicName}" required><br>
@@ -15,13 +16,29 @@
     <label for="duration">Duration:</label><br>
     <input type="number" id="duration" name="duration" th:value="${duration}" required><br>
 
-    <label for="status">Status:</label><br>
-    <input type="text" id="status" name="status" th:value="${status}" required><br>
+<!--    <label for="status">Status:</label><br>-->
+<!--    <input type="text" id="status" name="status" th:value="${status}" required><br>-->
+
+    <label for="status">Status</label>
+    <div>
+        <select class="form-control" id="status" name="status">
+            <option value="Soon">Soon</option>
+            <option value="OnGoing">OnGoing</option>
+            <option value="Finished">Finished</option>
+        </select>
+    </div>
 
     <label for="totalQuestion">Total Question:</label><br>
     <input type="number" id="totalQuestion" name="totalQuestion" th:value="${totalQuestion}" required><br>
-    <div th:if="${error!=null}" class="error-message">
-        <p th:text="${error}"></p>
+
+    <label for="startTestDate">Start Test Date:</label><br>
+    <input type="datetime-local" id="startTestDate" name="startTestDate" required><br>
+
+    <label for="finishTestDate">Finish Test Date:</label><br>
+    <input type="datetime-local" id="finishTestDate" name="finishTestDate" required><br>
+
+    <div th:if="${errorMessage != null}" class="error-message">
+        <p th:text="${errorMessage}"></p>
     </div>
     <input type="submit" value="Create Topic">
 </form>

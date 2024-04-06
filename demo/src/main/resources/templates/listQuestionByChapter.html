@@ -88,7 +88,14 @@
 
     <div class="row page">
         <div class="clearfix">
-            <h2>Question Table</h2>
+            <h2>Question Table</h2><br>
+            <h4>Tổng số câu hỏi có trong chapter <span th:text="${chapterName}"></span>: <span th:text="${totalQuestion}"></span></h4> <!-- Thêm dòng này -->
+        </div>
+        <div th:if="${error!=null}" class="error-message">
+            <p th:text="${error}"></p>
+        </div>
+        <div class="alert alert-danger" th:if="${error}">
+            <strong>Error:</strong> <span th:text="${error}"></span>
         </div>
 
         <div class="clearfix" th:if="${currentPage != null}">
@@ -173,8 +180,7 @@
 <div class="container-fluid">
 
     <div id="questionDetails"></div>
-    <a th:href="@{'/chapters/showListChapter?subjectId=' + ${subjectId}}" class="btn btn-info mb-3">Back to Chapter List
-        List</a>
+    <a th:href="@{'/chapters/showListChapter?subjectId=' + ${subjectId}}" class="btn btn-info mb-3">Back to Chapter List</a>
 
     <!--    <a th:href="@{'/chapters/showListChapter/subjectId?=' + ${subjectId}}" class="btn btn-info mb-3">Back to Question List</a>-->
 </div>
@@ -183,6 +189,7 @@
     <form action="/questions/searchByName" method="get">
         <input type="text" name="searchName" placeholder="Search by name" th:value="${searchName}">
         <input type="hidden" id="chapterId" name="chapterId" th:value="${chapterId}"/>
+        <input type="hidden" id="subjectId" name="subjectId" th:value="${subjectId}"/>
         <button type="submit">Search</button>
     </form>
 </div>

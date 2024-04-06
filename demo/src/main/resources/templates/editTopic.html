@@ -15,21 +15,40 @@
     <input type="hidden" name="chapterId" th:value="${chapterId}"/>
     <label>Tên topic:</label>
     <div>
-        <input class="form-control" type="text" id="topicName" name="topicName" th:value="${topic.topicName}" required />
+        <input class="form-control" type="text" id="topicName" name="topicName" th:value="${topic.topicName}" required/>
     </div>
     <label>Duration:</label>
     <div>
-        <input class="form-control" type="number" id="duration" name="duration" th:value="${topic.duration}" required />
+        <input class="form-control" type="number" id="duration" name="duration" th:value="${topic.duration}" required/>
     </div>
     <label>Total:</label>
     <div>
-        <input class="form-control" type="number" id="totalQuestion" name="totalQuestion" th:value="${topic.totalQuestion}" required />
+        <input class="form-control" type="number" id="totalQuestion" name="totalQuestion"
+               th:value="${topic.totalQuestion}" required/>
     </div>
-    <label>Status:</label>
+    <label>Status</label>
     <div>
-        <input class="form-control" type="text" id="status" name="status" th:value="${topic.status}" required />
+        <select class="form-control" name="status">
+            <option value="Soon">Soon</option>
+            <option value="OnGoing">OnGoing</option>
+            <option value="Finished">Finished</option>
+        </select>
     </div>
-    <input type="submit" value="Save Changes" />
+
+    <label>Start Test Date:</label><br>
+    <div>
+        <input class="form-control" type="datetime-local" id="startTestDate" name="startTestDate"
+               th:value="${topic.startTestDate}" required><br>
+    </div>
+    <label>Finish Test Date:</label><br>
+    <div>
+        <input class="form-control" type="datetime-local" id="finishTestDate" name="finishTestDate"
+               th:value="${topic.finishTestDate}" required><br>
+    </div>
+    <div th:if="${errorMessage != null}" class="error-message">
+        <p th:text="${errorMessage}"></p>
+    </div>
+    <input type="submit" value="Save Changes"/>
 </form>
 
 <div class="container">

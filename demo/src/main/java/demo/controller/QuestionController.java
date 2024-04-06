@@ -1,11 +1,11 @@
 package demo.controller;
 
 import demo.persistence.dto.QuestionDto;
+import demo.persistence.entity.ChaptersEntity;
 import demo.persistence.entity.Questions;
-import demo.repository.ChapterRepository;
-import demo.repository.QuestionRepository;
-import demo.repository.SubjectRepository;
-import demo.repository.TopicRepository;
+import demo.persistence.entity.SubjectsEntity;
+import demo.persistence.entity.TopicsEntity;
+import demo.repository.*;
 import demo.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,14 +47,25 @@ public class QuestionController {
 
     @Autowired
     private TopicRepository topicRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
     @GetMapping("/showQuestion/{subjectId}/{chapterId}")
-    public String getListQuestion(Model model, @RequestParam(defaultValue = "0") int page, @PathVariable("subjectId") int subjectId, @PathVariable("chapterId") int chapterId) {
+    public String getListQuestion(Model model,
+                                  @RequestParam(defaultValue = "0") int page,
+                                  @PathVariable("subjectId") int subjectId,
+                                  @PathVariable("chapterId") int chapterId) {
+        int totalQuestion = questionRepository.countByChaptersChapterId(chapterId);
+        ChaptersEntity chapters = chapterRepository.findById(chapterId).orElse(null);
+        chapters.setTotalQuestion(totalQuestion);
+        chapterRepository.save(chapters);
         int pageSize = 5;
         Page<Questions> questionPage = questionService.findProductsWithPaginationSortedByDate(page, pageSize, chapterId, subjectId);
         model.addAttribute("questions", questionPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", questionPage.getTotalPages());
-        model.addAttribute("subjectId", subjectId); // Thêm subjectId vào model
+        model.addAttribute("subjectId", subjectId);
+        model.addAttribute("totalQuestion", totalQuestion);
         return "listQuestionByChapter";
     }
 
@@ -83,11 +94,11 @@ public class QuestionController {
                                  @RequestParam("chapterId") Integer chapterId,
                                  @RequestParam("subjectId") Integer subjectId,
                                  @RequestParam("topicId") Integer topicId,
-                                 @RequestParam("status") String status) throws IOException {
-
+                                 @RequestParam("status") String status,
+                                 Model model) throws IOException {
+        ChaptersEntity chapter = chapterRepository.findById(chapterId).orElse(null);
         MultipartFile image = questionDto.getImage();
         String storageFile = "";
-
         if (image != null && !image.isEmpty()) {
             String uploadDir = "public/images/";
             Path uploadPath = Paths.get(uploadDir);
@@ -109,16 +120,18 @@ public class QuestionController {
         questions.setOptionC(questionDto.getOptionC());
         questions.setOptionD(questionDto.getOptionD());
         questions.setSolution(questionDto.getSolution());
+        questions.setAnswerId(questionDto.getAnswerId());
         questions.setImage(storageFile);
         questions.setStatus(status);
         questions.setCreateDate(LocalDateTime.now());
-        questions.setChapters(chapterRepository.findById(chapterId).orElse(null));
+        questions.setChapters(chapter);
+
         questions.setSubject(subjectRepository.findById(subjectId).orElse(null));
         questions.setTopics(topicRepository.findById(topicId).orElse(null));
         questionRepository.save(questions);
-
-        return "redirect:/questions/showQuestion/" + subjectId +'/'+chapterId;
+        return "redirect:/questions/showQuestion/" + subjectId + '/' + chapterId;
     }
+
     @GetMapping("/editQuestion")
     public String showEditQuestionForm(Model model, @RequestParam("id") int questionId, @RequestParam("subjectId") int subjectId, @RequestParam("chapterId") int chapterId) {
         try {
@@ -182,6 +195,7 @@ public class QuestionController {
                 question.setOptionC(questionDto.getOptionC());
                 question.setOptionD(questionDto.getOptionD());
                 question.setSolution(questionDto.getSolution());
+                question.setAnswerId(questionDto.getAnswerId());
                 question.setStatus(questionDto.getStatus());
                 questionRepository.save(question);
             }
@@ -211,7 +225,7 @@ public class QuestionController {
                                      @PathVariable("topicId") int topicId,
                                      @RequestParam("file") MultipartFile file) {
         questionService.saveQuestionToDatabase(file, subjectId, chapterId, topicId);
-        return "redirect:/questions/showQuestion/" + chapterId;
+        return "redirect:/questions/showQuestion/" + subjectId + '/' + chapterId;
     }
 
 
@@ -219,14 +233,16 @@ public class QuestionController {
     public String searchQuestionsByName(Model model,
                                         @RequestParam("searchName") String searchName,
                                         @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam("chapterId") int chapterId) {
-        int pageSize = 2;
+                                        @RequestParam("chapterId") int chapterId,
+                                        @RequestParam("subjectId") int subjectId) {
+        int pageSize = 5;
         Pageable pageable = PageRequest.of(page, pageSize); // Adjusted page parameter
-        Page<Questions> questionPage = questionRepository.findByQuestionContextContainingAndChaptersChapterId(searchName, chapterId, pageable);
+        Page<Questions> questionPage = questionRepository.findByQuestionContextContainingAndSubjectSubjectIdAndChaptersChapterId(searchName, subjectId, chapterId, pageable);
         model.addAttribute("questions", questionPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", questionPage.getTotalPages());
         model.addAttribute("chapterId", chapterId);
+        model.addAttribute("subjectId", subjectId);
         model.addAttribute("searchName", searchName);
         return "searchQuestionByChapterResult";
     }
@@ -236,7 +252,7 @@ public class QuestionController {
                                         @RequestParam("searchName") String searchName,
                                         @RequestParam(defaultValue = "0") int page,
                                         @RequestParam("subjectId") int subjectId) {
-        int pageSize = 2;
+        int pageSize = 5;
         Pageable pageable = PageRequest.of(page, pageSize); // Adjusted page parameter
         Page<Questions> questionPage = questionRepository.findByQuestionContextContainingAndSubjectSubjectId(searchName, subjectId, pageable);
         model.addAttribute("questions", questionPage.getContent());

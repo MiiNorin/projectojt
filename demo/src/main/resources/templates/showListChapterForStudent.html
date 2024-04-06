@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách các chương</title>
+</head>
+<body>
+<h2>Danh sách các chương của <span th:text="${subject.subjectName}"></span></h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Tên Chương</th>
+        <th>Action</th>
+        <th>Làm bài test tổng</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="chapter : ${chapters}">
+        <td th:text="${chapter.chapterName}"></td>
+        <td>
+            <a th:href="@{'/listTopics/listTest/' + ${subjectId} + '/' + ${chapter.chapterId}}">Chọn bài test</a>
+        </td>
+        <td><a th:href="@{'/listTopics/test/' + ${chapter.chapterId}}">Do test</a></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/subject/chooseYourCourses">Back to Subject List</a>
+</body>
+</html>

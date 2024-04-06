@@ -188,14 +188,15 @@
 </div>
 <div class="container-fluid">
     <div id="questionDetails"></div>
-    <a th:href="@{'/questions/showQuestion/' + ${chapterId}}" class="btn btn-info mb-3">Back to Question List</a>
+    <a th:href="@{'/questions/showQuestion/' + ${subjectId} + '/' + ${chapterId}}" class="btn btn-info mb-3">Back to Question List</a>
 </div>
 
 <div class="float-right">
 
-    <form action="/questions/searchByNameInsubject" method="get">
+    <form action="/questions/searchByName" method="get">
         <input type="text" name="searchName" placeholder="Search by name" th:value="${searchName}">
         <input type="hidden" id="chapterId" name="chapterId" th:value="${chapterId}"/>
+        <input type="hidden" id="subjectId" name="subjectId" th:value="${subjectId}"/>
         <button type="submit">Search</button>
     </form>
 

@@ -29,4 +29,6 @@ public class ChaptersEntity {
     @Basic
     @Column(name = "total_question")
     private Integer totalQuestion;
+
+
 }

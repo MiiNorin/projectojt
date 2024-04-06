@@ -62,13 +62,7 @@ public class QuestionService{
     public void save(Questions questions){
         questionRepository.save(questions);
     }
-    public List<Questions> searchQuestionByCharacter(String character) {
-        return questionRepository.findByQuestionContextContaining(character);
-    }
 
-    public List<Questions> findQuestionsByName(String name) {
-        return questionRepository.findByQuestionContextContaining(name);
-    }
 
 
     public void saveQuestionToDatabase(MultipartFile file, int subjectId, int chapterId, int topicId) {

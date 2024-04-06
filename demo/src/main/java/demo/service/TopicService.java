@@ -22,39 +22,20 @@ public class TopicService {
         return topicRepository.findAll();
     }
 
-    public Optional<TopicsEntity> getTopicById(int id) {
-        return topicRepository.findById(id);
-    }
-
-    public TopicsEntity saveTopic(TopicsEntity topic) {
-        return topicRepository.save(topic);
-    }
 
     public void deleteTopicById(int id) {
         topicRepository.deleteById(id);
     }
-
-    public TopicsEntity updateTopic(TopicsEntity updatedTopic) {
-        Optional<TopicsEntity> existingTopic = topicRepository.findById(updatedTopic.getTopicId());
-
-        if (existingTopic.isPresent()) {
-            // Nếu tồn tại, cập nhật thông tin và lưu lại
-            TopicsEntity topicToUpdate = existingTopic.get();
-            topicToUpdate.setTopicName(updatedTopic.getTopicName());
-            topicToUpdate.setDuration(updatedTopic.getDuration());
-            topicToUpdate.setTotalQuestion(updatedTopic.getTotalQuestion());
-            topicToUpdate.setTopicType(updatedTopic.getTopicType());
-            topicToUpdate.setGrade(updatedTopic.getGrade());
-            topicToUpdate.setCreateDate(updatedTopic.getCreateDate());
-            topicToUpdate.setStatus(updatedTopic.getStatus());
-            topicToUpdate.setStartTestDate(updatedTopic.getStartTestDate());
-            topicToUpdate.setFinishTestDate(updatedTopic.getFinishTestDate());
-            topicToUpdate.setSubjectId(updatedTopic.getSubjectId());
-            return topicRepository.save(topicToUpdate);
-        } else {
-            return null;
+    public int countTotalQuestionsByChapterId(int chapterId) {
+        Iterable<TopicsEntity> topics = topicRepository.findTopicsEntitiesByChapterChapterId(chapterId);
+        int totalQuestions = 0;
+        for (TopicsEntity topic : topics) {
+            totalQuestions += topic.getTotalQuestion();
         }
+
+        return totalQuestions;
     }
+
 
 
     @Autowired
@@ -69,7 +50,5 @@ public class TopicService {
     public List<Questions> findRandomQuestionsByTopicId(Integer topicId, Integer totalQuestion) {
         return questionRepository.findRandomQuestionsByTopicId(topicId, totalQuestion);
     }
-//    public List<Questions> getQuestionsByTopicId(Integer topicId) {
-//        return questionRepository.findByTopicsEntity_TopicId(topicId);
-//    }
+
 }

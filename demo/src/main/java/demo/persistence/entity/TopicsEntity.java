@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 
@@ -69,7 +70,30 @@ public class TopicsEntity {
     @Basic
     @Column(name = "subject_id")
     private Integer subjectId;
-
+    public String getFormattedCreateDate() {
+        if (createDate != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return createDate.format(formatter);
+        } else {
+            return "";
+        }
+    }
+    public String getFormattedStartDate() {
+        if (startTestDate != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return startTestDate.format(formatter);
+        } else {
+            return "";
+        }
+    }
+    public String getFormattedFinishDate() {
+        if (finishTestDate != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return finishTestDate.format(formatter);
+        } else {
+            return "";
+        }
+    }
 
 
 }

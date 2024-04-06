@@ -7,6 +7,7 @@
 
 <!-- Form để thêm mới môn học -->
 <form action="/subject/addSubject" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="userId" id="userId" th:value="${userId}"/>
     <label for="subjectName">Subject Name:</label>
     <input type="text" id="subjectName" name="subjectName" required>
 
@@ -45,7 +46,7 @@
         <td th:text="${subject.slot}"></td>
         <td>
             <a th:href="@{'/subject/editSubject?subjectId=' + ${subject.subjectId}}">Sửa subject</a>
-<!--            <a th:href="@{'/subject/editSubject?subjectId=' + '&subjectId=' + ${subjectId}}">Sửa</a>-->
+            <!--            <a th:href="@{'/subject/editSubject?subjectId=' + '&subjectId=' + ${subjectId}}">Sửa</a>-->
             <a th:href="@{'/subject/deleteSubject?id=' + ${subject.subjectId}}" onclick="return confirm('Are you sure you want to delete this question?')">Delete</a>
             <a th:href="@{/chapters/addChapter/{subjectId}(subjectId = ${subject.subjectId})}">Thêm chapter</a>
             <a th:href="@{'/chapters/showListChapter?subjectId=' + ${subject.subjectId}}">Hiển thị chapter</a>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<head>
+    <title>Subject List</title>
+</head>
+<body>
+<h2>Subject List</h2>
+
+<!-- Form để thêm mới môn học -->
+
+<!-- Table để hiển thị danh sách môn học -->
+<table border="1">
+    <tr>
+        <th>Subject Name</th>
+        <th>Action</th>
+
+    </tr>
+    <!-- Sử dụng Thymeleaf để lặp qua danh sách môn học -->
+    <tr th:each="subject : ${subjects}">
+        <td th:text="${subject.subjectName}"></td>
+        <td>
+            <a th:href="@{'/chapters/chooseChapter?subjectId=' + ${subject.subjectId}}">Xem các chapter</a>
+        </td>
+
+    </tr>
+</table>
+<a href="/home/homePage">Về trang chủ</a>
+</body>
+</html>

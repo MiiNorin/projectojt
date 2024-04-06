@@ -44,18 +44,18 @@ public class ExcelUploadService {
         LocalDateTime currentDate = LocalDateTime.now();
         try (XSSFWorkbook workbook = new XSSFWorkbook(inputStream)) {
             XSSFSheet sheet = workbook.getSheet("questions");
-            int rowIndex=0;
-            for(Row row: sheet){
-                if(rowIndex == 0){
+            int rowIndex = 0;
+            for (Row row : sheet) {
+                if (rowIndex == 0) {
                     rowIndex++;
                     continue;
                 }
                 Iterator<Cell> cellIterator = row.iterator();
-                int cellIndex=0;
+                int cellIndex = 0;
                 Questions questions = new Questions();
-                while (cellIterator.hasNext()){
+                while (cellIterator.hasNext()) {
                     Cell cell = cellIterator.next();
-                    switch ((cellIndex)){
+                    switch ((cellIndex)) {
                         case 0 -> questions.setQuestionId((int) cell.getNumericCellValue());
                         case 1 -> questions.setQuestionContext(cell.getStringCellValue());
                         case 2 -> questions.setOptionA(cell.getStringCellValue());
@@ -63,19 +63,24 @@ public class ExcelUploadService {
                         case 4 -> questions.setOptionC(cell.getStringCellValue());
                         case 5 -> questions.setOptionD(cell.getStringCellValue());
                         case 6 -> questions.setStatus(cell.getStringCellValue());
-                        case 7 -> questions.setSolution(cell.getStringCellValue());
+                        case 7 -> questions.setAnswerId((int) cell.getNumericCellValue());
+                        case 8 -> questions.setSolution(cell.getStringCellValue());
                         default -> {
                         }
                     }
                     cellIndex++;
                 }
                 questions.setCreateDate(currentDate);
-                if((questions.getQuestionId() != 0) && (questions.getQuestionContext() != "")) {
+                if ((questions.getQuestionId() != 0) &&
+                        (questions.getQuestionContext() != "") &&
+                        ((questions.getOptionA() != "") || (questions.getOptionB() != "") || (questions.getOptionC() != "") || (questions.getOptionD() != "")) &&
+                        (questions.getStatus() != "") &&
+                        (questions.getAnswerId() != 0) &&
+                        (questions.getSolution() != "")) {
                     questionsList.add(questions);
                 }
             }
-            }
-        catch(IOException exception){
+        } catch (IOException exception) {
             exception.getStackTrace();
         }
         return questionsList;

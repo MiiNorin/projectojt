@@ -13,6 +13,7 @@
             margin-bottom: 10px;
             cursor: pointer;
         }
+
         .topic-card:hover {
             background-color: #f0f0f0;
         }
@@ -20,39 +21,43 @@
 </head>
 <body>
 <h1>List of Topics</h1>
+<h3>Chapter <span th:text="${chapter.chapterName}"></h3>
 
-<!--<div class="topic-card" th:each="topic : ${topics}">-->
-
-
-<!--    <h3 th:text="${topic.topicName}"></h3>-->
-<!--        <p th:text="${topic.totalQuestion}"></p>-->
-<!--    </a>-->
-<!--</div>-->
 <table border="1">
     <thead>
     <tr>
         <th>Tên test</th>
         <th>Action</th>
-        <th>Làm bài test</th>
+        <th>Status</th>
+        <th>Ngày bắt đầu</th>
+        <th>Ngày kết thúc</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="topic : ${topics}">
         <td th:text="${topic.topicName}"></td>
         <td>
-            <a th:href="@{/questions/createQuestionList/{subjectId}/{chapterId}/{topicId}(subjectId=${subjectId}, chapterId=${chapterId}, topicId=${topic.topicId})}">Tạo question</a>
-            <a th:href="@{'/listTopics/editTopic?subjectId=' + ${subjectId} + '&chapterId=' + ${chapterId} + '&topicId=' + ${topic.topicId}}">Sửa Test</a>
-            <a th:href="@{'/listTopics/deleteTopic?id=' + ${topicId}}" onclick="return confirm('Are you sure you want to delete this question?')">Xóa Test</a>
-
+            <a th:href="@{/questions/createQuestionList/{subjectId}/{chapterId}/{topicId}(subjectId=${subjectId}, chapterId=${chapterId}, topicId=${topic.topicId})}">Tạo
+                question</a>
+            <a th:href="@{'/listTopics/editTopic?subjectId=' + ${subjectId} + '&chapterId=' + ${chapterId} + '&topicId=' + ${topic.topicId}}">Sửa
+                Test</a>
+            <a th:href="@{/listTopics/deleteTopic/{subjectId}/{chapterId}/{topicId}(subjectId=${subjectId}, chapterId=${chapterId}, topicId=${topic.topicId})}"
+               onclick="return confirm('Are you sure you want to delete this question?')">Xóa Test</a>
         </td>
-        <td><a th:href="@{'/test/' + ${topic.topicId} + '/' + ${topic.totalQuestion}}" th:text="${topic.topicName}"></a></td>
+        <td><span th:text="${topic.status}"></span></a>
+        </td>
+        <td><span th:text="${topic.formattedStartDate}"></span></td>
+        <td><span th:text="${topic.formattedFinishDate}"></span></td>
 
     </tr>
     </tbody>
 </table>
+<a th:href="@{'/chapters/showListChapter?subjectId=' + ${subjectId}}">Về lại Chapter List</a>
+
+<!--@{'/chapters/showListChapter?subjectId=' + ${subject.subjectId}}-->
 <script>
     document.querySelectorAll('.topic-card a').forEach(link => {
-        link.addEventListener('click', function(event) {
+        link.addEventListener('click', function (event) {
             event.stopPropagation(); // Ngăn chặn hành vi click mặc định
             const url = this.getAttribute('href');
             window.location.href = url;

@@ -43,7 +43,7 @@
 <!--</form>-->
 <form action="/subject/editSubject" method="post" enctype="multipart/form-data">
     <input type="hidden" id="subjectId" name="subjectId" th:value="${subject.subjectId}"/>
-
+    <input type="hidden" id="userId" name="userId" th:value="${userId}"/>
     <label for="subjectName">Subject Name: </label>
     <input type="text" id="subjectName" name="subjectName" th:value="${subject.subjectName}" required/><br/>
 
@@ -51,11 +51,7 @@
         <img th:src="@{'/public/subject_images/' + ${subject.imgLink}}" width="150">
         <button type="button" class="remove-button" onclick="removeImage()">X</button>
     </div>
-<!--    <div class="form-group" th:if="${question.image != null}">-->
-<!--        <img th:src="@{'/public/images/' + ${question.image}}" width="150">-->
-<!--        <a href="#" class="delete-image" onclick="deleteImage()">x</a>-->
-<!--        <input type="hidden" name="deleteImage" id="deleteImage" value="false">-->
-<!--    </div>-->
+
     <br/>
 
     <label>Browse Image</label>
@@ -68,7 +64,7 @@
     <button type="submit">Lưu</button>
 </form>
 <!-- Link back to the subject list -->
-<a th:href="@{/listSubjects}">Back to Subject List</a>
+<a th:href="@{listSubjects/{userId}(userId=${userId})}">Back to Subject List</a>
 <script>
     function removeImage() {
         var imageContainer = document.querySelector('.image-container');

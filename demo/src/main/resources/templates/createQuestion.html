@@ -16,11 +16,33 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 mx-auto rounded border p-4 m-4">
+<!--            <input type="hidden" name="totalQuestion" th:value="${chapterId}">-->
             <h2 class="text-center mb-5">New Question</h2>
-            <form action="/questions/createQuestionList" method="post" enctype="multipart/form-data">
+            <!-- Modal popup -->
+            <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="errorModalLabel">Error</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Display error message here -->
+                            <span th:text="${error}"></span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <form  id="questionForm" action="/questions/createQuestionList" method="post" enctype="multipart/form-data">
                 <input type="hidden" id="chapterId" name="chapterId" th:value="${chapterId}"/>
                 <input type="hidden" id="subjectId" name="subjectId" th:value="${subjectId}"/>
                 <input type="hidden" id="topicId" name="topicId" th:value="${topicId}"/>
+
                 <div class="form-group">
                     <label>Question Context</label>
                     <div>
@@ -58,6 +80,18 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label>Đáp án</label>
+                    <div>
+                        <select class="form-control" name="answerId">
+                            <option value="1">Đáp án A</option>
+                            <option value="2">Đáp án B</option>
+                            <option value="3">Đáp án C</option>
+                            <option value="4">Đáp án D</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label>Status</label>
                     <div>
                         <div class="form-check form-check-inline">
@@ -78,14 +112,13 @@
                         <input class="form-control" name="solution"></input>
                     </div>
                 </div>
-                <div class="row multiple-context">
-                    <button type="submit" class="btn btn-primary">Add</button>
-                </div>
+                <button type="button" class="btn btn-primary" onclick="validateAndSubmit()">Add</button>
+
             </form>
         </div>
         <div class="import-and-export">
             <!-- Sửa action của form này -->
-            <form th:action="@{/questions/import/{subjectId}/{chapterId}/{topicId}(subjectId=${subjectId}, chapterId=${chapterId}, topic=${topicId})}" method="post" enctype="multipart/form-data">
+            <form th:action="@{/questions/import/{subjectId}/{chapterId}/{topicId}(subjectId=${subjectId}, chapterId=${chapterId}, topicId=${topicId})}" method="post" enctype="multipart/form-data">
                 <input type="file" name="file"/>
                 <input type="hidden" name="chapterId" th:value="${chapterId}"/>
                 <input type="hidden" id="subjectId" name="subjectId" th:value="${subjectId}"/>
@@ -98,6 +131,28 @@
         <a href="/excel/download">Download Template Here</a>
     </div>
 </div>
+<script>
+    // Hàm kiểm tra hợp lệ trước khi submit
+    function validateAndSubmit() {
+        var totalQuestionsInChapter = parseInt("${totalQuestion}");
+        var maxQuestionsInChapter = parseInt("${maxQuestions}");
+
+        // Kiểm tra nếu tổng số câu hỏi vượt quá số lượng tối đa trong chương
+        if (totalQuestionsInChapter >= maxQuestionsInChapter) {
+            // Hiển thị modal popup với thông báo lỗi
+            $('#errorModalBody').text("Total questions added into the chapter should not exceed the limit of " + maxQuestionsInChapter);
+            $('#errorModal').modal('show');
+        } else {
+            // Nếu hợp lệ, submit form
+            document.getElementById("createForm").submit();
+        }
+    }
+
+    // Hàm điều hướng người dùng về trang topic list
+    function redirectToTopicList() {
+        window.location.href = "http://localhost:8080/listTopics/showListTopic/";
+    }
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
