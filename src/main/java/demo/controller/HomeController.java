@@ -21,13 +21,5 @@ public class HomeController {
         return "mainPage";
     }
 
-    @GetMapping("/ViewAdmin")
-    public String movetoAdmin(){
-        return "ViewAdmin";
-    }
 
-    @GetMapping("/ListAccount")
-    public String movetoListAccount(){
-        return "ListAccount";
-    }
 }

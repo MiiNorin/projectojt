@@ -45,37 +45,81 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                <li class="breadcrumb-item active">Schedule Manager</li>
+                <li class="breadcrumb-item active">Account Manager</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
 
     <section class="section dashboard">
-        <div class="card-body pb-0">
-            <h5 class="card-title">List Subject <span></span></h5>
+        <div class="row">
 
-            <table class="table table-bordered table-striped">
-                <thead>
-                <tr>
-                    <th scope="col">Account ID</th>
-                    <th scope="col">Account Name</th>
-                    <th scope="col">Create Date</th>
-                    <th scope="col">Slot</th>
+            <!-- Left side columns -->
+            <!-- Reports -->
+            <div class="col-12">
+                <div class="card top-selling overflow-auto">
 
-                    <td>
-                        <a class="btn btn-danger" href="">Delete</a>
-                        <a class="btn btn-primary " href="">Edit</a>
-                    </td>
-                </tr>
-                </thead>
+                    <div class="filter">
+                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                                <h6></h6>
+                            </li>
 
-                <tbody>
+                        </ul>
+                    </div>
 
-                </tbody>
-            </table>
+                    <div class="card-body pb-0">
+                        <h5 class="card-title">List Account <span></span></h5>
 
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">Account ID</th>
+                                <th scope="col">Role Id</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Password</th>
+                                <th scope="col">Create Date</th>
+                                <th scope="col">Full Name</th>
+                                <th scope="col">Birth Day</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">School Name</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">Status</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+<tr th:each="a : ${accountList}">
+    <td scope="col" th:text="${a.getAccountId()}"></td>
+    <td scope="col" th:text="${a.getRoleId()}"></td>
+    <td scope="col" th:text="${a.getEmail()}"></td>
+    <td scope="col" th:text="${a.getPassword()}"></td>
+    <td scope="col" th:text="${a.getCreateDate()}"></td>
+    <td scope="col" th:text="${a.getFullName()}"></td>
+    <td scope="col" th:text="${a.getBirthDay()}"></td>
+    <td scope="col" th:text="${a.getPhone()}"></td>
+    <td scope="col" th:text="${a.getSchoolName()}"></td>
+    <td scope="col" th:text="${a.getGender()}"></td>
+    <td scope="col" th:text="${a.getStatus()}"></td>
+    <td>
+        <a class="btn btn-danger" href="">Delete</a>
+        <a class="btn btn-primary " href="">Edit</a>
+    </td>
+
+</tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div><!-- Report -->
         </div>
     </section>
+
+
+
 
 
 
