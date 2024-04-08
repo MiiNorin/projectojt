@@ -11,7 +11,6 @@ import java.util.List;
 public interface SubjectRepository extends JpaRepository<SubjectsEntity, Integer> {
     @Query("SELECT s.account.userId FROM SubjectsEntity s WHERE s.subjectId = :subjectId")
     Integer findAccountIdBySubjectId(Integer subjectId);
-
     List<SubjectsEntity> findSubjectsEntitiesByAccountUserId(Integer userId);
 
 }

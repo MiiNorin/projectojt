@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,14 @@ public class ChapterController {
     @GetMapping("/showListChapter")
     public String showChaptersBySubjectId(@RequestParam("subjectId") Integer subjectId, Model model, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("user_id");
-
+        if (userId == null) {
+            return "redirect:/home/homePage";
+        }
+        SubjectsEntity subjectCheck = subjectRepository.findById(subjectId).orElse(null);
+        int createdSubjectUserId = subjectCheck.getAccount().getUserId();
+        if(userId!=null && userId!=createdSubjectUserId){
+            return "redirect:/home/homePage";
+        }
         List<ChaptersEntity> chapters = chapterRepository.findChaptersEntityBySubjectsSubjectId(subjectId);
         model.addAttribute("chapters", chapters);
         model.addAttribute("subjectId", subjectId);
@@ -43,8 +51,9 @@ public class ChapterController {
         return "showListChapter";
     }
 
+
     @GetMapping("/chooseChapter")
-    public String showChapterForStudent(@RequestParam("subjectId") Integer subjectId, Model model){
+    public String showChapterForStudent(@RequestParam("subjectId") Integer subjectId, Model model) {
         List<ChaptersEntity> chapters = chapterRepository.findChaptersEntityBySubjectsSubjectId(subjectId);
         model.addAttribute("chapters", chapters);
         model.addAttribute("subjectId", subjectId);
@@ -52,15 +61,34 @@ public class ChapterController {
         model.addAttribute("subject", subject);
         return "showListChapterForStudent";
     }
+
     @GetMapping("/addChapter/{subjectId}")
-    public String showAddChapterForm(Model model, @PathVariable("subjectId") int subjectId) {
+    public String showAddChapterForm(Model model, @PathVariable("subjectId") int subjectId, HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userId == null) {
+            return "redirect:/home/homePage";
+        }
+        SubjectsEntity subjectCheck = subjectRepository.findById(subjectId).orElse(null);
+        int createdSubjectUserId = subjectCheck.getAccount().getUserId();
+        if(userId!=null && userId!=createdSubjectUserId){
+            return "redirect:/home/homePage";
+        }
         model.addAttribute("subjectId", subjectId);
         return "addChapter";
     }
 
     @PostMapping("/addChapter")
     public String addChapterToSubject(Model model, @RequestParam("subjectId") int subjectId,
-                                      @RequestParam String chapterName) {
+                                      @RequestParam String chapterName, HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userId == null) {
+            return "redirect:/home/homePage";
+        }
+        SubjectsEntity subjectCheck = subjectRepository.findById(subjectId).orElse(null);
+        int createdSubjectUserId = subjectCheck.getAccount().getUserId();
+        if(userId!=null && userId!=createdSubjectUserId){
+            return "redirect:/home/homePage";
+        }
         ChaptersEntity chaptersEntity = new ChaptersEntity();
         chaptersEntity.setChapterName(chapterName);
         int totalQuestionInChapter = 0;
@@ -74,15 +102,36 @@ public class ChapterController {
     }
 
 
-
     @GetMapping("/deleteChapter/{chapterId}/{subjectId}")
-    public String deleteChapter(@PathVariable("chapterId") int chapterId, @PathVariable("subjectId") int subjectId) {
+    public String deleteChapter(@PathVariable("chapterId") int chapterId, @PathVariable("subjectId") int subjectId,
+                                HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userId == null) {
+            return "redirect:/home/homePage";
+        }
+        SubjectsEntity subjectCheck = subjectRepository.findById(subjectId).orElse(null);
+        int createdSubjectUserId = subjectCheck.getAccount().getUserId();
+        if(userId!=null && userId!=createdSubjectUserId){
+            return "redirect:/home/homePage";
+        }
         chapterRepository.deleteById(chapterId);
         return "redirect:/chapters/showListChapter?subjectId=" + subjectId;
     }
 
     @GetMapping("/editChapter")
-    public String showEditChapterForm(Model model, @RequestParam("subjectId") int subjectId, @RequestParam("chapterId") int chapterId) {
+    public String showEditChapterForm(Model model,
+                                      @RequestParam("subjectId") int subjectId,
+                                      @RequestParam("chapterId") int chapterId,
+                                      HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userId == null) {
+            return "redirect:/home/homePage";
+        }
+        SubjectsEntity subjectCheck = subjectRepository.findById(subjectId).orElse(null);
+        int createdSubjectUserId = subjectCheck.getAccount().getUserId();
+        if(userId!=null && userId!=createdSubjectUserId){
+            return "redirect:/home/homePage";
+        }
         try {
             ChaptersEntity chapter = chapterRepository.findById(chapterId).orElse(null);
             if (chapter != null) {
@@ -96,10 +145,21 @@ public class ChapterController {
             return "error";
         }
     }
+
     @PostMapping("/editChapter")
     public String editQuestion(@RequestParam("chapterId") int chapterId,
                                @RequestParam("subjectId") int subjectId,
-                               @ModelAttribute ChaptersEntity chapter) {
+                               @ModelAttribute ChaptersEntity chapter,
+                               HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("user_id");
+        if (userId == null) {
+            return "redirect:/home/homePage";
+        }
+        SubjectsEntity subjectCheck = subjectRepository.findById(subjectId).orElse(null);
+        int createdSubjectUserId = subjectCheck.getAccount().getUserId();
+        if(userId!=null && userId!=createdSubjectUserId){
+            return "redirect:/home/homePage";
+        }
         try {
             ChaptersEntity chapters = chapterRepository.findById(chapterId).orElse(null);
             if (chapters != null) {

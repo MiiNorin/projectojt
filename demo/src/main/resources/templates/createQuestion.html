@@ -16,7 +16,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8 mx-auto rounded border p-4 m-4">
-<!--            <input type="hidden" name="totalQuestion" th:value="${chapterId}">-->
+            <!--            <input type="hidden" name="totalQuestion" th:value="${chapterId}">-->
             <h2 class="text-center mb-5">New Question</h2>
             <!-- Modal popup -->
             <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
@@ -28,56 +28,72 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                            <!-- Display error message here -->
-                            <span th:text="${error}"></span>
-                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <form  id="questionForm" action="/questions/createQuestionList" method="post" enctype="multipart/form-data">
+            <form method="post" action="/questions/createQuestionList" enctype="multipart/form-data" th:object="${questionDto}">
                 <input type="hidden" id="chapterId" name="chapterId" th:value="${chapterId}"/>
                 <input type="hidden" id="subjectId" name="subjectId" th:value="${subjectId}"/>
                 <input type="hidden" id="topicId" name="topicId" th:value="${topicId}"/>
-
                 <div class="form-group">
                     <label>Question Context</label>
                     <div>
-                        <input class="form-control" name="questionContext"></input>
+                        <input class="form-control" th:field="${questionDto.questionContext}"></input>
+                        <p th:if="${#fields.hasErrors('questionContext')}" th:errorclass="text-danger" th:errors="${questionDto.questionContext}"></p>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Option A</label>
                     <div>
-                        <input class="form-control" name="optionA"></input>
+                        <input class="form-control" th:field="${questionDto.optionA}"></input>
+                        <p th:if="${#fields.hasErrors('optionA')}" th:errorclass="text-danger" th:errors="${questionDto.optionA}"></p>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Option B</label>
                     <div>
-                        <input class="form-control" name="optionB"></input>
+                        <input class="form-control" th:field="${questionDto.optionB}"></input>
+                        <p th:if="${#fields.hasErrors('optionB')}" th:errorclass="text-danger" th:errors="${questionDto.optionB}"></p>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Option C</label>
                     <div>
-                        <input class="form-control" name="optionC"></input>
+                        <input class="form-control" th:field="${questionDto.optionC}"></input>
+                        <p th:if="${#fields.hasErrors('optionC')}" th:errorclass="text-danger" th:errors="${questionDto.optionC}"></p>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Option D</label>
                     <div>
-                        <input class="form-control" name="optionD"></input>
+                        <input class="form-control" th:field="${questionDto.optionD}"></input>
+                        <p th:if="${#fields.hasErrors('optionD')}" th:errorclass="text-danger" th:errors="${questionDto.optionD}"></p>
                     </div>
                 </div>
+                <small id="optionError" class="text-danger" style="display: none;">Please fill at least one option.</small>
+
                 <div class="form-group">
                     <label>Browse Image</label>
                     <div>
-                        <input type="file" class="form-control-file" name="image">
+                        <input type="file" class="form-control-file" th:field="${questionDto.image}">
                     </div>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="hardRadio" value="hard">
+                            <label class="form-check-label" for="hardRadio">Hard</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="easyRadio" value="easy">
+                            <label class="form-check-label" for="easyRadio">Easy</label>
+                        </div>
+                    </div>
+                    <small id="statusError" class="text-danger" style="display: none;">Please select one option.</small>
                 </div>
                 <div class="form-group">
                     <label>Đáp án</label>
@@ -90,31 +106,84 @@
                         </select>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label>Status</label>
-                    <div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="status" id="hardRadio" value="hard" checked>
-                            <label class="form-check-label" for="hardRadio">Hard</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="status" id="easyRadio" value="easy">
-                            <label class="form-check-label" for="easyRadio">Easy</label>
-                        </div>
-                    </div>
-                </div>
-
-
                 <div class="form-group">
                     <label>Solution</label>
                     <div>
-                        <input class="form-control" name="solution"></input>
+                        <input class="form-control" th:field="${questionDto.solution}"></input>
+                        <p th:if="${#fields.hasErrors('solution')}" th:errorclass="text-danger" th:errors="${questionDto.solution}">You must fill the solution</p>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary" onclick="validateAndSubmit()">Add</button>
+
+                <div class="row">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
 
             </form>
+<!--            <form  id="questionForm" action="/questions/createQuestionList" method="post" enctype="multipart/form-data">-->
+
+
+<!--                <div class="form-group">-->
+<!--                    <label>Question Context</label>-->
+<!--                    <div>-->
+<!--                        <input class="form-control" name="questionContext"></input>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="form-group">-->
+<!--                    <label>Option A</label>-->
+<!--                    <div>-->
+<!--                        <input class="form-control" name="optionA"></input>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="form-group">-->
+<!--                    <label>Option B</label>-->
+<!--                    <div>-->
+<!--                        <input class="form-control" name="optionB"></input>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="form-group">-->
+<!--                    <label>Option C</label>-->
+<!--                    <div>-->
+<!--                        <input class="form-control" name="optionC"></input>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="form-group">-->
+<!--                    <label>Option D</label>-->
+<!--                    <div>-->
+<!--                        <input class="form-control" name="optionD"></input>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="form-group">-->
+<!--                    <label>Browse Image</label>-->
+<!--                    <div>-->
+<!--                        <input type="file" class="form-control-file" name="image">-->
+<!--                    </div>-->
+<!--                </div>-->
+
+
+<!--                <div class="form-group">-->
+<!--                    <label>Status</label>-->
+<!--                    <div>-->
+<!--                        <div class="form-check form-check-inline">-->
+<!--                            <input class="form-check-input" type="radio" name="status" id="hardRadio" value="hard" checked>-->
+<!--                            <label class="form-check-label" for="hardRadio">Hard</label>-->
+<!--                        </div>-->
+<!--                        <div class="form-check form-check-inline">-->
+<!--                            <input class="form-check-input" type="radio" name="status" id="easyRadio" value="easy">-->
+<!--                            <label class="form-check-label" for="easyRadio">Easy</label>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+
+<!--                <div class="form-group">-->
+<!--                    <label>Solution</label>-->
+<!--                    <div>-->
+<!--                        <input class="form-control" name="solution"></input>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <button type="button" class="btn btn-primary">Add</button>-->
+
+<!--            </form>-->
         </div>
         <div class="import-and-export">
             <!-- Sửa action của form này -->
@@ -132,7 +201,18 @@
     </div>
 </div>
 <script>
-    // Hàm kiểm tra hợp lệ trước khi submit
+    document.querySelector('form').addEventListener('submit', function(event) {
+        var hardRadio = document.getElementById('hardRadio');
+        var easyRadio = document.getElementById('easyRadio');
+        var statusError = document.getElementById('statusError');
+
+        if (!hardRadio.checked && !easyRadio.checked) {
+            event.preventDefault();
+            statusError.style.display = 'block';
+        } else {
+            statusError.style.display = 'none';
+        }
+    });
     function validateAndSubmit() {
         var totalQuestionsInChapter = parseInt("${totalQuestion}");
         var maxQuestionsInChapter = parseInt("${maxQuestions}");

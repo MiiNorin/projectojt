@@ -29,5 +29,4 @@ public interface QuestionRepository extends JpaRepository<Questions, Integer> {
     Page<Questions> findByChaptersChapterId(Integer chapterId, Pageable pageable);
     Page<Questions> findBySubjectSubjectId(Integer subjectId, Pageable pageable);
 
-    long countByTopicsTopicIdAndChaptersChapterId(int topicId, Integer chapterId);
 }
