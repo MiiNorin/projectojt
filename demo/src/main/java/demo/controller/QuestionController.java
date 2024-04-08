@@ -51,6 +51,7 @@ public class QuestionController {
 
     @Autowired
     private AccountRepository accountRepository;
+
     @GetMapping("/showQuestion/{subjectId}/{chapterId}")
     public String getListQuestion(Model model,
                                   @RequestParam(defaultValue = "0") int page,
@@ -65,7 +66,7 @@ public class QuestionController {
         Integer createdSubjectUserId = subjectCheck.getAccount().getUserId();
         ChaptersEntity chapterCheck = chapterRepository.findById(chapterId).orElse(null);
         Integer createdChapterUserId = chapterCheck.getSubjects().getAccount().getUserId();
-        if(userId!=null && (userId!=createdChapterUserId || userId!=createdSubjectUserId)){
+        if (userId != null && (userId != createdChapterUserId || userId != createdSubjectUserId)) {
             return "redirect:/home/homePage";
         }
         int totalQuestion = questionRepository.countByChaptersChapterId(chapterId);
@@ -86,7 +87,7 @@ public class QuestionController {
 
 
     @GetMapping("subject/{subjectId}")
-    public String getListQuestionBySubject(Model model, @RequestParam(defaultValue = "0") int page, @PathVariable("subjectId") int subjectId){
+    public String getListQuestionBySubject(Model model, @RequestParam(defaultValue = "0") int page, @PathVariable("subjectId") int subjectId) {
         int pageSize = 5;
         Page<Questions> questionPage = questionService.findQuestionsWithPaginationSortByDate(page, pageSize, subjectId);
         model.addAttribute("questions", questionPage.getContent());
@@ -112,7 +113,7 @@ public class QuestionController {
         Integer createdChapterUserId = chapterCheck.getSubjects().getAccount().getUserId();
         TopicsEntity topicCheck = topicRepository.findById(topicId).orElse(null);
         Integer createdTopicUserId = topicCheck.getChapter().getSubjects().getAccount().getUserId();
-        if(userId!=null && (userId!=createdChapterUserId || userId!=createdSubjectUserId || userId!=createdTopicUserId)){
+        if (userId != null && (userId != createdChapterUserId || userId != createdSubjectUserId || userId != createdTopicUserId)) {
             return "/home/homePage";
         }
         model.addAttribute("questionDto", new QuestionDto());
@@ -121,6 +122,7 @@ public class QuestionController {
         model.addAttribute("topicId", topicId);
         return "createQuestion";
     }
+
     @PostMapping("/createQuestionList")
     public String createQuestion(@Valid @ModelAttribute QuestionDto questionDto,
                                  @RequestParam("chapterId") Integer chapterId,
@@ -140,7 +142,7 @@ public class QuestionController {
         Integer createdChapterUserId = chapterCheck.getSubjects().getAccount().getUserId();
         TopicsEntity topicCheck = topicRepository.findById(topicId).orElse(null);
         Integer createdTopicUserId = topicCheck.getChapter().getSubjects().getAccount().getUserId();
-        if(userId!=null && (userId!=createdChapterUserId || userId!=createdSubjectUserId || userId!=createdTopicUserId)){
+        if (userId != null && (userId != createdChapterUserId || userId != createdSubjectUserId || userId != createdTopicUserId)) {
             return "/home/homePage";
         }
         ChaptersEntity chapter = chapterRepository.findById(chapterId).orElse(null);
@@ -193,7 +195,7 @@ public class QuestionController {
         Integer createdSubjectUserId = subjectCheck.getAccount().getUserId();
         ChaptersEntity chapterCheck = chapterRepository.findById(chapterId).orElse(null);
         Integer createdChapterUserId = chapterCheck.getSubjects().getAccount().getUserId();
-        if(userId!=null && (userId!=createdChapterUserId || userId!=createdSubjectUserId)){
+        if (userId != null && (userId != createdChapterUserId || userId != createdSubjectUserId)) {
             return "/home/homePage";
         }
         try {
@@ -211,6 +213,7 @@ public class QuestionController {
             return "redirect:/questions/showQuestion/" + chapterId;
         }
     }
+
     @PostMapping("/editQuestion")
     public String editQuestion(@RequestParam("id") int questionId,
                                @RequestParam("chapterId") int chapterId,
@@ -227,7 +230,7 @@ public class QuestionController {
         Integer createdSubjectUserId = subjectCheck.getAccount().getUserId();
         ChaptersEntity chapterCheck = chapterRepository.findById(chapterId).orElse(null);
         Integer createdChapterUserId = chapterCheck.getSubjects().getAccount().getUserId();
-        if(userId!=null && (userId!=createdChapterUserId || userId!=createdSubjectUserId)){
+        if (userId != null && (userId != createdChapterUserId || userId != createdSubjectUserId)) {
             return "/home/homePage";
         }
         try {
@@ -294,12 +297,13 @@ public class QuestionController {
         Integer createdSubjectUserId = subjectCheck.getAccount().getUserId();
         ChaptersEntity chapterCheck = chapterRepository.findById(chapterId).orElse(null);
         Integer createdChapterUserId = chapterCheck.getSubjects().getAccount().getUserId();
-        if(userId!=null && (userId!=createdChapterUserId || userId!=createdSubjectUserId)){
+        if (userId != null && (userId != createdChapterUserId || userId != createdSubjectUserId)) {
             return "/home/homePage";
         }
         questionService.deleteQuestionById(id);
-        return "redirect:/questions/showQuestion/" + subjectId +'/'+ chapterId;
+        return "redirect:/questions/showQuestion/" + subjectId + '/' + chapterId;
     }
+
     @GetMapping("/deleteQuestionInSubject")
     public String deleteQuestionInSubject(@RequestParam("id") int id,
                                           @RequestParam("subjectId") int subjectId,
@@ -310,7 +314,7 @@ public class QuestionController {
         }
         SubjectsEntity subjectCheck = subjectRepository.findById(subjectId).orElse(null);
         Integer createdSubjectUserId = subjectCheck.getAccount().getUserId();
-        if(userId!=null && (userId!=createdSubjectUserId)){
+        if (userId != null && (userId != createdSubjectUserId)) {
             return "/home/homePage";
         }
         questionService.deleteQuestionById(id);
@@ -334,7 +338,7 @@ public class QuestionController {
         Integer createdChapterUserId = chapterCheck.getSubjects().getAccount().getUserId();
         TopicsEntity topicCheck = topicRepository.findById(topicId).orElse(null);
         Integer createdTopicUserId = topicCheck.getChapter().getSubjects().getAccount().getUserId();
-        if(userId!=null && (userId!=createdChapterUserId || userId!=createdSubjectUserId || userId!=createdTopicUserId)){
+        if (userId != null && (userId != createdChapterUserId || userId != createdSubjectUserId || userId != createdTopicUserId)) {
             return "/home/homePage";
         }
         questionService.saveQuestionToDatabase(file, subjectId, chapterId, topicId);
@@ -357,7 +361,7 @@ public class QuestionController {
         Integer createdSubjectUserId = subjectCheck.getAccount().getUserId();
         ChaptersEntity chapterCheck = chapterRepository.findById(chapterId).orElse(null);
         Integer createdChapterUserId = chapterCheck.getSubjects().getAccount().getUserId();
-        if(userId!=null && (userId!=createdChapterUserId || userId!=createdSubjectUserId)){
+        if (userId != null && (userId != createdChapterUserId || userId != createdSubjectUserId)) {
             return "/home/homePage";
         }
         int pageSize = 5;
@@ -384,7 +388,7 @@ public class QuestionController {
         }
         SubjectsEntity subjectCheck = subjectRepository.findById(subjectId).orElse(null);
         Integer createdSubjectUserId = subjectCheck.getAccount().getUserId();
-        if(userId!=null && (userId!=createdSubjectUserId)){
+        if (userId != null && (userId != createdSubjectUserId)) {
             return "/home/homePage";
         }
         int pageSize = 5;

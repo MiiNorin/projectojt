@@ -123,11 +123,12 @@
         </ul>
     </div>
 </div>
-<form action="/subject/searchByName" method="get">
+<form action="/subject/searchByName" method="get"> <!-- Chỉnh sửa action của form -->
     <input type="text" name="searchName" placeholder="Search by name" th:value="${searchName}">
     <input type="hidden" id="userId" name="userId" th:value="${userId}"/>
     <button type="submit">Search</button>
 </form>
 
+<a th:href="@{/subject/listSubjects/{userId}(userId=${userId})}">Back to list</a>
 </body>
 </html>

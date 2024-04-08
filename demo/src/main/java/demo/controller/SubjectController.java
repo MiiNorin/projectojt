@@ -2,6 +2,8 @@ package demo.controller;
 
 
 import demo.persistence.entity.Account;
+import demo.persistence.entity.ChaptersEntity;
+import demo.persistence.entity.Questions;
 import demo.persistence.entity.SubjectsEntity;
 import demo.repository.AccountRepository;
 import demo.repository.SubjectRepository;
@@ -9,6 +11,10 @@ import demo.service.SubjectService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -35,22 +41,34 @@ public class SubjectController {
     private SubjectRepository subjectRepository;
     @Autowired
     private AccountRepository accountRepository;
+
     @GetMapping("/listSubjects/{userId}")
-    public String getSubjects(Model model, @PathVariable("userId") int userId, HttpSession session) {
+    public String getSubjects(Model model, @PathVariable("userId") int userId, @RequestParam(defaultValue = "0") int page, HttpSession session) {
         Integer loggedInUserId = (Integer) session.getAttribute("user_id");
         if (loggedInUserId != null && loggedInUserId.equals(userId)) {
-            List<SubjectsEntity> subjectsEntities = subjectRepository.findSubjectsEntitiesByAccountUserId(userId);
-            model.addAttribute("subjects", subjectsEntities);
+            List<SubjectsEntity> allSubjects = subjectRepository.findSubjectsEntitiesByAccountUserId(userId);
+
+            if (allSubjects.isEmpty()) {
+                model.addAttribute("subjects", allSubjects);
+                model.addAttribute("userId", userId);
+                model.addAttribute("currentPage", 0);
+                model.addAttribute("totalPages", 0);
+                return "showListSubject";
+            }
+            int pageSize = 5;
+            Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createDate").descending());
+            Page<SubjectsEntity> subjectsPage = subjectRepository.findByAccount_UserId(userId, pageable);
+            model.addAttribute("subjects", subjectsPage.getContent());
             model.addAttribute("userId", userId);
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", subjectsPage.getTotalPages());
             return "showListSubject";
         } else {
             return "redirect:/home/homePage";
         }
     }
-
-
     @GetMapping("/chooseYourCourses")
-    public String chooseSubjects(Model model){
+    public String chooseSubjects(Model model) {
         List<SubjectsEntity> subjects = subjectService.getAllSubjects();
         model.addAttribute("subjects", subjects);
         return "showListSubjectForStudent";
@@ -62,7 +80,12 @@ public class SubjectController {
     public String addSubject(@ModelAttribute SubjectsEntity newSubject,
                              @RequestParam("imageFile") MultipartFile imageFile,
                              @RequestParam("userId") int userId,
-                             Model model) {
+                             Model model,
+                             HttpSession session) {
+        Integer loggedInUserId = (Integer) session.getAttribute("user_id");
+        if (loggedInUserId != null && userId != loggedInUserId) {
+            return "/home/homePage";
+        }
         try {
             Account account = accountRepository.findById(userId).orElse(null);
 
@@ -103,8 +126,18 @@ public class SubjectController {
         subjectRepository.deleteById(id);
         return "redirect:/subject/listSubjects/" + userId;
     }
+
     @GetMapping("/editSubject")
     public String showEditSubjectForm(@RequestParam("subjectId") int subjectId, Model model, HttpSession session) {
+        Integer loggedInUserId = (Integer) session.getAttribute("user_id");
+        if(loggedInUserId==null){
+            return "redirect:/home/homePage";
+        }
+        SubjectsEntity subjectCheck = subjectRepository.findById(subjectId).orElse(null);
+        Integer checkedId = subjectCheck.getAccount().getUserId();
+        if(loggedInUserId!=null&&loggedInUserId!=checkedId){
+            return "redirect:/home/homePage";
+        }
         Optional<SubjectsEntity> subjectOptional = subjectService.getSubjectById(subjectId);
         Integer userId = (Integer) session.getAttribute("user_id");
         if (subjectOptional.isPresent()) {
@@ -120,7 +153,17 @@ public class SubjectController {
     public String editSubject(@RequestParam("subjectId") int subjectId,
                               @RequestParam(value = "newImage", required = false) MultipartFile newImage,
                               @ModelAttribute SubjectsEntity subject,
-                              @RequestParam("userId") int userId) {
+                              @RequestParam("userId") int userId,
+                              HttpSession session) {
+        Integer loggedInUserId = (Integer) session.getAttribute("user_id");
+        if(loggedInUserId==null){
+            return "redirect:/home/homePage";
+        }
+        SubjectsEntity subjectCheck = subjectRepository.findById(subjectId).orElse(null);
+        Integer checkedId = subjectCheck.getAccount().getUserId();
+        if(loggedInUserId!=null&&loggedInUserId!=checkedId){
+            return "redirect:/home/homePage";
+        }
         try {
             Optional<SubjectsEntity> optionalExistingSubject = subjectService.getSubjectById(subjectId);
             if (!optionalExistingSubject.isPresent()) {
@@ -163,6 +206,26 @@ public class SubjectController {
             System.out.println("Error editing subject: " + ex.getMessage());
             return "error";
         }
+
     }
+
+    @GetMapping("/searchByName")
+    public String searchByName(Model model,
+                               @RequestParam("searchName") String searchName,
+                               @RequestParam(defaultValue = "0") int page,
+                               @RequestParam("userId") int userId) {
+        int pageSize = 5;
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createDate").descending());
+        Page<SubjectsEntity> subjectPage = subjectRepository.findBySubjectNameContaining(searchName, pageable);
+        model.addAttribute("subjects", subjectPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", subjectPage.getTotalPages());
+        model.addAttribute("userId", userId);
+        model.addAttribute("searchName", searchName);
+        return "searchSubjectResultPage";
+    }
+
+
+
 
 }
