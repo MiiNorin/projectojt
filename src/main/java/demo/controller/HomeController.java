@@ -16,10 +16,11 @@ import java.util.List;
 @RequestMapping("/home")
 @Controller
 public class HomeController {
-    @GetMapping("/manageQuestion")
+    @GetMapping("/HomePage")
     public String moveToShowQuestion(){
-        return "mainPage";
+        return "HomePage";
     }
+
 
 
 }
