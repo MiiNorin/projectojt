@@ -102,8 +102,9 @@
                                 <td scope="col" th:text="${b.getSubjectId()}"></td>
                                 <td scope="col" th:text="${b.getChapterId()}"></td>
                                 <td>
-                                    <a class="btn btn-danger" href="">Delete</a>
-                                    <a class="btn btn-primary " href="">Edit</a>
+                                    <a th:href="@{'/questions/editQuestion?id=' + ${b.getTopicId()}}" class="btn btn-primary">Edit</a>
+
+                                    <a th:href="@{'/questions/deleteQuestion?id=' + ${b.getTopicId()}}" onclick="return confirm('Are you sure you want to delete this Topic?')" class="btn btn-danger">Delete</a>
                                 </td>
                             </tr>
 
