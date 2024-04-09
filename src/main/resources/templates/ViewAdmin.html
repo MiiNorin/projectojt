@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>ADMIN MANAGER</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="/assets/img/favicon.png" rel="icon">
+    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="/assetsAdmin/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assetsAdmin/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assetsAdmin/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assetsAdmin/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="/assetsAdmin/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="/assetsAdmin/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assetsAdmin/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="/assetsAdmin/css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+<th:block  th:include="/layouts/Admin/SidebarAdmin.html"></th:block>
+<th:block  th:include="/layouts/Guest/headerGuest.html"></th:block>
+
+
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Dashboard</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+        <div class="row">
+
+            <!-- Left side columns -->
+            <!-- Reports -->
+            <div class="col-12">
+                <div class="card top-selling overflow-auto">
+
+                    <div class="filter">
+                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                                <h6></h6>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <div class="card-body pb-0">
+                        <h5 class="card-title">List Account <span></span></h5>
+
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">Account ID</th>
+                                <th scope="col">Role Id</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Password</th>
+                                <th scope="col">Create Date</th>
+                                <th scope="col">Full Name</th>
+                                <th scope="col">Birth Day</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">School Name</th>
+                                <th scope="col">Gender</th>
+                                <th scope="col">Status</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="a : ${accountList}">
+                                <td scope="col" th:text="${a.getAccountId()}"></td>
+                                <td scope="col" th:text="${a.getRoleId()}"></td>
+                                <td scope="col" th:text="${a.getEmail()}"></td>
+                                <td scope="col" th:text="${a.getPassword()}"></td>
+                                <td scope="col" th:text="${a.getCreateDate()}"></td>
+                                <td scope="col" th:text="${a.getFullName()}"></td>
+                                <td scope="col" th:text="${a.getBirthDay()}"></td>
+                                <td scope="col" th:text="${a.getPhone()}"></td>
+                                <td scope="col" th:text="${a.getSchoolName()}"></td>
+                                <td scope="col" th:text="${a.getGender()}"></td>
+                                <td scope="col" th:text="${a.getStatus()}"></td>
+
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div><!-- Report -->
+        </div>
+    </section>
+
+    <section class="section dashboard">
+        <div class="row">
+
+            <!-- Left side columns -->
+            <!-- Reports -->
+            <div class="col-12">
+                <div class="card top-selling overflow-auto">
+
+                    <div class="filter">
+                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                                <h6></h6>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <div class="card-body pb-0">
+                        <h5 class="card-title">List Subject <span></span></h5>
+
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">Subject ID</th>
+                                <th scope="col">Subject Name</th>
+                                <th scope="col">img</th>
+                                <th scope="col">Create Date</th>
+                                <th scope="col">Slot</th>
+                            </tr>
+
+                            </thead>
+                            <tbody>
+                            <tr th:each="b : ${subjectList}">
+                                <td scope="col" th:text="${b.getSubjectId()}"></td>
+                                <td scope="col" th:text="${b.getSubjectName()}"></td>
+                                <td scope="col" th:text="${b.getImage()}"></td>
+                                <td scope="col" th:text="${b.getCreateDate()}"></td>
+                                <td scope="col" th:text="${b.getSlot()}"></td>
+
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+        </div>
+    </section>
+    <section class="section dashboard">
+        <div class="row">
+
+            <!-- Left side columns -->
+            <!-- Reports -->
+            <div class="col-12">
+                <div class="card top-selling overflow-auto">
+
+                    <div class="filter">
+                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                                <h6></h6>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <div class="card-body pb-0">
+                        <h5 class="card-title">List Questions <span></span></h5>
+
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">Question ID</th>
+                                <th scope="col">Topic Id</th>
+                                <th scope="col">Question Context</th>
+                                <th scope="col">Option A</th>
+                                <th scope="col">Option B</th>
+                                <th scope="col">Option C</th>
+                                <th scope="col">Option D</th>
+                                <th scope="col">Solution</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Create Date</th>
+
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="b : ${questionList}">
+                                <td scope="col" th:text="${b.getQuestionId()}"></td>
+                                <td scope="col" th:text="${b.getTopicId()}"></td>
+                                <td scope="col" th:text="${b.getQuestionContext()}"></td>
+                                <td scope="col" th:text="${b.getOptionA()}"></td>
+                                <td scope="col" th:text="${b.getOptionB()}"></td>
+                                <td scope="col" th:text="${b.getOptionC()}"></td>
+                                <td scope="col" th:text="${b.getOptionD()}"></td>
+                                <td scope="col" th:text="${b.getSolution()}"></td>
+                                <td scope="col" th:text="${b.getStatus()}"></td>
+                                <td scope="col" th:text="${b.getCreateDate()}"></td>
+
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div><!-- Report -->
+        </div>
+    </section>
+    <section class="section dashboard">
+        <div class="row">
+
+            <!-- Left side columns -->
+            <!-- Reports -->
+            <div class="col-12">
+                <div class="card top-selling overflow-auto">
+
+                    <div class="filter">
+                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                            <li class="dropdown-header text-start">
+                                <h6></h6>
+                            </li>
+
+                        </ul>
+                    </div>
+
+                    <div class="card-body pb-0">
+                        <h5 class="card-title">List Topics <span></span></h5>
+
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">Topic ID</th>
+                                <th scope="col">Topic Name</th>
+                                <th scope="col"> Total Question</th>
+                                <th scope="col">Topic Type </th>
+                                <th scope="col">Grade</th>
+                                <th scope="col">Create Date</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Start test</th>
+                                <th scope="col">Finish test</th>
+                                <th scope="col">Subject Id</th>
+                                <th scope="col">Chapter Id</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="b : ${topicsList}">
+                                <td scope="col" th:text="${b.getTopicId()}"></td>
+                                <td scope="col" th:text="${b.getTopicName()}"></td>
+                                <td scope="col" th:text="${b.getTotalQuestion()}"></td>
+                                <td scope="col" th:text="${b.getTopicType()}"></td>
+                                <td scope="col" th:text="${b.getGrade()}"></td>
+                                <td scope="col" th:text="${b.getCreateDate()}"></td>
+                                <td scope="col" th:text="${b.getStatus()}"></td>
+                                <td scope="col" th:text="${b.getStartTestDate()}"></td>
+                                <td scope="col" th:text="${b.getFinishTestDate()}"></td>
+                                <td scope="col" th:text="${b.getSubjectId()}"></td>
+                                <td scope="col" th:text="${b.getChapterId()}"></td>
+
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div><!-- Report -->
+        </div>
+    </section>
+
+
+
+
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer  id="footer" class="footer">
+    <div class="copyright">
+        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="/assetsAdmin/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assetsAdmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assetsAdmin/vendor/chart.js/chart.umd.js"></script>
+<script src="/assetsAdmin/vendor/echarts/echarts.min.js"></script>
+<script src="/assetsAdmin/vendor/quill/quill.min.js"></script>
+<script src="/assetsAdmin/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assetsAdmin/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assetsAdmin/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<script src="/assetsAdmin/js/main.js"></script>
+
+</body>
+
+</html>
+
+
+
