@@ -21,6 +21,14 @@ public class HomeController {
         return "HomePage";
     }
 
+    @GetMapping("/Chapter")
+    public String moveToShowChapter(){
+        return "Chapter";
+    }
 
+    @GetMapping("/FormTest")
+    public String movetoShowTest(){
+        return "FormTest";
+    }
 
 }
