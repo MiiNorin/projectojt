@@ -41,8 +41,6 @@
 
 <body>
 <th:block  th:include="/layouts/Guest/headerGuest.html"></th:block>
-<!--<header th:insert="headerGuest.html :: header"></header>-->
-<!--<header th:insert="headerUser.html :: header"></header>-->
 
 
 <br>
@@ -53,7 +51,7 @@
     <div class="container" data-aos="fade-up">
 
         <div class="section-title " >
-            <p>Các Chủ Đề cơ bản</p>
+            <p>Các Chương cơ bản</p>
             <div style="display: flex">
                 <input type="text" id="searchInput" placeholder="Tìm kiếm mã môn học ">
                 <form action="/Topic/searchByStatus" method="get">
@@ -76,7 +74,7 @@
 
 
 
-                        <button style="justify-content: center;" type="button" class="btn btn-outline-success">Làm bài kiểm tra </button>
+                        <a href="/home/FormTest" type="button" class="btn btn-outline-success">Làm bài kiểm tra </a>
                     </div>
                 </div>
             </div> <!-- End Course Item-->
