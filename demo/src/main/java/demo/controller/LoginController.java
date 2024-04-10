@@ -4,6 +4,8 @@ package demo.controller;
 import demo.entity.Account;
 import demo.repository.AccountRepository;
 import demo.service.AccountService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -49,15 +51,30 @@ public class LoginController {
     String fogotPass() {
         return "forgotPass";
     }
-    @PostMapping("/forgotPassPage")
+    @GetMapping("/verifyForgotPass")
     public String fogotPass(@RequestParam String username, Model model) {
         Optional<Account> user = accountRepository.findByEmail(username);
         if (user.isPresent() ) {
-            return "redirect:/home/homePage";
+            String otp =accountService.generateOTP();
+            model.addAttribute("otp",otp);
+            model.addAttribute("user",user);
+            accountService.sendVerificationEmailtoChangePass(username,otp);
+            return "otp_verify";
         } else {
             // auth failed, set error message and return to login page
             model.addAttribute("errorlogin", "Invalid username");
             return "forgotPass";
+        }
+    }
+    @GetMapping("/changePassword")
+    public String verifyUser(@RequestParam String email, @RequestParam("otp") String otp, Model model, HttpSession session1, HttpServletRequest request) {
+        try {
+            HttpSession session = request.getSession();
+            accountService.verify(email, otp, session);
+            return "/FAcademy/login?registerSuccess";
+        } catch (RuntimeException e) {
+            model.addAttribute("error", e.getMessage());
+            return "error";
         }
     }
 //    @GetMapping("/signingoogle")

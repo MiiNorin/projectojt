@@ -50,8 +50,9 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, HttpSession session) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("/FAcademy/loginPage", "/FAcademy/login","/FAcademy/forgotPassPage","/FAcademy/registration",
-                        "/FAcademy/verify","/FAcademy/verify","/home/homePage","/home/About",
+                .requestMatchers("/FAcademy/loginPage", "/FAcademy/login","/FAcademy/forgotPassPage","/FAcademy/verifyForgotPass","/FAcademy/registration",
+                        "/FAcademy/verify","/FAcademy/verify","/home/homePage","/home/About","/home/Trainers",
+                        "/headerGuest","/headerUser",
                         "/css/**", "/js/**", "/vendor/**","/fonts/**", "/images/**",
                         "/static/**","/static/assets/**", "/assets/**",
                         "/home/assets/**","/home/**")

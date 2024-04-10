@@ -31,8 +31,8 @@
 
 <body>
 
-<th:block th:if="${user != null}" th:include="/headerUser.html"></th:block>
-<th:block th:if="${user == null}" th:include="/headerGuest.html"></th:block>
+<header th:if="${user == null}" th:insert="headerGuest.html :: header"></header>
+<header th:if="${user != null}" th:insert="headerUser.html :: header"></header>
 
 <main id="main">
   <!-- ======= Breadcrumbs ======= -->

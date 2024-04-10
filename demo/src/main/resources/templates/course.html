@@ -32,7 +32,8 @@
 
 <body>
 
-<header th:insert="headerGuest.html :: header"></header>
+<header th:if="${user == null}" th:insert="headerGuest.html :: header"></header>
+<header th:if="${user != null}" th:insert="headerUser.html :: header"></header>
 
 <main id="main" data-aos="fade-in">
 
