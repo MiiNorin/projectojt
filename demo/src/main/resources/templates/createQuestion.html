@@ -193,7 +193,11 @@
                 <input type="hidden" id="subjectId" name="subjectId" th:value="${subjectId}"/>
                 <input type="hidden" id="topicId" name="topicId" th:value="${topicId}"/>
                 <input type="submit" value="Import" />
+
             </form>
+            <div th:if="${error != null}" class="error-message">
+                <p th:text="${error}"></p>
+            </div>
         </div>
         <hr>
 

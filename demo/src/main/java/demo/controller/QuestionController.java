@@ -327,7 +327,8 @@ public class QuestionController {
                                      @PathVariable("chapterId") int chapterId,
                                      @PathVariable("topicId") int topicId,
                                      @RequestParam("file") MultipartFile file,
-                                     HttpSession session) {
+                                     HttpSession session,
+                                     Model model) {
         Integer userId = (Integer) session.getAttribute("user_id");
         if (userId == null) {
             return "redirect:/home/homePage";
@@ -341,7 +342,17 @@ public class QuestionController {
         if (userId != null && (userId != createdChapterUserId || userId != createdSubjectUserId || userId != createdTopicUserId)) {
             return "/home/homePage";
         }
-        questionService.saveQuestionToDatabase(file, subjectId, chapterId, topicId);
+        try{
+            questionService.saveQuestionToDatabase(file, subjectId, chapterId, topicId);
+        }
+        catch (Exception e) {
+            model.addAttribute("error", "File không đúng định dạng");
+            model.addAttribute("subjectId", subjectId);
+            model.addAttribute("chapterId", chapterId);
+            model.addAttribute("topicId", topicId);
+            model.addAttribute("questionDto", new QuestionDto());
+            return "createQuestion";
+        }
         return "redirect:/questions/showQuestion/" + subjectId + '/' + chapterId;
     }
 

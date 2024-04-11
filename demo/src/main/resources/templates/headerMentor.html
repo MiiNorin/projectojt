@@ -111,8 +111,7 @@
                 <li><a class="active" href="/home/homePage">Trang chủ</a></li>
                 <li><a  href="/home/About">Giới Thiệu</a></li>
                 <li><a href="/home/Trainers">Đào tạo</a></li>
-                <li><a href="/Events">Làm Test</a></li>
-                <li ><a href="/Course"><span>Khóa Học</span></a></li>
+                <li><a th:href="@{/subject/listSubjects/{userId}(userId=${user.userId})}">Quản lý khóa học</a></li>
                 <li><a href="/home/Contact">Liên Hệ</a></li>
                 <li class="nav-item dropdown">
 
@@ -260,7 +259,7 @@
                         <img th:src="${user.avatar}" alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;">
                         <span class="d-none d-md-block dropdown-toggle ps-2" th:text="${user.fullName}">Tên người đăng nhap</span>
                     </a><!-- End Profile Iamge Icon -->
-<!--                    <input type="hidden" name="userId" id="userId" th:value="${}"/>-->
+                    <!--                    <input type="hidden" name="userId" id="userId" th:value="${}"/>-->
                     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile" style="">
                         <li class="dropdown-header">
                             <h6 th:text="${user.fullName}"></h6>
@@ -288,13 +287,6 @@
                         </li>
                         <li>
                             <hr class="dropdown-divider">
-                        </li>
-                        <li>
-
-                            <a class="dropdown-item d-flex align-items-center" th:href="@{/subject/listSubjects/{userId}(userId=${userId})}">
-                                <i class="bi bi-question-circle"></i>
-                                <span>Manage Subject</span>
-                            </a>
                         </li>
 
                         <li>

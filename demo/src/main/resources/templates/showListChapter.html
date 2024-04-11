@@ -1,42 +1,185 @@
+
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh sách các chương</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>ADMIN MANAGER</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="/assets/img/favicon.png" rel="icon">
+    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="/assetsAd/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="/assetsAd/css/style.css" rel="stylesheet">
+    <link href="/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+    <link href="/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <link href="/assets/css/style.css" rel="stylesheet"/>
 </head>
+
 <body>
-<h2>Danh sách các chương của <span th:text="${subject.subjectName}"></span></h2>
-<table border="1">
-    <thead>
-    <tr>
-        <th>Tên Chương</th>
-        <th>Action</th>
-        <th>Tổng số câu hỏi</th>
-        <th>Làm bài test tổng</th>
-        <th>Show list câu hỏi</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="chapter : ${chapters}">
-        <td th:text="${chapter.chapterName}"></td>
-        <td>
-            <a th:href="@{/listTopics/addTopic/{subjectId}/{chapterId}(subjectId=${subjectId}, chapterId = ${chapter.chapterId})}">Thêm test</a>
-            <a th:href="@{'/listTopics/showListTopic/' + ${subjectId} + '/' + ${chapter.chapterId}}">Quản lý câu hỏi</a>
-            <a th:href="@{'/chapters/editChapter?chapterId=' + ${chapter.chapterId} + '&subjectId=' + ${subjectId}}">Sửa
-                Chapter</a>
-            <a th:href="@{'/chapters/deleteChapter/' + ${chapter.chapterId} + '/' + ${subjectId}}"
-               onclick="return confirm('Are you sure you want to delete this question?')">Xóa</a>
-        </td>
-        <th><span th:text="${chapter.totalQuestion}" readonly></span></th>
-        <td><a th:href="@{'/listTopics/test/' + ${chapter.chapterId}}">Do test</a></td>
-        <td><a th:href="@{'/questions/showQuestion/' +${subjectId} + '/'+${chapter.chapterId}}">Show List Question</a>
-        </td>
+<th:block th:include="/layouts/Admin/SidebarChapter.html"></th:block>
 
-    </tr>
-    </tbody>
-</table>
+<th:block th:if="${user != null}">
+    <!-- Header for normal users -->
+    <th:block th:if="${user.roleId == 4}" th:include="/headerUser.html"></th:block>
 
-<a th:href="@{/subject/listSubjects/{userId}(userId=${userId})}">Back to Subject List</a>
+    <!-- Header for mentors -->
+    <th:block th:if="${user.roleId == 1 or user.roleId == 2 or user.roleId == 3}"
+              th:include="/headerMentor.html"></th:block>
+</th:block>
+
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Dashboard</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/home/homePage">Home</a></li>
+                <li class="breadcrumb-item active">Manage Chapter</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
+    <div class="wrapper">
+
+        <div class="single-card" th:each="chapter : ${chapters}">
+            <div class="img-area">
+                <img th:src="@{'/subject_images/' + ${subject.imgLink}}" onerror='this.style.display="none"' style="max-width: 100%">
+                <div class="overlay">
+                    <button class="delete-btn">
+                        <a th:href="@{'/chapters/deleteChapter/' + ${chapter.chapterId} + '/' + ${subjectId}}"
+                           onclick="return confirm('Are you sure you want to delete this question?')">
+                            <div style="display: inline-block; background-color: red; width: 30px; height: 30px; text-align: center; line-height: 30px; border-radius: 5px;">
+                                <!-- Biểu tượng trash từ Bootstrap Icons -->
+                                <i class="bi bi-trash" style="color: white;"></i>
+                            </div>
+                        </a>
+                    </button>
+                    <button class="add-to-cart"><a
+                            th:href="@{'/chapters/editChapter?chapterId=' + ${chapter.chapterId} + '&subjectId=' + ${subjectId}}">Sửa
+                        Chapter</a></button>
+                    <button class="view-details"><a
+                            th:href="@{'/listTopics/showListTopic/' + ${subjectId} + '/' + ${chapter.chapterId}}">Hiển
+                        thị test</a></button>
+                    <button>Thêm Chapter</button>
+                </div>
+            </div>
+            <div class="info">
+                <h3 th:text="${chapter.chapterName}"></h3>
+                <p>Tổng số câu hỏi: <span th:text="${chapter.totalQuestion}"></span></p>
+            </div>
+        </div>
+
+    </div>
+    <div class="clearfix" th:if="${currentPage != null and not #lists.isEmpty(chapters)}">
+        <ul class="pagination">
+
+            <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
+                <a th:if="${currentPage > 0}"
+                   th:href="@{/chapters/showListChapter(subjectId=${subjectId}, page=0)}"
+                   class="page-link">First</a>
+                <span th:if="${currentPage == 0}" class="page-link">First</span>
+            </li>
+
+            <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
+                <a th:if="${currentPage > 0}"
+                   th:href="@{/chapters/showListChapter(subjectId=${subjectId}, page=${currentPage - 1})}"
+                   class="page-link">Previous</a>
+                <span th:if="${currentPage == 0}" class="page-link">Previous</span>
+            </li>
+
+            <!-- Hiển thị các số trang -->
+            <li th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+                th:if="${pageNumber >= currentPage - 1 and pageNumber <= currentPage + 1}"
+                th:class="${pageNumber == currentPage} ? 'page-item active' : 'page-item'">
+                <!-- Hiển thị trang -->
+                <a th:href="@{/chapters/showListChapter(subjectId=${subjectId}, page=${pageNumber})}"
+                   class="page-link" th:text="${pageNumber + 1}"></a>
+            </li>
+
+            <!-- Nút Next -->
+            <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">
+                <a th:if="${currentPage < totalPages - 1}"
+                   th:href="@{/chapters/showListChapter(subjectId=${subjectId}, page=${currentPage + 1})}"
+                   class="page-link">Next</a>
+                <span th:if="${currentPage == totalPages - 1}" class="page-link">Next</span>
+            </li>
+            <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">
+                <a th:if="${currentPage < totalPages - 1}"
+                   th:href="@{/chapters/showListChapter(subjectId=${subjectId}, page=${totalPages - 1})}"
+                   class="page-link">Last</a>
+                <span th:if="${currentPage == totalPages - 1}" class="page-link">Last</span>
+            </li>
+        </ul>
+    </div>
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer id="footer" class="footer">
+    <div class="copyright">
+        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="/assetsAd/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assetsAd/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assetsAd/vendor/chart.js/chart.umd.js"></script>
+<script src="/assetsAd/vendor/echarts/echarts.min.js"></script>
+<script src="/assetsAd/vendor/quill/quill.min.js"></script>
+<script src="/assetsAd/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assetsAd/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assetsAd/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<script src="/assetsAd/js/main.js"></script>
+<script src="/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="/assets/vendor/aos/aos.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<!--<script src="/js/main.js"></script>-->
+<script type="text/javascript" th:src="@{/assets/js/main.js}"></script>
 </body>
+
 </html>

@@ -31,6 +31,8 @@
         <th>Status</th>
         <th>Ngày bắt đầu</th>
         <th>Ngày kết thúc</th>
+        <th>Tổng số câu hỏi có trong bài test</th>
+        <th>Số câu hỏi khó</th>
     </tr>
     </thead>
     <tbody>
@@ -48,7 +50,8 @@
         </td>
         <td><span th:text="${topic.formattedStartDate}"></span></td>
         <td><span th:text="${topic.formattedFinishDate}"></span></td>
-
+        <td th:text="${totalQuestions}"></td>
+        <td th:text="${totalHardQuestions}"></td>
     </tr>
     </tbody>
 </table>

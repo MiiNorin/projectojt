@@ -7,4 +7,7 @@ import java.util.List;
 
 public interface TopicRepository extends JpaRepository<TopicsEntity, Integer> {
     List<TopicsEntity> findTopicsEntitiesByChapterChapterId(Integer chapterId);
+
+    TopicsEntity findTopicsEntityByTopicName(String topicName);
+    TopicsEntity findTopicsEntityByTopicId(int topic_id);
 }

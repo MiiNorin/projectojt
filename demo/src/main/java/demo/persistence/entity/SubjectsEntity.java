@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.sql.Date;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 @Getter
 @Setter
@@ -32,6 +33,14 @@ public class SubjectsEntity {
     @Basic
     @Column(name = "create_date")
     private LocalDateTime createDate;
+    public String getFormattedCreateDate() {
+        if (createDate != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            return createDate.format(formatter);
+        } else {
+            return "";
+        }
+    }
     @Basic
     @Column(name = "Slot")
     private Integer slot;

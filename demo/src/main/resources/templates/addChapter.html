@@ -1,25 +1,148 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Add Chapter</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h2>Add Chapter</h2>-->
+
+<!--&lt;!&ndash; Form để thêm mới chapter-->
+<!-- &ndash;&gt;-->
+
+
+<!--<br>-->
+<!--<a href="/">Back to Subject List</a>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Chapter</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>ADMIN MANAGER</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="/assets/img/favicon.png" rel="icon">
+    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="/assetsAd/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="/assetsAd/css/style.css" rel="stylesheet">
+    <link href="/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+    <link href="/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <link href="/assets/css/style.css" rel="stylesheet"/>
 </head>
+
 <body>
-<h2>Add Chapter</h2>
+<th:block th:include="/layouts/Admin/SidebarChapter.html"></th:block>
 
-<!-- Form để thêm mới chapter
- -->
+<th:block th:if="${user != null}">
+    <!-- Header for normal users -->
+    <th:block th:if="${user.roleId == 4}" th:include="/headerUser.html"></th:block>
 
-<form th:action="@{/chapters/addChapter}" method="post">
-    <input type="hidden" id="subjectId" name="subjectId" th:value="${subjectId}">
+    <!-- Header for mentors -->
+    <th:block th:if="${user.roleId == 1 or user.roleId == 2 or user.roleId == 3}"
+              th:include="/headerMentor.html"></th:block>
+</th:block>
 
-    <label for="chapterName">Chapter Name:</label>
-    <input type="text" id="chapterName" name="chapterName" th:value="${chapterName}"required>
-    <button type="submit">Add Chapter</button>
-</form>
 
-<br>
-<a href="/">Back to Subject List</a>
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>Dashboard</h1>
+        <nav>
+            <div class="main-breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/home/homePage">Home</a></li>
+                    <li class="breadcrumb-item active">Quản lý Chapter</li>
+                </ol>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active"><h3 style="font-weight: bold; color: #899bbd;">Thêm Chapter</h3></li>
+                </ol>
+            </div>
+        </nav>
+    </div><hr>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="panel-body">
+                <form th:action="@{/chapters/addChapter}" method="post">
+                    <input type="hidden" id="subjectId" name="subjectId" th:value="${subjectId}">
+                    <label for="chapterName">Chapter Name:</label>
+                    <input type="text" id="chapterName" name="chapterName" th:value="${chapterName}" required>
+                    <button type="submit">Add Chapter</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+
+<footer id="footer" class="footer">
+    <div class="copyright">
+        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+</footer><!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+<!-- Vendor JS Files -->
+<script src="/assetsAd/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assetsAd/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assetsAd/vendor/chart.js/chart.umd.js"></script>
+<script src="/assetsAd/vendor/echarts/echarts.min.js"></script>
+<script src="/assetsAd/vendor/quill/quill.min.js"></script>
+<script src="/assetsAd/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assetsAd/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assetsAd/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<script src="/assetsAd/js/main.js"></script>
+<script src="/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="/assets/vendor/aos/aos.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<!--<script src="/js/main.js"></script>-->
+<script type="text/javascript" th:src="@{/assets/js/main.js}"></script>
 </body>
+
 </html>

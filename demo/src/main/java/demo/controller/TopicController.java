@@ -19,9 +19,7 @@ import org.springframework.validation.BindingResult;
 
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RequestMapping("/listTopics")
 @Controller
@@ -118,6 +116,12 @@ public class TopicController {
                 topic.setStatus("Finished");
             }
         }
+        for(TopicsEntity topic: topics){
+            int topicId = topic.getTopicId();
+            List<Questions> questions = questionRepository.findQuestionsByTopicsTopicId(topicId);
+            int totalQuestion = topic.getTotalQuestion();
+            model.addAttribute("totalQuestions", totalQuestion);
+        }
         topicRepository.saveAll(topics);
         model.addAttribute("topics", topics);
         Optional<ChaptersEntity> chapterOptional = chapterRepository.findById(chapterId);
@@ -129,19 +133,12 @@ public class TopicController {
     @GetMapping("/listTest/{subjectId}/{chapterId}")
     public String showTestForStudent(@PathVariable("chapterId") Integer chapterId,
                                      @PathVariable("subjectId") Integer subjectId,
-                                     Model model, HttpSession session) {
-        Integer userId = (Integer) session.getAttribute("user_id");
-        if (userId == null) {
-            return "redirect:/home/homePage";
-        }
-        SubjectsEntity subjectCheck = subjectRepository.findById(subjectId).orElse(null);
-        Integer createdSubjectUserId = subjectCheck.getAccount().getUserId();
-        ChaptersEntity chapterCheck = chapterRepository.findById(chapterId).orElse(null);
-        Integer createdChapterUserId = chapterCheck.getSubjects().getAccount().getUserId();
-        if(userId!=null && (userId!=createdChapterUserId || userId!=createdSubjectUserId)){
-            return "/home/homePage";
-        }
+                                     Model model) {
         List<TopicsEntity> topics = topicRepository.findTopicsEntitiesByChapterChapterId(chapterId);
+        for(TopicsEntity topic: topics){
+            int totalQuestion = topic.getTotalQuestion();
+            model.addAttribute("totalQuestions", totalQuestion);
+        }
         model.addAttribute("subjectId", subjectId);
         model.addAttribute("chapterId", chapterId);
         model.addAttribute("topics", topics);
@@ -152,17 +149,7 @@ public class TopicController {
     }
 
     @GetMapping("/test/{chapterId}")
-    public String showQuestionByChapterId(@PathVariable("chapterId") Integer chapterId, Model model, HttpSession session) {
-        Integer userId = (Integer) session.getAttribute("user_id");
-        if (userId == null) {
-            return "redirect:/home/homePage";
-        }
-        ChaptersEntity chapterCheck = chapterRepository.findById(chapterId).orElse(null);
-        Integer createdChapterUserId = chapterCheck.getSubjects().getAccount().getUserId();
-        Integer createdSubjectUserId = chapterCheck.getSubjects().getSubjectId();
-        if(userId!=null && (userId!=createdChapterUserId || userId!=createdSubjectUserId)){
-            return "/home/homePage";
-        }
+    public String showQuestionByChapterId(@PathVariable("chapterId") Integer chapterId, Model model) {
         List<Questions> questions = questionRepository.findQuestionsByChaptersChapterId(chapterId);
         model.addAttribute("questions", questions);
         return "test";
@@ -216,8 +203,15 @@ public class TopicController {
             model.addAttribute("errorMessage", "Finish date must be after start date and at least 10 minutes later from now.");
             return "createListTopic";
         }
-        ChaptersEntity chapter = chapterRepository.findById(chapterId).orElse(null);
+//        HttpSession httpSession = request.getSession();
+//        Map<Integer, Integer> hardQuestionsMap = (Map<Integer, Integer>) httpSession.getAttribute("hardQuestionsMap");
+//        if (hardQuestionsMap == null) {
+//            hardQuestionsMap = new HashMap<>();
+//        }
+//        hardQuestionsMap.put(topicId, totalHardQuestions);
+//        httpSession.setAttribute("hardQuestionsMap", hardQuestionsMap);
 
+        ChaptersEntity chapter = chapterRepository.findById(chapterId).orElse(null);
         TopicsEntity topicsEntity = new TopicsEntity();
         topicsEntity.setTopicName(topicName);
         topicsEntity.setDuration(duration);
@@ -230,15 +224,11 @@ public class TopicController {
         topicsEntity.setSubjectId(subjectId);
         topicRepository.save(topicsEntity);
         topicsEntity.setSubjectId(subjectId);
+
         model.addAttribute("chapterId", chapterId);
         model.addAttribute("subjectId", subjectId);
-
         return "addChapterSuccess";
     }
-
-
-
-
 
     @GetMapping("/editTopic")
     public String showEditTopicForm(Model model,

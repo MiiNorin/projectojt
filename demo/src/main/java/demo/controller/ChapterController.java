@@ -1,15 +1,21 @@
 package demo.controller;
 
 import demo.persistence.dto.QuestionDto;
+import demo.persistence.entity.Account;
 import demo.persistence.entity.ChaptersEntity;
 import demo.persistence.entity.Questions;
 import demo.persistence.entity.SubjectsEntity;
+import demo.repository.AccountRepository;
 import demo.repository.ChapterRepository;
 import demo.repository.SubjectRepository;
 import demo.service.ChapterService;
 import demo.service.SubjectService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +29,8 @@ import java.util.Optional;
 public class ChapterController {
 
     @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
     private ChapterRepository chapterRepository;
     @Autowired
     private ChapterService chapterService;
@@ -30,9 +38,18 @@ public class ChapterController {
     private SubjectRepository subjectRepository;
     @Autowired
     private SubjectService subjectService;
+    @GetMapping("/ChapterPage")
+    public String ChapterPage(){
+        return "ChapterPage";
+    }
     @GetMapping("/showListChapter")
-    public String showChaptersBySubjectId(@RequestParam("subjectId") Integer subjectId, Model model, HttpSession session) {
+    public String showChaptersBySubjectId(@RequestParam("subjectId") Integer subjectId,
+                                          @RequestParam(defaultValue = "0") int page,
+                                          Model model,
+                                          HttpSession session) {
         Integer userId = (Integer) session.getAttribute("user_id");
+        Account account = accountRepository.findById(userId).orElse(null);
+        model.addAttribute("user", account);
         if (userId == null) {
             return "redirect:/home/homePage";
         }
@@ -41,30 +58,35 @@ public class ChapterController {
         if(userId!=null && userId!=createdSubjectUserId){
             return "redirect:/home/homePage";
         }
-        List<ChaptersEntity> chapters = chapterRepository.findChaptersEntityBySubjectsSubjectId(subjectId);
-        model.addAttribute("chapters", chapters);
+//        List<ChaptersEntity> chapters = chapterRepository.findChaptersEntityBySubjectsSubjectId(subjectId);
+        int pageSize = 6;
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("chapterName").descending());
+        Page<ChaptersEntity> chapters = chapterRepository.findBySubjectsSubjectId(subjectId, pageable);
+        model.addAttribute("chapters", chapters.getContent());
         model.addAttribute("subjectId", subjectId);
         model.addAttribute("userId", userId);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("subjects", subjectCheck);
+        model.addAttribute("totalPages", chapters.getTotalPages());
+        model.addAttribute("user", account);
         Optional<SubjectsEntity> subjects = subjectRepository.findById(subjectId);
         SubjectsEntity subject = subjects.get();
         model.addAttribute("subject", subject);
         return "showListChapter";
     }
-
-
-    @GetMapping("/chooseChapter")
-    public String showChapterForStudent(@RequestParam("subjectId") Integer subjectId, Model model) {
-        List<ChaptersEntity> chapters = chapterRepository.findChaptersEntityBySubjectsSubjectId(subjectId);
-        model.addAttribute("chapters", chapters);
-        model.addAttribute("subjectId", subjectId);
-        SubjectsEntity subject = subjectRepository.findById(subjectId).orElse(null);
-        model.addAttribute("subject", subject);
-        return "showListChapterForStudent";
+    @PostMapping("/")
+    public String getUserId(HttpSession session, Model model) {
+        Integer userId = (Integer) session.getAttribute("user_id");
+        model.addAttribute("userId", userId);
+        return "layouts/Admin/SidebarChapter";
     }
+
+
 
     @GetMapping("/addChapter/{subjectId}")
     public String showAddChapterForm(Model model, @PathVariable("subjectId") int subjectId, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("user_id");
+        Account account = accountRepository.findById(userId).orElse(null);
         if (userId == null) {
             return "redirect:/home/homePage";
         }
@@ -74,6 +96,10 @@ public class ChapterController {
             return "redirect:/home/homePage";
         }
         model.addAttribute("subjectId", subjectId);
+        model.addAttribute("user", account);
+        model.addAttribute("userId", userId);
+        model.addAttribute("subjects", subjectCheck);
+
         return "addChapter";
     }
 
@@ -81,6 +107,8 @@ public class ChapterController {
     public String addChapterToSubject(Model model, @RequestParam("subjectId") int subjectId,
                                       @RequestParam String chapterName, HttpSession session) {
         Integer userId = (Integer) session.getAttribute("user_id");
+        Account account = accountRepository.findById(userId).orElse(null);
+        int subjectIdToCheck = subjectId;
         if (userId == null) {
             return "redirect:/home/homePage";
         }
@@ -97,8 +125,9 @@ public class ChapterController {
         chaptersEntity.setSubjects(subjectRepository.findById(subjectId).get());
         SubjectsEntity subjects = subjectRepository.findById(subjectId).orElse(null);
         model.addAttribute("subjectId", subjectId);
+        model.addAttribute("user", account);
         chapterRepository.save(chaptersEntity);
-        return "addChapterSuccess";
+        return "redirect:/chapters/showListChapter?subjectId=" + subjectIdToCheck;
     }
 
 

@@ -9,29 +9,48 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "TESTDETAILS", schema = "dbo", catalog = "Db_ZOTSystem")
 public class TestDetailsEntity {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "test_detail_id")
-    private int testDetailId;
+    private int testDetailid;
+
     @Basic
     @Column(name = "account_id")
     private Integer accountId;
+
     @Basic
     @Column(name = "score")
     private Double score;
+
     @Basic
     @Column(name = "submitted")
     private Boolean submitted;
+
     @Basic
     @Column(name = "create_date")
-    private LocalDateTime createDate;
+    private Date createDate;
 
-    public int getTestDetailId() {
-        return testDetailId;
+    // Thêm trường topicId
+    @Basic
+    @Column(name = "topic_id")
+    private Integer topicId;
+
+    // Tạo các getter và setter cho topicId
+    public Integer getTopicId() {
+        return topicId;
     }
 
-    public void setTestDetailId(int testDetailId) {
-        this.testDetailId = testDetailId;
+    public void setTopicId(Integer topicId) {
+        this.topicId = topicId;
+    }
+
+    public int getTestDetailid() {
+        return testDetailid;
+    }
+
+    public void setTestDetailid(int testDetailid) {
+        this.testDetailid = testDetailid;
     }
 
     public Integer getAccountId() {
@@ -58,11 +77,11 @@ public class TestDetailsEntity {
         this.submitted = submitted;
     }
 
-    public LocalDateTime getCreateDate() {
+    public Date getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(LocalDateTime createDate) {
+    public void setCreateDate(Date createDate) {
         this.createDate = createDate;
     }
 
@@ -73,7 +92,7 @@ public class TestDetailsEntity {
 
         TestDetailsEntity that = (TestDetailsEntity) o;
 
-        if (testDetailId != that.testDetailId) return false;
+        if (testDetailid != that.testDetailid) return false;
         if (accountId != null ? !accountId.equals(that.accountId) : that.accountId != null) return false;
         if (score != null ? !score.equals(that.score) : that.score != null) return false;
         if (submitted != null ? !submitted.equals(that.submitted) : that.submitted != null) return false;
@@ -84,7 +103,7 @@ public class TestDetailsEntity {
 
     @Override
     public int hashCode() {
-        int result = testDetailId;
+        int result = testDetailid;
         result = 31 * result + (accountId != null ? accountId.hashCode() : 0);
         result = 31 * result + (score != null ? score.hashCode() : 0);
         result = 31 * result + (submitted != null ? submitted.hashCode() : 0);

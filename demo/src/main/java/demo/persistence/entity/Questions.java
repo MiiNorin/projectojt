@@ -79,6 +79,8 @@ public class Questions {
     @ManyToOne
     @JoinColumn(name="topic_id", nullable = false)
     private TopicsEntity topics;
+
+
     public String getFormattedCreateDate() {
         if (createDate != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -87,5 +89,9 @@ public class Questions {
             return "";
         }
     }
+    public boolean isHardQuestion() {
+        return status.equals("Hard");
+    }
+
 
 }

@@ -32,7 +32,6 @@
 
 
 <body>
-
 <th:block th:if="${user == null}" th:include="/headerGuest.html"></th:block>
 
 <!-- Header for logged in users -->
@@ -43,14 +42,11 @@
     <!-- Header for mentors -->
     <th:block th:if="${role.roleId == 1 or role.roleId == 2 or role.roleId == 3}" th:include="/headerMentor.html"></th:block>
 </th:block>
-
-
-
 <section id="hero" class="d-flex justify-content-center align-items-center">
     <div class="container position-relative" data-aos="zoom-in" data-aos-delay="100">
         <h1>Học Thử Miễn Phí<br>Cùng Chuyên Gia tại FPT Software</h1>
         <h2>Học viện đào tạo kỹ sư Công nghệ thông tin trực thuộc FPT Software</h2>
-        <a class="btn-get-started">Tìm hiểu thêm</a>
+        <a href="Courses.jsp" class="btn-get-started">Tìm hiểu thêm</a>
     </div>
 </section><!-- End Hero -->
 
@@ -194,69 +190,6 @@
 
         </ul>
     </div>
-    <!-- ======= Popular Courses Section ======= -->
-    <section id="popular-courses" class="courses">
-        <div class="container" data-aos="fade-up">
-
-            <div class="section-title">
-                <h2>Khóa Học</h2>
-                <p>Các Khóa Học cơ bản</p>
-            </div>
-
-            <div class="row" data-aos="zoom-in" data-aos-delay="100">
-
-                <div class="col-lg-4 col-md-6 d-flex align-items-stretch">
-                    <div class="course-item">
-                        <img src="/assets/img/lập trình C.jpg" class="img-fluid" alt="...">
-                        <div class="course-content">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h4>C Toturial</h4>
-                                <p class="price">Free</p>
-                            </div>
-
-                            <h3><a>Lập trình với ngôn ngữ C</a></h3>
-                            <p>Cung cấp kiến thức từ bài bản đến nâng cao về ngôn ngữ lập trình C chỉ trong 50h đào tạo</p>
-                            <button style="justify-content: center;" type="button" class="btn btn-outline-success">Đăng kí khóa học </button>
-                        </div>
-                    </div>
-                </div> <!-- End Course Item-->
-
-                <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0">
-                    <div class="course-item">
-                        <img src="/assets/img/lập trình C.jpg" width="600px" height ="450px" class="img-fluid" alt="...">
-                        <div class="course-content">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h4>C Toturial</h4>
-                                <p class="price">Free</p>
-                            </div>
-
-                            <h3><a>Lập trình với ngôn ngữ C</a></h3>
-                            <p>Cung cấp kiến thức từ bài bản đến nâng cao về ngôn ngữ lập trình C chỉ trong 50h đào tạo</p>
-                            <button style="justify-content: center;" type="button" class="btn btn-outline-success">Đăng kí khóa học </button>
-                        </div>
-                    </div>
-                </div> <!-- End Course Item-->
-
-                <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0">
-                    <div class="course-item">
-                        <img src="/assets/img/lập trình C.jpg" class="img-fluid" alt="...">
-                        <div class="course-content">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h4>C Toturial</h4>
-                                <p class="price">Free</p>
-                            </div>
-
-                            <h3><a>Lập trình với ngôn ngữ C</a></h3>
-                            <p>Cung cấp kiến thức từ bài bản đến nâng cao về ngôn ngữ lập trình C chỉ trong 50h đào tạo</p>
-                            <button style="justify-content: center;" type="button" class="btn btn-outline-success">Đăng kí khóa học </button>
-                        </div>
-                    </div>
-                </div> <!-- End Course Item-->
-
-            </div>
-
-        </div>
-    </section><!-- End Popular Courses Section -->
 
     <!-- ======= Trainers Section ======= -->
     <section id="trainers" class="trainers">
