@@ -1,13 +1,12 @@
 package demo.controller;
 
 import demo.entity.*;
-import demo.repository.AccountRepository;
-import demo.repository.RoleRepository;
+import demo.repository.*;
 import demo.service.AccountService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,7 +32,12 @@ public class AccountController {
     private AccountRepository accountRepository;
     @Autowired
     private RoleRepository roleRepository;
-
+//    @Autowired
+//    SubjectRepository subjectRepository;
+    @Autowired
+    TopicRepository topicRepository;
+    @Autowired
+    QuestionRepository questionRepository;
 //    @GetMapping("/showAccount")
 //    public String getListAccount(Model model, HttpSession session,
 //                                 @RequestParam(name = "pageNo",defaultValue = "1") Integer pageNo)
@@ -54,7 +58,7 @@ public class AccountController {
 //
 //    }
     @GetMapping("/showAccountList")
-    public String getAccountList(Model model, HttpSession session,
+    public String getAccountList(Model model, HttpSession session,@Param("keyword") String keyword,
                                  @RequestParam(name = "pageNo",defaultValue = "1") Integer pageNo)
     {
         Integer userId = (Integer) session.getAttribute("user_id");
@@ -68,6 +72,10 @@ public class AccountController {
             }
         }
         Page<Account> accounts = accountService.getAllAccount(pageNo);
+        if (keyword!= null){
+            accounts = this.accountService.searchAccountByFullName(keyword,pageNo);
+            model.addAttribute("keyword",keyword);
+        }
         model.addAttribute("totalPage", accounts.getTotalPages());
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("accountList", accounts);
@@ -218,5 +226,16 @@ public class AccountController {
         model.addAttribute("account", accounts);
         return "redirect:/account/showAccountList";
     }
-
+    @GetMapping("/admin")
+    public String getAllAccounts(Model model){
+        List<Account> accountList = accountRepository.findAll();
+//        List<SubjectsEntity> subjectsList = subjectRepository.findAll();
+        List<Questions> questionList = questionRepository.findAll();
+        List<TopicsEntity> topicsList = topicRepository.findAll();
+//        model.addAttribute("subjectList", subjectsList);
+        model.addAttribute("accountList", accountList);
+        model.addAttribute("questionList", questionList);
+        model.addAttribute("topicsList", topicsList);
+        return "ViewAdmin";
+    }
 }

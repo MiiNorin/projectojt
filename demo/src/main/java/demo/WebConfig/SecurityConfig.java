@@ -33,6 +33,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -51,7 +52,7 @@ public class SecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http, HttpSession session) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/FAcademy/loginPage", "/FAcademy/login","/FAcademy/forgotPassPage","/FAcademy/verifyForgotPass","/FAcademy/registration",
-                        "/FAcademy/verify","/FAcademy/verify","/home/homePage","/home/About","/home/Trainers",
+                        "/FAcademy/verify","/FAcademy/verify","/home/homePage","/home/About","/home/Trainers","/FAcademy/changePassword",
                         "/headerGuest","/headerUser",
                         "/css/**", "/js/**", "/vendor/**","/fonts/**", "/images/**",
                         "/static/**","/static/assets/**", "/assets/**",

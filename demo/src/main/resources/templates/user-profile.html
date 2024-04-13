@@ -282,7 +282,7 @@
       <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
           <a th:href="@{/questions/showQuestion}">
-            <i class="bi bi-circle"></i><span>Data Question</span>
+            <i class="bi bi-circle"></i><span>Data Subject</span>
           </a>
         </li>
         <li>
@@ -404,17 +404,21 @@
 
               </div>
 
-              <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+              <div class="tab-pane fade profile-edit pt-3" id="profile-edit" >
 
                 <!-- Profile Edit Form -->
-                <form action="/home/Profile" method="post">
+                <form action="/home/editProfile" method="post" enctype="multipart/form-data">
                   <div class="row mb-3">
+                    <div th:if="${message}">
+                      <!-- Hiển thị thông điệp -->
+                      <div class="alert alert-success" role="alert" th:text="${message}"></div>
+                    </div>
                     <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
                     <div class="col-md-8 col-lg-9">
                       <img  th:if="${user.avatar != null}" th:src="${user.avatar}"  alt="Profile" class="rounded-circle" style="width: 40px; height: 40px;"/>
                       <i th:if="${user.avatar == null}" class="bi bi-person fs-1" ></i>
                       <div class="pt-2">
-                        <input name="avatar" id="file" type="file" />
+                        <input name="avatar" id="file" type="file" value="Submit" />
                         <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
                         <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
                       </div>
@@ -467,8 +471,11 @@
 
               <div class="tab-pane fade pt-3" id="profile-change-password">
                 <!-- Change Password Form -->
-                <form>
-
+                <form action="/home/changePassword" method="post">
+                  <div th:if="${message}">
+                    <!-- Hiển thị thông điệp -->
+                    <div class="alert alert-success" role="alert" th:text="${message}"></div>
+                  </div>
                   <div class="row mb-3">
                     <label for="currentPassword" class="col-md-4 col-lg-3 col-form-label">Current Password</label>
                     <div class="col-md-8 col-lg-9">

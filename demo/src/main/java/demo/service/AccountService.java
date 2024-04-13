@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -101,6 +102,18 @@ public class AccountService {
     public List<Account> searchAccountByName(String character) {
         return accountRepository.findAccountByFullNameContaining(character);
     }
+    public Page<Account> searchAccountByFullName(String character,Integer pageNo) {
+        List list = this.searchAccountByName(character);
+        Pageable pageable = PageRequest.of(pageNo-1,4);
+
+        Integer start = (int) pageable.getOffset();
+
+        Integer end =(int) ((pageable.getOffset() +pageable.getPageSize()) > list.size() ? list.size() : pageable.getOffset() + pageable.getPageSize());
+
+        list = list.subList(start,end);
+
+        return new PageImpl<Account>(list,pageable,this.searchAccountByName(character).size());
+    }
 
     public void verify(String email, String otp, HttpSession session) {
         Account users = accountRepository.findAccountByEmail(email);
@@ -128,18 +141,7 @@ public class AccountService {
     public void updateAccount(String avatar, String fullName, String phone, String email, String school, String gender, Integer accountId) throws IOException, IOException {
         Account account = accountRepository.findById(accountId).orElse(null); // Tìm account cần cập nhật
         if (account != null) {
-//            if (!file.isEmpty()) {
-//                // Lưu file
-//                byte[] bytes = file.getBytes();
-//                Path path = Paths.get(uploadDir + file.getOriginalFilename());
-//                Files.write(path, bytes);
-//
-//                // Lưu đường dẫn file vào account
-//                account.setAvatar(path.toString());
-//            }
-
-            // Cập nhật các thông tin khác
-            if(!avatar.equals("")) {
+            if(!avatar.isEmpty()) {
                 account.setAvatar(avatar);
             }
             account.setFullName(fullName);
@@ -151,6 +153,44 @@ public class AccountService {
             // Lưu lại account sau khi đã cập nhật
             accountRepository.save(account);
         }
+    }
+    public String changePassword(Integer userId,String currentPass, String newPass, String renewPass) {
+        if (!newPass.equals(renewPass)) {
+            return "New passwords do not match!";
+        }
+
+        Account account = accountRepository.findById(userId).orElse(null);
+        if (account == null) {
+            return "User not found!";
+        }
+
+        // Kiểm tra mật khẩu hiện tại
+        if (!passwordEncoder.matches(currentPass,account.getPassword())) {
+            return "Current password is incorrect!";
+        }
+
+        // Cập nhật mật khẩu mới
+        account.setPassword(passwordEncoder.encode(newPass));
+        accountRepository.save(account);
+
+        return "Password successfully changed!";
+    }
+    public String changePasswordLogin(Integer userId, String newPass, String renewPass) {
+        if (!newPass.equals(renewPass)) {
+            return "New passwords do not match!";
+        }
+
+        Account account = accountRepository.findById(userId).orElse(null);
+        if (account == null) {
+            return "User not found!";
+        }
+
+        // Cập nhật mật khẩu mới
+        account.setPassword(passwordEncoder.encode(newPass));
+        System.out.println(account.getPassword());
+        accountRepository.save(account);
+
+        return "Password successfully changed!";
     }
 
 
@@ -166,11 +206,7 @@ public class AccountService {
         String body ="your verification otp is: "+otp;
         emailService.sendEmail(email,subject,body);
     }
-    public void sendVerificationEmailtoChangePass(String email,String otp){
-        String subject = "Email verification";
-        String body ="your verification otp is: "+otp;
-        emailService.sendEmail(email,subject,body);
-    }
+
 
 
 }

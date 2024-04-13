@@ -10,7 +10,7 @@
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="/assets/img/FPTLOGO.png" rel="icon">
+    <link href="/assets/img/favicon.png" rel="icon">
     <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
@@ -346,7 +346,7 @@
             <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
                 <li>
                     <a th:href="@{/questions/showQuestion}">
-                        <i class="bi bi-circle"></i><span>Data Subject</span>
+                        <i class="bi bi-circle"></i><span>Data Question</span>
                     </a>
                 </li>
 
@@ -393,15 +393,15 @@
                 <div class="card top-selling overflow-auto">
                     <div class="card-body pb-0 ">
                         <h5 class="card-title">List Account <span></span></h5>
-<!--                        <div class="datatable-top">-->
-<!--                            <a th:href="@{/account/createAccount}" class="btn btn-success">Add User</a>-->
-                            <div class="float-end mb-3 datatable-search">
-                                <form class="card-title" action="/account/showAccountList" method="get">
-                                    <input class="datatable-input" type="text" name="keyword" placeholder="Search by character...">
-                                    <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-                                </form>
-                            </div>
-<!--                        </div>-->
+                        <!--                        <div class="datatable-top">-->
+                        <!--                            <a th:href="@{/account/createAccount}" class="btn btn-success">Add User</a>-->
+                        <div class="float-end mb-3 datatable-search">
+                            <form class="card-title" action="/account/searchAccount" method="get">
+                                <input class="datatable-input" type="text" name="character" placeholder="Search by character...">
+                                <button type="submit" title="Search"><i class="bi bi-search"></i></button>
+                            </form>
+                        </div>
+                        <!--                        </div>-->
                         <table class="table table-bordered table-striped">
                             <thead>
                             <tr>
@@ -449,7 +449,7 @@
                                     <li th:each="i : ${#numbers.sequence(1,totalPage)}" th:classappend="${currentPage == i ? 'datatable-active' : ''}"
                                         class="datatable-pagination-list-item">
                                         <a th:text="${i}" th:href="@{'?pageNo=' + ${i}}"
-                                                data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1">1</a>
+                                           data-page="1" class="datatable-pagination-list-item-link" aria-label="Page 1">1</a>
                                     </li>
                                     <li class="datatable-pagination-list-item">
                                         <a th:if="${currentPage < totalPage} " th:href="@{'?pageNo=' + ${currentPage + 1}}" data-page="2" class="datatable-pagination-list-item-link" aria-label="Page 2">›</a>
@@ -464,6 +464,185 @@
             </div><!-- Report -->
         </div>
     </section>
+
+        <section class="section dashboard">
+            <div class="row">
+
+                <!-- Left side columns -->
+                <!-- Reports -->
+                <div class="col-12">
+                    <div class="card top-selling overflow-auto">
+
+                        <div class="filter">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <li class="dropdown-header text-start">
+                                    <h6></h6>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                        <div class="card-body pb-0">
+                            <h5 class="card-title">List Subject <span></span></h5>
+
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Subject ID</th>
+                                    <th scope="col">Subject Name</th>
+                                    <th scope="col">img</th>
+                                    <th scope="col">Create Date</th>
+                                    <th scope="col">Slot</th>
+                                </tr>
+
+                                </thead>
+                                <tbody>
+                                <tr th:each="b : ${subjectList}">
+                                    <td scope="col" th:text="${b.getSubjectId()}"></td>
+                                    <td scope="col" th:text="${b.getSubjectName()}"></td>
+                                    <td scope="col" th:text="${b.getImage()}"></td>
+                                    <td scope="col" th:text="${b.getCreateDate()}"></td>
+                                    <td scope="col" th:text="${b.getSlot()}"></td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section dashboard">
+            <div class="row">
+
+                <!-- Left side columns -->
+                <!-- Reports -->
+                <div class="col-12">
+                    <div class="card top-selling overflow-auto">
+
+                        <div class="filter">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <li class="dropdown-header text-start">
+                                    <h6></h6>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                        <div class="card-body pb-0">
+                            <h5 class="card-title">List Subject <span></span></h5>
+
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Question ID</th>
+                                    <th scope="col">Topic Id</th>
+                                    <th scope="col">Question Context</th>
+                                    <th scope="col">Option A</th>
+                                    <th scope="col">Option B</th>
+                                    <th scope="col">Option C</th>
+                                    <th scope="col">Option D</th>
+                                    <th scope="col">Solution</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Create Date</th>
+
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="b : ${questionList}">
+                                    <td scope="col" th:text="${b.getQuestionId()}"></td>
+                                    <td scope="col" th:text="${b.getTopicId()}"></td>
+                                    <td scope="col" th:text="${b.getQuestionContext()}"></td>
+                                    <td scope="col" th:text="${b.getOptionA()}"></td>
+                                    <td scope="col" th:text="${b.getOptionB()}"></td>
+                                    <td scope="col" th:text="${b.getOptionC()}"></td>
+                                    <td scope="col" th:text="${b.getOptionD()}"></td>
+                                    <td scope="col" th:text="${b.getSolution()}"></td>
+                                    <td scope="col" th:text="${b.getStatus()}"></td>
+                                    <td scope="col" th:text="${b.getCreateDate()}"></td>
+
+                                </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div><!-- Report -->
+            </div>
+        </section>
+        <section class="section dashboard">
+            <div class="row">
+
+                <!-- Left side columns -->
+                <!-- Reports -->
+                <div class="col-12">
+                    <div class="card top-selling overflow-auto">
+
+                        <div class="filter">
+                            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <li class="dropdown-header text-start">
+                                    <h6></h6>
+                                </li>
+
+                            </ul>
+                        </div>
+
+                        <div class="card-body pb-0">
+                            <h5 class="card-title">List Topics <span></span></h5>
+
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Topic ID</th>
+                                    <th scope="col">Topic Name</th>
+                                    <th scope="col"> Total Question</th>
+                                    <th scope="col">Topic Type </th>
+                                    <th scope="col">Grade</th>
+                                    <th scope="col">Create Date</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Start test</th>
+                                    <th scope="col">Finish test</th>
+                                    <th scope="col">Subject Id</th>
+                                    <th scope="col">Chapter Id</th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="b : ${topicsList}">
+                                    <td scope="col" th:text="${b.getTopicId()}"></td>
+                                    <td scope="col" th:text="${b.getTopicName()}"></td>
+                                    <td scope="col" th:text="${b.getTotalQuestion()}"></td>
+                                    <td scope="col" th:text="${b.getTopicType()}"></td>
+                                    <td scope="col" th:text="${b.getGrade()}"></td>
+                                    <td scope="col" th:text="${b.getCreateDate()}"></td>
+                                    <td scope="col" th:text="${b.getStatus()}"></td>
+                                    <td scope="col" th:text="${b.getStartTestDate()}"></td>
+                                    <td scope="col" th:text="${b.getFinishTestDate()}"></td>
+                                    <td scope="col" th:text="${b.getSubjectId()}"></td>
+                                    <td scope="col" th:text="${b.getChapterId()}"></td>
+
+                                </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div><!-- Report -->
+            </div>
+        </section>
+
+
+
 
 
 </main><!-- End #main -->

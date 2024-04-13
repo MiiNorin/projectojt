@@ -12,6 +12,7 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     Account findAccountByEmail(String email);
     Account getAccountByEmail(String email);
     List<Account> findAccountByFullNameContaining(String keyword);
+    List<Account> searchAccountByFullNameContains(String keyword);
     @Query(value = "select * from ACCOUNT where email = :user_email", nativeQuery = true)
     Optional<Account> findByEmail(@Param("user_email") String user_email);
 

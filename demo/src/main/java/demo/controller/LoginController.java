@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.sql.Timestamp;
@@ -51,31 +52,31 @@ public class LoginController {
     String fogotPass() {
         return "forgotPass";
     }
-    @GetMapping("/verifyForgotPass")
-    public String fogotPass(@RequestParam String username, Model model) {
-        Optional<Account> user = accountRepository.findByEmail(username);
-        if (user.isPresent() ) {
-            String otp =accountService.generateOTP();
-            model.addAttribute("otp",otp);
-            model.addAttribute("user",user);
-            accountService.sendVerificationEmailtoChangePass(username,otp);
-            return "otp_verify";
-        } else {
-            // auth failed, set error message and return to login page
-            model.addAttribute("errorlogin", "Invalid username");
-            return "forgotPass";
-        }
-    }
+
     @GetMapping("/changePassword")
-    public String verifyUser(@RequestParam String email, @RequestParam("otp") String otp, Model model, HttpSession session1, HttpServletRequest request) {
+    public String ChangePassLogin(@RequestParam("username") String email, Model model, HttpSession session1, HttpServletRequest request) {
         try {
             HttpSession session = request.getSession();
-            accountService.verify(email, otp, session);
-            return "/FAcademy/login?registerSuccess";
+            Account account = accountRepository.findAccountByEmail(email);
+            model.addAttribute("account",account);
+            return "changePassword";
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             return "error";
         }
+    }
+    @PostMapping("/changePassword")
+    public String ChangePassLoginDone(@RequestParam("email") String email,
+                                      @RequestParam("newPass") String newPass,
+                                      @RequestParam("renewPass") String renewPass,
+                                      RedirectAttributes redirectAttributes,
+                                      Model model, HttpSession session1, HttpServletRequest request) {
+        Account account = accountRepository.findAccountByEmail(email);
+        System.out.println(account);
+        String result = accountService.changePasswordLogin(account.getUserId(),newPass,renewPass);
+        redirectAttributes.addFlashAttribute("message", result);
+        return "redirect:/FAcademy/changePassword";
+
     }
 //    @GetMapping("/signingoogle")
 //    public String currentUser(OAuth2AuthenticationToken oAuth2AuthenticationToken) {
