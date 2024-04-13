@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface TestDetailRepository extends JpaRepository<TestDetailsEntity, Integer> {
-    List<TestDetailsEntity> findByAccountId(int accountId);
+    List<TestDetailsEntity> findByAccounts_UserId(Integer id);
 
 }

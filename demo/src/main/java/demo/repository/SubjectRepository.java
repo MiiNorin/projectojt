@@ -19,4 +19,6 @@ public interface SubjectRepository extends JpaRepository<SubjectsEntity, Integer
 
     Page<SubjectsEntity> findByAccount_UserId(int userId, Pageable pageable);
 
+    Page<SubjectsEntity> findAllByOrderByCreateDateDesc(Pageable pageable);
+
 }

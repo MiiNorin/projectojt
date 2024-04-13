@@ -63,16 +63,27 @@ public class SubjectController {
         }
     }
     @GetMapping("/chooseYourCourses")
-    public String chooseSubjects(Model model, HttpSession session) {
-        Integer loggedInUserId = (Integer) session.getAttribute("user_id");
-        List<SubjectsEntity> subjects = subjectService.getAllSubjects();
-        model.addAttribute("userId", loggedInUserId);
-        model.addAttribute("subjects", subjects);
+    public String chooseSubjects(Model model, @RequestParam(defaultValue = "0") int page, HttpSession session) {
+        int pageSize = 6;
+        Integer userId = (Integer) session.getAttribute("user_id");
+        Account account = accountRepository.findById(userId).orElse(null);
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<SubjectsEntity> subjectsPage = subjectRepository.findAllByOrderByCreateDateDesc(pageable);
+        model.addAttribute("subjects", subjectsPage.getContent());
+        model.addAttribute("userId", userId);
+        model.addAttribute("user", account);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", subjectsPage.getTotalPages());
         return "showListSubjectForStudent";
-
+    }
+    @PostMapping("/")
+    public String getUserId(HttpSession session, Model model) {
+        Integer userId = (Integer) session.getAttribute("user_id");
+        model.addAttribute("userId", userId);
+        return "layouts/Admin/SidebarAdmin";
     }
 
-//    @GetMapping("/addSubject")
+    //    @GetMapping("/addSubject")
 //    public String showAddSubjectForm(Model model, HttpSession session) {
 //        Integer userId = (Integer) session.getAttribute("user_id");
 //        model.addAttribute("newSubject", new SubjectsEntity());
@@ -143,6 +154,7 @@ public class SubjectController {
     @GetMapping("/editSubject")
     public String showEditSubjectForm(@RequestParam("subjectId") int subjectId, Model model, HttpSession session) {
         Integer loggedInUserId = (Integer) session.getAttribute("user_id");
+        Account account = accountRepository.findById(loggedInUserId).orElse(null);
         if(loggedInUserId==null){
             return "redirect:/home/homePage";
         }
@@ -156,6 +168,7 @@ public class SubjectController {
         if (subjectOptional.isPresent()) {
             model.addAttribute("subject", subjectOptional.get());
             model.addAttribute("userId", userId);
+            model.addAttribute("user", account);
             return "editSubject";
         } else {
             return "redirect:/subject/listSubjects/" + userId;
@@ -167,14 +180,12 @@ public class SubjectController {
                               @RequestParam(value = "newImage", required = false) MultipartFile newImage,
                               @ModelAttribute SubjectsEntity subject,
                               @RequestParam("userId") int userId,
-                              HttpSession session,
-                              Model model) {
+                              HttpSession session) {
         Integer loggedInUserId = (Integer) session.getAttribute("user_id");
         if(loggedInUserId==null){
             return "redirect:/home/homePage";
         }
         SubjectsEntity subjectCheck = subjectRepository.findById(subjectId).orElse(null);
-
         Integer checkedId = subjectCheck.getAccount().getUserId();
         if(loggedInUserId!=null&&loggedInUserId!=checkedId){
             return "redirect:/home/homePage";
@@ -185,18 +196,20 @@ public class SubjectController {
                 return "redirect:/subject/listSubjects";
             }
             SubjectsEntity existingSubject = optionalExistingSubject.get();
+
             if (newImage == null || newImage.isEmpty()) {
+                // Xóa ảnh cũ nếu người dùng không tải lên ảnh mới
                 String oldImagePath = existingSubject.getImgLink();
                 if (oldImagePath != null && !oldImagePath.isEmpty()) {
                     try {
-                        Files.deleteIfExists(Paths.get("public/subject_images/" + oldImagePath));
+                        Files.deleteIfExists(Paths.get(oldImagePath));
                     } catch (IOException e) {
                         System.out.println("Error deleting old image: " + e.getMessage());
                     }
                     existingSubject.setImgLink(null);
                 }
             } else {
-                // Nếu người dùng tải lên hình ảnh mới, xử lý và lưu hình ảnh mới
+                // Xử lý ảnh mới và thay thế ảnh cũ
                 String fileName = StringUtils.cleanPath(newImage.getOriginalFilename());
                 String uploadDir = "public/subject_images/";
                 Path uploadPath = Paths.get(uploadDir);
@@ -206,6 +219,15 @@ public class SubjectController {
                 try (InputStream inputStream = newImage.getInputStream()) {
                     Path filePath = uploadPath.resolve(fileName);
                     Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                    // Xóa ảnh cũ nếu tồn tại
+                    String oldImagePath = existingSubject.getImgLink();
+                    if (oldImagePath != null && !oldImagePath.isEmpty()) {
+                        try {
+                            Files.deleteIfExists(Paths.get("public/subject_images/" + oldImagePath));
+                        } catch (IOException e) {
+                            System.out.println("Error deleting old image: " + e.getMessage());
+                        }
+                    }
                     existingSubject.setImgLink(fileName);
                 } catch (IOException e) {
                     throw new RuntimeException("Could not save the file: " + e.getMessage());
@@ -215,13 +237,12 @@ public class SubjectController {
             existingSubject.setSubjectName(subject.getSubjectName());
             existingSubject.setSlot(subject.getSlot());
             subjectService.saveSubject(existingSubject);
-            model.addAttribute("subjectId", subjectId);
+
             return "redirect:/subject/listSubjects/" + userId;
         } catch (Exception ex) {
             System.out.println("Error editing subject: " + ex.getMessage());
             return "error";
         }
-
     }
 
     @GetMapping("/searchByName")

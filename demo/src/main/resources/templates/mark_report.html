@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mark Report</title>
+</head>
+<body>
+<h1>Mark Report</h1>
+
+<!-- Hiển thị thông tin tài khoản nếu có -->
+<div th:if="${account != null}">
+    <h2>Thông tin</h2>
+    <p><strong>Email:</strong> <span th:text="${account.email}"></span></p>
+    <p><strong>Full Name:</strong> <span th:text="${account.fullName}"></span></p>
+    <p><strong>Birth Day:</strong> <span th:text="${account.birthDay}"></span></p>
+    <p><strong>Phone:</strong> <span th:text="${account.phone}"></span></p>
+    <p><strong>School Name:</strong> <span th:text="${account.schoolName}"></span></p>
+    <p><strong>Gender:</strong> <span th:text="${account.gender}"></span></p>
+
+    <!-- Hiển thị danh sách các chi tiết kiểm tra nếu có -->
+    <div th:if="${testDetailsList != null}">
+        <h2>Chi tiết các bài kiểm tra</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>TopicName</th>
+                <th>Score</th>
+                <th>Submitted</th>
+                <th>CreateDate</th>
+                <th>Detail</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Lặp qua danh sách chi tiết kiểm tra và hiển thị từng chi tiết -->
+            <tr th:each="testDetail : ${testDetailsList}">
+                <td th:text="${topicRepository.findTopicsEntityByTopicId(testDetail.getTopicId()).getTopicName()}"></td>
+                <td th:text="${testDetail.score}"></td>
+                <td th:text="${testDetail.submitted} ? 'Yes' : 'No'"></td>
+                <td th:text="${testDetail.createDate}"></td>
+                <!-- Sửa link để chuyển hướng đến chi tiết bài kiểm tra dựa trên account_id -->
+                <td><a th:href="@{/questiontests/{testDetailId}(testDetailId=${testDetail.getTestDetailid()})}">Detail</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Hiển thị thông báo lỗi nếu không tìm thấy tài khoản -->
+<div th:if="${errorMessage != null}">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+</body>
+</html>

@@ -68,6 +68,7 @@ public class TestController {
 
     @GetMapping("/test/{topicId}")
     public String getTestForTopic(@PathVariable Integer topicId, Model model) {
+
         TopicsEntity topic = topicRepository.findById(topicId).orElse(null);
         int total = topic.getTotalQuestion();
         if (isTestExpired(topic.getStartTestDate(), topic.getFinishTestDate())) {
@@ -92,7 +93,7 @@ public class TestController {
                                         @RequestParam("totalHardQuestion") int totalHardQuestion) {
 
 
-        int testDetailId = testDetailService.createNewTestDetail(topicId);
+        int testDetailId = testDetailService.createNewTestDetail(topicId, session);
 
         TopicsEntity topic = topicRepository.findById(topicId).orElse(null);
         if (topic == null) {

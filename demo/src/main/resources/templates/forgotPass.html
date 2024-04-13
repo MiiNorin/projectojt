@@ -21,7 +21,7 @@
     <div th:if="${param.resetPassSuccess}">
         <div style="color: greenyellow; text-align: center;" class="alert alert-info"> You are successfull registered to our awsome app!</div>
     </div>
-    <form th:action="@{/FAcademy/forgotPass}"  id="form-login" method="post">
+    <form th:action="@{/FAcademy/changePassword}"  id="form-login" method="get">
         <h1 class="form-heading">Reset Password</h1>
         <div class="form-group">
             <i class="far fa-user"></i>
@@ -35,7 +35,7 @@
         <!--            </div>-->
         <!--        </div>-->
         <a style="color: white; margin-left: 0px;" th:href="@{/FAcademy/registration}">Register</a>
-        <button type="submit" class="form-submit">Send OTP</button>
+        <button type="submit" class="form-submit">Đổi mật khẩu</button>
         <br>
         <br>
         <div style="display:flex; justify-content: center;">

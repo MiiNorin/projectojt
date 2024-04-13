@@ -60,7 +60,7 @@ public class ChapterController {
         }
 //        List<ChaptersEntity> chapters = chapterRepository.findChaptersEntityBySubjectsSubjectId(subjectId);
         int pageSize = 6;
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("chapterName").descending());
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("chapterName").ascending());
         Page<ChaptersEntity> chapters = chapterRepository.findBySubjectsSubjectId(subjectId, pageable);
         model.addAttribute("chapters", chapters.getContent());
         model.addAttribute("subjectId", subjectId);
@@ -81,7 +81,30 @@ public class ChapterController {
         return "layouts/Admin/SidebarChapter";
     }
 
+    @GetMapping("/chooseChapter")
+    public String showChapterForStudent(@RequestParam("subjectId") Integer subjectId,
+                                        @RequestParam(defaultValue = "0") int page,
+                                        Model model,
+                                        HttpSession session){
+        Integer userId = (Integer) session.getAttribute("user_id");
+        Account account = accountRepository.findById(userId).orElse(null);
 
+        SubjectsEntity subjectCheck = subjectRepository.findById(subjectId).orElse(null);
+
+        int pageSize = 6;
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("chapterName").ascending());
+        Page<ChaptersEntity> chapters = chapterRepository.findBySubjectsSubjectId(subjectId, pageable);
+        model.addAttribute("chapters", chapters.getContent());
+        model.addAttribute("subjectId", subjectId);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("subjects", subjectCheck);
+        model.addAttribute("totalPages", chapters.getTotalPages());
+        model.addAttribute("user", account);
+        Optional<SubjectsEntity> subjects = subjectRepository.findById(subjectId);
+        SubjectsEntity subject = subjects.get();
+        model.addAttribute("subject", subject);
+        return "showListChapterForStudent";
+    }
 
     @GetMapping("/addChapter/{subjectId}")
     public String showAddChapterForm(Model model, @PathVariable("subjectId") int subjectId, HttpSession session) {

@@ -1,31 +1,210 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh sách các chương</title>
-</head>
-<body>
-<h2>Danh sách các chương của <span th:text="${subject.subjectName}"></span></h2>
-<table border="1">
-    <thead>
-    <tr>
-        <th>Tên Chương</th>
-        <th>Action</th>
-        <th>Làm bài test tổng</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="chapter : ${chapters}">
-        <td th:text="${chapter.chapterName}"></td>
-        <td>
-            <a th:href="@{'/listTopics/listTest/' + ${subjectId} + '/' + ${chapter.chapterId}}">Chọn bài test</a>
-        </td>
-        <td><a th:href="@{'/listTopics/test/' + ${chapter.chapterId}}">Do test</a></td>
-    </tr>
-    </tbody>
-</table>
+<!--<!DOCTYPE html>-->
+<!--<head>-->
+<!--    <title>Subject List</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h2>Subject List</h2>-->
 
-<a href="/subject/chooseYourCourses">Back to Subject List</a>
+<!--&lt;!&ndash; Form để thêm mới môn học &ndash;&gt;-->
+
+<!--&lt;!&ndash; Table để hiển thị danh sách môn học &ndash;&gt;-->
+<!--<table border="1">-->
+<!--    <tr>-->
+<!--        <th>Subject Name</th>-->
+<!--        <th>Action</th>-->
+
+<!--    </tr>-->
+<!--    &lt;!&ndash; Sử dụng Thymeleaf để lặp qua danh sách môn học &ndash;&gt;-->
+<!--    <tr th:each="subject : ${subjects}">-->
+<!--        <td th:text="${subject.subjectName}"></td>-->
+<!--        <td>-->
+<!--            <a th:href="@{'/chapters/chooseChapter?subjectId=' + ${subject.subjectId}}">Xem các chapter</a>-->
+<!--        </td>-->
+
+<!--    </tr>-->
+<!--</table>-->
+<!--<a href="/home/homePage">Về trang chủ</a>-->
+<!--</body>-->
+<!--</html>-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>LIST CHAPTER</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="/assets/img/favicon.png" rel="icon">
+    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="/assetsAd/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="/assetsAd/css/style.css" rel="stylesheet">
+    <link href="/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+    <link href="/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <link href="/assets/css/style.css" rel="stylesheet"/>
+</head>
+
+<body>
+
+<th:block th:if="${user != null}">
+    <!-- Header for normal users -->
+    <th:block th:if="${user.roleId == 4}" th:include="/headerUser.html"></th:block>
+
+</th:block>
+<main>
+    <div class="container">
+        <div class="pagetitle">
+            <h1>Dashboard</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/home/homePage">Home</a></li>
+                    <li class="breadcrumb-item active">List Chapter</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+
+        <section id="popular-courses" class="courses">
+            <div class="container" data-aos="fade-up"  style="display: flex; justify-content: space-between">
+                <div class="section-title main-theme-x">
+                    <div class="factor">
+                        <h3><span th:text="${subject.subjectName}"></span> / Chapter</h3>
+                    </div>
+                </div>
+                <div class="section-title main-theme-x">
+                    <div class="clearfix" th:if="${currentPage != null}">
+                        <ul class="pagination">
+
+                            <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
+                                <a th:if="${currentPage > 0}"
+                                   th:href="@{/chapters/chooseChapters(subject=${subject}, page=0)}"
+                                   class="page-link">First</a>
+                                <span th:if="${currentPage == 0}" class="page-link">First</span>
+                            </li>
+
+                            <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
+                                <a th:if="${currentPage > 0}"
+                                   th:href="@{/chapters/chooseChapters(subject=${subject},page=${currentPage - 1})}"
+                                   class="page-link">Previous</a>
+                                <span th:if="${currentPage == 0}" class="page-link">Previous</span>
+                            </li>
+
+                            <!-- Hiển thị các số trang -->
+                            <li th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+                                th:if="${pageNumber >= currentPage - 1 and pageNumber <= currentPage + 1}"
+                                th:class="${pageNumber == currentPage} ? 'page-item active' : 'page-item'">
+                                <!-- Hiển thị trang -->
+                                <a th:href="@{/chapters/chooseChapters(subject=${subject},page=${pageNumber})}"
+                                   class="page-link" th:text="${pageNumber + 1}"></a>
+                            </li>
+
+
+                            <!-- Nút Next -->
+                            <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">
+                                <a th:if="${currentPage < totalPages - 1}"
+                                   th:href="@{/chapters/chooseChapters(subject=${subject},page=${currentPage + 1})}"
+                                   class="page-link">Next</a>
+                                <span th:if="${currentPage == totalPages - 1}" class="page-link">Next</span>
+                            </li>
+                            <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">
+                                <a th:if="${currentPage < totalPages - 1}"
+                                   th:href="@{/chapters/chooseChapters(subject=${subject},page=${totalPages - 1})}"
+                                   class="page-link">Last</a>
+                                <span th:if="${currentPage == totalPages - 1}" class="page-link">Last</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="card-body pb-0">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">Chapter</th>
+                        <th scope="col">Tên chapter</th>
+                        <th scope="col">Tổng số câu hỏi</th>
+                        <th scope="col">Làm bài test</th>
+                    </tr>
+
+                    </thead>
+                    <tbody>
+                    <tr th:each="chapter, index : ${chapters}">
+                        <td scope="col" th:text="${index.index+1}"></td>
+                        <td scope="col" th:text="${chapter.chapterName}"></td>
+                        <td scope="col" th:text="${chapter.totalQuestion}"></td>
+                        <td scope="col"><a th:href="@{'/listTopics/listTest/' + ${subjectId} + '/' + ${chapter.chapterId}}">Chọn test</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </section><!-- End Popular Courses Section -->
+
+
+    </div>
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<footer id="footer-student-page" class="footer">
+
+    <div class="copyright">
+        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+</footer>
+
+<script src="/assetsAd/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assetsAd/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assetsAd/vendor/chart.js/chart.umd.js"></script>
+<script src="/assetsAd/vendor/echarts/echarts.min.js"></script>
+<script src="/assetsAd/vendor/quill/quill.min.js"></script>
+<script src="/assetsAd/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assetsAd/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assetsAd/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<script src="/assetsAd/js/main.js"></script>
+<script src="/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="/assets/vendor/aos/aos.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<!--<script src="/js/main.js"></script>-->
+<script type="text/javascript" th:src="@{/assets/js/main.js}"></script>
+
+
 </body>
+
 </html>

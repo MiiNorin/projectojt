@@ -1,0 +1,28 @@
+<aside id="sidebar" class="sidebar">
+  <br>
+  <ul class="sidebar-nav" id="sidebar-nav">
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="">
+        <i class="bi bi-bar-chart"></i>
+        <span>DASHBOARD</span>
+      </a>
+
+    </li>
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="/account">
+        <i class="bi bi-list"></i><span>Account Manager</span><i class="bi"></i>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" th:href="@{/subject/listSubjects/{userId}(userId=${userId})}">
+        <i class="bi bi-list"></i><span>Manage Subject</span><i class="bi"></i>
+      </a>
+
+    </li><!-- End Tables Nav -->
+  </ul>
+
+
+
+
+</aside><!-- End Sidebar-->

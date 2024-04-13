@@ -14,13 +14,11 @@ import demo.service.TopicService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.ui.Model;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class TestDetailController {
@@ -28,46 +26,49 @@ public class TestDetailController {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private TestDetailRepository testDetailRepository;
+
+    @Autowired
+    private TopicRepository topicRepository;
+
+    @Autowired
+    private QuestionTestService questionTestService;
+
+    @Autowired
+    private TopicService topicService;
+
+    @Autowired
+    private QuestionRepository questionRepository;
+
+    @Autowired
+    private TestDetailService testDetailService;
 
     @GetMapping("/markreport")
     public String redirectToSearchPage() {
         return "markreport";
     }
 
-
-    @Autowired
-    private TestDetailRepository testDetailsRepository;
-    @Autowired
-    private TopicRepository topicRepository;
-    @Autowired
-    private QuestionTestService questionTestService;
-    @Autowired
-    private TopicService topicService;
-    @Autowired
-    private QuestionRepository questionRepository;
-    @Autowired
-    private TestDetailService testDetailService;
-
     @GetMapping("/markreport/search")
-    public String searchByEmail(@RequestParam("email") String email, Model model) {
-        Account a = accountRepository.findByEmail(email).orElse(null);
-        if (a != null) {
-            model.addAttribute("account", a);
+    public String searchByEmail(@RequestParam("email") String email, Model model, HttpSession session) {
+        Integer loggedInUserId = (Integer) session.getAttribute("user_id");
+        Account account = accountRepository.findByEmail(email).orElse(null);
 
-            // Lấy tất cả các chi tiết kiểm tra dựa trên ID tài khoản
-            List<TestDetailsEntity> testDetailsList = testDetailsRepository.findByAccountId(a.getUserId());
+        if (account != null && loggedInUserId != null && loggedInUserId.equals(account.getUserId())) {
+            model.addAttribute("account", account);
+
+            List<TestDetailsEntity> testDetailsList = testDetailRepository.findByAccounts_UserId(account.getUserId());
             if (!testDetailsList.isEmpty()) {
                 model.addAttribute("testDetailsList", testDetailsList);
 
-                // Lặp qua danh sách các chi tiết kiểm tra
                 for (TestDetailsEntity testDetail : testDetailsList) {
                     int testDetailId = testDetail.getTestDetailid();
 
                     List<QuestiontestsEntity> questionTests = questionTestService.getQuestionTestsByTestDetailId(testDetailId);
-
                     int correctCount = 0;
-
+                    int totalQuestion = 0;
                     Integer topicId = null;
+
                     if (!questionTests.isEmpty()) {
                         QuestiontestsEntity firstQuestionTest = questionTests.get(0);
                         Questions question = questionRepository.findById(firstQuestionTest.getQuestionId()).orElse(null);
@@ -76,32 +77,20 @@ public class TestDetailController {
                         }
                     }
 
-                    int totalQuestion = 0;
                     if (topicId != null) {
                         totalQuestion = topicService.getTotalQuestionByTopicId(topicId);
                     }
 
                     for (QuestiontestsEntity questionTest : questionTests) {
                         Questions question = questionRepository.findById(questionTest.getQuestionId()).orElse(null);
-                        if (question != null) {
-                            if (question.getAnswerId() != null && question.getAnswerId().equals(questionTest.getAnswerId())) {
-                                correctCount++;
-                            }
+                        if (question != null && question.getAnswerId() != null && question.getAnswerId().equals(questionTest.getAnswerId())) {
+                            correctCount++;
                         }
                     }
 
-                    double score = 0;
-                    if (totalQuestion != 0) {
-                        score = ((double) correctCount / totalQuestion) * 10;
-                    }
-
-                    // In ra điểm ra console
-                    System.out.println("Số câu đúng: " + correctCount);
-                    System.out.println("Tổng số câu hỏi: " + totalQuestion);
-                    System.out.println("Điểm: " + score);
-
-                    // Cập nhật điểm vào chi tiết kiểm tra và lưu vào cơ sở dữ liệu
-                    testDetail.setScore(score);
+//                    double score = totalQuestion != 0 ? ((double) correctCount / totalQuestion) * 10 : 0;
+//                    testDetail.setScore(score);
+                    testDetail.setAccounts(account);
                     testDetailService.saveTestDetail(testDetail);
                 }
             } else {
@@ -110,9 +99,9 @@ public class TestDetailController {
         } else {
             model.addAttribute("errorMessage", "Không tìm thấy tài khoản cho email: " + email);
         }
+
         model.addAttribute("topicRepository", topicRepository);
 
         return "mark_report";
     }
-
 }

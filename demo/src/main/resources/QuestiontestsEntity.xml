@@ -128,4 +128,21 @@
             </basic>
         </attributes>
     </entity>
+    <entity class="demo.persistence.entity.CommentEntity">
+        <table name="COMMENT" schema="dbo" catalog="Db_ZOTSystem"/>
+        <attributes>
+            <id name="commentId">
+                <column name="comment_id"/>
+            </id>
+            <basic name="accountId">
+                <column name="account_id"/>
+            </basic>
+            <basic name="chapterId">
+                <column name="chapter_id"/>
+            </basic>
+            <basic name="commentContext">
+                <column name="comment_context"/>
+            </basic>
+        </attributes>
+    </entity>
 </entity-mappings>

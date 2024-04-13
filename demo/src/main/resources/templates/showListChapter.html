@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>ADMIN MANAGER</title>
+    <title>MANAGE CHAPTER</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -62,6 +62,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/home/homePage">Home</a></li>
+                <li class="breadcrumb-item"><span th:text="${subject.subjectName}"></span></li>
                 <li class="breadcrumb-item active">Manage Chapter</li>
             </ol>
         </nav>
@@ -86,10 +87,10 @@
                             th:href="@{'/chapters/editChapter?chapterId=' + ${chapter.chapterId} + '&subjectId=' + ${subjectId}}">Sửa
                         Chapter</a></button>
                     <button class="view-details"><a
-                            th:href="@{'/listTopics/showListTopic/' + ${subjectId} + '/' + ${chapter.chapterId}}">Hiển
-                        thị test</a></button>
-                    <button>Thêm Chapter</button>
-                </div>
+                            th:href="@{'/listTopics/showListTopic/' + ${subjectId} + '/' + ${chapter.chapterId}}">Kho lưu trữ</a></button>
+                    <button class="view-details"><a
+                            th:href="@{'/listTopics/addTopic/' + ${subjectId} + '/' + ${chapter.chapterId}}">Khởi tạo kho</a></button>
+                    </div>
             </div>
             <div class="info">
                 <h3 th:text="${chapter.chapterName}"></h3>

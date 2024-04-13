@@ -51,16 +51,29 @@
 
     <div class="card panel-understanding-check">
         <div class="card-body">
-            <form id="quizForm" action="/submitAnswers" method="post">
+            <form id="quizForm" action="/questiontests/submitAnswers" method="post">
                 <div id="questionContainer">
                     <div th:each="question : ${questions}">
                         <label class="questioncontext" th:text="${question.questionContext}"></label>
                         <ul>
-                            <li><input type="radio" th:name="'answerId' + ${question.questionId}" value="1" /> <span th:text="${question.optionA}"></span></li>
-                            <li><input type="radio" th:name="'answerId' + ${question.questionId}" value="2" /> <span th:text="${question.optionB}"></span></li>
-                            <li><input type="radio" th:name="'answerId' + ${question.questionId}" value="3" /> <span th:text="${question.optionC}"></span></li>
-                            <li><input type="radio" th:name="'answerId' + ${question.questionId}" value="4" /> <span th:text="${question.optionD}"></span></li>
+                            <li th:if="${not #strings.isEmpty(question.optionA)}">
+                                <input type="radio" th:name="'answerId' + ${question.questionId}" value="1" />
+                                <span th:text="${question.optionA}"></span>
+                            </li>
+                            <li th:if="${not #strings.isEmpty(question.optionB)}">
+                                <input type="radio" th:name="'answerId' + ${question.questionId}" value="2" />
+                                <span th:text="${question.optionB}"></span>
+                            </li>
+                            <li th:if="${not #strings.isEmpty(question.optionC)}">
+                                <input type="radio" th:name="'answerId' + ${question.questionId}" value="3" />
+                                <span th:text="${question.optionC}"></span>
+                            </li>
+                            <li th:if="${not #strings.isEmpty(question.optionD)}">
+                                <input type="radio" th:name="'answerId' + ${question.questionId}" value="4" />
+                                <span th:text="${question.optionD}"></span>
+                            </li>
                         </ul>
+
                         <input type="hidden" class="questionId" name="questionId" th:value="${question.questionId}" />
                         <input type="hidden" class="selectedAnswer" name="selectedAnswer" />
                         <input type="hidden" class="testDetailId" name="testDetailId" th:value="${testDetailId}"/>
@@ -80,53 +93,6 @@
 
 <script>
 
-    // document.addEventListener("DOMContentLoaded", function() {
-    //     var questions = [
-    //         {
-    //             question: "What is the capital of France?",
-    //             answers: ["Paris", "London", "Berlin", "Madrid"]
-    //         },
-    //         // Thêm các câu hỏi khác tương tự ở đây...
-    //     ];
-    //
-    //     // Đảo ngẫu nhiên thứ tự các đáp án của mỗi câu hỏi
-    //     questions.forEach(function(question) {
-    //         question.answers.sort(function() {
-    //             return 0.5 - Math.random(); // Sử dụng hàm sort với hàm so sánh ngẫu nhiên
-    //         });
-    //     });
-    //
-    //     // Hiển thị câu hỏi và các đáp án đã được đảo ngẫu nhiên
-    //     var questionContainer = document.getElementById('questionContainer');
-    //     questions.forEach(function(question, index) {
-    //         var questionElement = document.createElement('div');
-    //         questionElement.classList.add('question');
-    //
-    //         var questionText = document.createElement('p');
-    //         questionText.textContent = "Question " + (index + 1) + ": " + question.question;
-    //         questionElement.appendChild(questionText);
-    //
-    //         var answersList = document.createElement('ul');
-    //         question.answers.forEach(function(answer, answerIndex) {
-    //             var answerItem = document.createElement('li');
-    //             var answerInput = document.createElement('input');
-    //             answerInput.type = "radio";
-    //             answerInput.name = "answer" + index;
-    //             answerInput.value = answer;
-    //             answerItem.appendChild(answerInput);
-    //             var answerText = document.createElement('span');
-    //             answerText.textContent = answer;
-    //             answerItem.appendChild(answerText);
-    //             answersList.appendChild(answerItem);
-    //         });
-    //         questionElement.appendChild(answersList);
-    //
-    //         questionContainer.appendChild(questionElement);
-    //     });
-    // });
-
-
-
     document.getElementById('quizForm').addEventListener('submit', function(event) {
         var selectedAnswers = [];
         var radioInputs = document.querySelectorAll('input[type="radio"]');
@@ -141,7 +107,7 @@
         });
 
         if (!atLeastOneSelected) {
-            selectedAnswers.push("0");
+            selectedAnswers.push("5");
         }
 
         document.querySelector('.selectedAnswer').value = selectedAnswers.join(',');
@@ -172,6 +138,12 @@
             quizForm.submit();
         }
     }
+
+    ipt>
+    // Chờ sau 3 giây trước khi chuyển hướng
+    setTimeout(function() {
+        window.location.href = "redirect:/home/homePage";
+    }, 3000);
 
     // Thêm sự kiện click cho các input radio
     radioInputs.forEach(function(input) {

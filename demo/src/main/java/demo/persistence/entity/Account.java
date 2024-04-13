@@ -59,6 +59,8 @@ public class Account implements Serializable {
     private String status;
     @OneToMany(mappedBy = "account",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<SubjectsEntity> subjects;
+    @OneToMany(mappedBy = "accounts", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<TestDetailsEntity> testDetails;
     public Account(int roleId, String email, String password, LocalDate createDate, String fullName, LocalDate birthDay, String phone, String schoolName, String avatar, String gender, String status) {
         this.roleId = roleId;
         this.email = email;

@@ -1,122 +1,348 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <title>List of Topics</title>
-    <style>
-        .topic-card {
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-        .topic-card:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
+    <title>ADMIN MANAGER</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!-- Favicons -->
+    <link href="/assets/img/favicon.png" rel="icon">
+    <link href="/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="/assetsAd/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/quill/quill.snow.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/quill/quill.bubble.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assetsAd/vendor/simple-datatables/style.css" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link href="/assetsAd/css/style.css" rel="stylesheet">
+    <link href="/assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+    <link href="/assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <link href="/assets/css/style.css" rel="stylesheet"/>
 </head>
+
 <body>
-<h1>List of Topics</h1>
-<h3>Chapter <span th:text="${chapter.chapterName}"></span></h3>
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>Tên test</th>
-        <th>Làm bài test</th>
-        <th>Status</th>
-        <th>Số câu hỏi</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="topic : ${topics}">
-        <input type="hidden" name="subjectId" th:value="${subjectId}"/>
-        <input type="hidden" name="chapterId" th:value="${chapterId}"/>
-        <td th:text="${topic.topicName}"></td>
-        <td>
-            <span th:if="${(topic.status != 'Finished') and (topic.status!='Soon')}">
-                <a class="topic-link" href="#"
-                   th:data-topic-id="${topic.topicId}"
-                   th:data-total-question="${topic.totalQuestion}"
-                   data-toggle="modal" data-target="#myModal"
-                   th:text="${topic.topicName}">Làm bài test</a>
-            </span>
-            <span th:unless="${(topic.status != 'Finished') and (topic.status!='Soon')}" th:text="${topic.topicName}"></span>
-        </td>
-        <td class="topic-status" th:data-status="${topic.status}" th:text="${topic.status}"></td>
-        <td th:text="${totalQuestions}"></td>
-    </tr>
-    </tbody>
-</table>
+<th:block th:if="${user != null}">
+    <!-- Header for normal users -->
+    <th:block th:if="${user.roleId == 4}" th:include="/headerUser.html"></th:block>
 
-<a th:href="@{'/chapters/chooseChapter?subjectId=' + ${subjectId}}">Về lại Chapter List</a>
+    <!-- Header for mentors -->
+    <th:block th:if="${user.roleId == 1 or user.roleId == 2 or user.roleId == 3}"
+              th:include="/headerMentor.html"></th:block>
+</th:block>
 
-<!-- The Modal -->
-<div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog">
 
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Modal Header</h4>
+<main>
+    <div class="container">
+        <div class="pagetitle">
+            <h1>Dashboard</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/home/homePage">Home</a></li>
+                    <li class="breadcrumb-item active">List Test</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+
+        <section id="popular-courses" class="courses">
+            <div class="container" data-aos="fade-up">
+
+                <div class="section-title main-theme-x">
+                    <div class="factor">
+                        <h3><span th:text="${subjects.subjectName}"></span> / <span
+                                th:text="${chapter.chapterName}"></span> / Test</h3>
+                    </div>
+
+                </div>
+
             </div>
-            <div class="modal-body">
-                <p>Are you sure you want to proceed to the test?</p>
-            </div>
-            <div class="form-group">
-                <label for="hardQuestion">Chọn câu hỏi khó:</label>
-                <input type="number" class="form-control" id="hardQuestion" value="0" th:max="${totalQuestion}">
-            </div>
-            <input type="hidden" id="totalHardQuestion" name="totalHardQuestion">
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button id="okBtn" type="button" class="btn btn-primary">OK</button>
-            </div>
-        </div>
+            <hr>
 
+            <div class="card-body pb-0">
+                <h5 class="card-title">List Topics <span></span></h5>
+
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">No.</th>
+                        <th scope="col">Tên test</th>
+                        <th scope="col">Số câu</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Bắt đầu</th>
+                        <th scope="col">Kết thúc</th>
+                        <th scope="col">Làm bài</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="topic, index : ${topics}">
+                        <input type="hidden" name="subjectId" th:value="${subjectId}"/>
+                        <input type="hidden" name="chapterId" th:value="${chapterId}"/>
+                        <td scope="col" th:text="${index.index+1}"></td>
+                        <td scope="col" th:text="${topic.topicName}"></td>
+                        <td scope="col" th:text="${topic.totalQuestion}"></td>
+                        <td scope="col" th:text="${topic.status}"></td>
+                        <td scope="col" th:text="${topic.formattedStartDate}"></td>
+                        <td scope="col" th:text="${topic.formattedFinishDate}"></td>
+                        <td>
+                                <span th:if="${(topic.status != 'Finished') and (topic.status!='Soon')}">
+                                    <a class="topic-link" href="#"
+                                       th:data-topic-id="${topic.topicId}"
+                                       th:data-total-question="${topic.totalQuestion}"
+                                       data-toggle="modal" data-target="#myModal"
+                                       th:text="${topic.topicName}">Làm bài test</a>
+                                </span>
+                            <span th:unless="${(topic.status != 'Finished') and (topic.status!='Soon')}"
+                                  th:text="${topic.topicName}"></span>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+
+        </section>
     </div>
-</div>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Xác nhận làm bài?</p>
+                </div>
+                <div class="form-group">
+                    <label for="hardQuestion">Chọn câu hỏi khó:</label>
+                    <input type="number" class="form-control" id="hardQuestion" value="0" th:max="${totalQuestion}">
+                </div>
+                <input type="hidden" id="totalHardQuestion" name="totalHardQuestion">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button id="okBtn" type="button" class="btn btn-primary">OK</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<!--    <div class="container">-->
+<!--        <h1>Comments</h1>-->
+<!--        <input type="hidden" id="userId" th:value="${user.userId}">-->
+<!--        &lt;!&ndash; Comment Form &ndash;&gt;-->
+<!--        <h2>Add a New Comment</h2>-->
+<!--        <form id="commentForm" th:action="@{/listComments/listTest/{subjectId}/{chapterId}/comments}" method="post">-->
+<!--            <input type="hidden" id="subjectId" th:value="${subjectId}">-->
+<!--            <input type="hidden" id="chapterId" th:value="${chapterId}">-->
+<!--            <label for="comment">Comment:</label><br>-->
+<!--            <textarea id="comment" name="commentcontext" rows="4" cols="50"></textarea><br><br>-->
+<!--            <input type="submit" value="Submit">-->
+<!--        </form>-->
+
+<!--        &lt;!&ndash; Display Existing Comments &ndash;&gt;-->
+<!--        <h2>Existing Comments</h2>-->
+<!--        <div id="commentsContainer">-->
+<!--            <ul>-->
+<!--                <li th:each="comment : ${comments}">-->
+<!--                    <input type="hidden" id="subjectId" th:value="${subjectId}">-->
+<!--                    <input type="hidden" id="chapterId" th:value="${chapterId}">-->
+<!--                    <span th:text="${comment.commentcontext}"></span>-->
+<!--                    <button th:onclick="'toggleEditForm(' + ${comment.commentId} + ')'">Edit</button>-->
+<!--                    &lt;!&ndash; Edit Form (Initially Hidden) &ndash;&gt;-->
+<!--                    <form th:id="'editForm_' + ${comment.commentId}"-->
+<!--                          th:action="'/listTopics/listTest/{subjectId}/{chapterId}/comments/' + ${comment.commentId} + '/edit'"-->
+<!--                          method="post" style="display: none;">-->
+<!--                        <textarea name="commentcontext" rows="4" cols="50"-->
+<!--                                  th:text="${comment.commentcontext}"></textarea>-->
+<!--                        <input type="submit" value="Save">-->
+<!--                        <button type="button" th:onclick="'toggleEditForm(' + ${comment.commentId} + ')'">Cancel-->
+<!--                        </button>-->
+<!--                    </form>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <script>
+        function toggleEditForm(commentId) {
+            var editForm = document.getElementById('editForm_' + commentId);
+            if (editForm.style.display === 'none') {
+                editForm.style.display = 'block';
+            } else {
+                editForm.style.display = 'none';
+            }
+        }
+    </script>
+
+    <!--    end comment-->
+
+</main><!-- End #main -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <script>
-    document.querySelectorAll('.topic-link').forEach(link => {
-        link.addEventListener('click', function (event) {
-            const status = this.closest('tr').querySelector('.topic-status').getAttribute('data-status');
-            if (status === 'Finished') {
-                event.preventDefault();
-                alert('This topic is already finished.');
-            }
+    $(document).ready(function () {
+        // Bắt sự kiện khi form comment được gửi đi
+        $('#commentForm').submit(function (event) {
+            // Ngăn chặn hành động mặc định của form
+            event.preventDefault();
+
+            // Thu thập dữ liệu từ form
+            var commentText = $('#comment').val();
+            var chapterId = $('#chapterId').val();
+            var subjectId = $('#subjectId').val();
+
+            // Gửi dữ liệu đến server bằng AJAX
+            $.ajax({
+                type: 'POST',
+                url: '/listComments/listTest/' + subjectId + '/' + chapterId + '/comments',
+                data: {
+                    commentcontext: commentText
+                },
+                success: function (data) {
+                    // Xử lý phản hồi từ server (nếu cần)
+                    console.log('Comment added successfully');
+
+                    // Cập nhật giao diện nếu cần thiết
+                    // Ví dụ: load lại danh sách comment
+                    loadComments(chapterId);
+                },
+                error: function (xhr, status, error) {
+                    // Xử lý lỗi (nếu có)
+                    console.error('Error adding comment:', error);
+                }
+            });
         });
+
+        // Hàm để load lại danh sách comment sau khi thêm mới
+        function loadComments(chapterId) {
+            var subjectId = $('#subjectId').val();
+            // Sử dụng AJAX để lấy danh sách comment từ server
+            $.get('/listComments/listTest/' + subjectId + '/' + chapterId + '/comments', function (data) {
+                // Xóa nội dung hiện tại của commentsContainer
+                $('#commentsContainer').empty();
+
+                // Thêm các comment mới vào commentsContainer
+                data.forEach(function(comment) {
+                    $('#commentsContainer').append('<li>' + comment.commentcontext + '</li>');
+                });
+            });
+        }
     });
 
-    // Handling click on "OK" button
-    document.getElementById("okBtn").addEventListener("click", function () {
-        const topicId = document.querySelector('.topic-link').getAttribute("data-topic-id");
-        const totalQuestion = document.querySelector('.topic-link').getAttribute("data-total-question");
-        let totalHardQuestion = parseInt(document.getElementById("hardQuestion").value); // Lấy giá trị từ trường "Chọn câu hỏi khó"
 
-        if (totalHardQuestion < 0) {
-            totalHardQuestion = 0;
-        } else if (totalHardQuestion > totalQuestion) {
-            totalHardQuestion = totalQuestion;
+    // Hàm để load lại danh sách comment sau khi thêm mới
+        function loadComments(chapterId) {
+            var subjectId = $('#subjectId').val();
+            // Sử dụng AJAX để lấy danh sách comment từ server
+            $.get('/listComments/listTest/' + subjectId + '/' + chapterId + '/comments', function (data) {
+                // Xóa nội dung hiện tại của commentsContainer
+                $('#commentsContainer').empty();
+
+                // Thêm các comment mới vào commentsContainer
+                data.forEach(function(comment) {
+                    $('#commentsContainer').append('<li>' + comment.commentcontext + '</li>');
+                });
+            });
         }
 
-        document.getElementById("totalHardQuestion").value = totalHardQuestion;
-        window.location.href = "/test/" + topicId + "/" + totalQuestion + "?totalHardQuestion=" + totalHardQuestion;
-    });
-    document.getElementById("hardQuestion").addEventListener("input", function() {
-        if (this.value < 0) {
-            this.value = 0;
-        }
+
+    $(document).ready(function () {
+
+        $('.topic-link').click(function () {
+            var topicId = $(this).data('topic-id');
+            var totalQuestion = $(this).data('total-question');
+            var topicName = $(this).text().trim();
+
+            // Hiển thị modal
+            $('#myModal').modal('show');
+
+            // Cập nhật thông tin trong modal
+            $('.modal-title').text('Làm bài test: ' + topicName);
+            $('#totalHardQuestion').attr('max', totalQuestion);
+            $('#totalHardQuestion').val(0);
+
+            // Lưu thông tin topicId và totalQuestion vào các biến toàn cục để sử dụng sau khi xác nhận
+            window.topicId = topicId;
+            window.totalQuestion = totalQuestion;
+
+            // Ngăn chặn hành động mặc định của thẻ a
+            return false;
+        });
+
+        // Xử lý khi nhấn nút OK trong modal
+        $('#okBtn').click(function () {
+            // Lấy giá trị của trường nhập câu hỏi khó
+            var totalHardQuestion = parseInt($('#hardQuestion').val());
+
+            // Tiến hành chuyển người dùng sang trang test với các thông số cần thiết
+            window.location.href = '/test/' + window.topicId + '/' + window.totalQuestion + '?totalHardQuestion=' + totalHardQuestion;
+        });
+        $('#myModal').on('hidden.bs.modal', function () {
+            // Xóa giá trị của trường nhập câu hỏi khó khi modal được ẩn
+            $('#hardQuestion').val(0);
+        });
     });
 </script>
 
+<!-- ======= Footer ======= -->
+<footer id="footer-student-page" class="footer">
+
+    <div class="copyright">
+        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
+    </div>
+    <div class="credits">
+
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+    </div>
+</footer>
+
+<script src="/assetsAd/vendor/apexcharts/apexcharts.min.js"></script>
+<script src="/assetsAd/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assetsAd/vendor/chart.js/chart.umd.js"></script>
+<script src="/assetsAd/vendor/echarts/echarts.min.js"></script>
+<script src="/assetsAd/vendor/quill/quill.min.js"></script>
+<script src="/assetsAd/vendor/simple-datatables/simple-datatables.js"></script>
+<script src="/assetsAd/vendor/tinymce/tinymce.min.js"></script>
+<script src="/assetsAd/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<script src="/assetsAd/js/main.js"></script>
+<script src="/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="/assets/vendor/aos/aos.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<!--<script src="/js/main.js"></script>-->
+<script type="text/javascript" th:src="@{/assets/js/main.js}"></script>
+
+
 </body>
+
 </html>

@@ -6,18 +6,22 @@ import demo.persistence.entity.Role;
 import demo.repository.AccountRepository;
 import demo.repository.RoleRepository;
 import demo.service.AccountService;
+import demo.service.FileUpload;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @RequestMapping("/home")
 @Controller
+@RequiredArgsConstructor
 public class HomeController {
     @Autowired
     private AccountRepository accountRepository;
@@ -25,6 +29,7 @@ public class HomeController {
     private AccountService accountService;
     @Autowired
     private RoleRepository roleRepository;
+    private final FileUpload fileUpload;
     @GetMapping("/manageQuestion")
     public String moveToShowQuestion(){
         return "mainPage";
@@ -115,9 +120,9 @@ public class HomeController {
         }
         return "user-profile";
     }
-    @PostMapping("/Profile")
+    @PostMapping("/editProfile")
     public String editProfile(Model model, HttpSession session,
-                              @RequestParam("avatar") String avatar,
+                              @RequestParam("avatar") MultipartFile multipartFile,
                               @RequestParam("fullName") String fullName,
                               @RequestParam("phone") String phone,
                               @RequestParam("email") String email,
@@ -127,7 +132,10 @@ public class HomeController {
                               @Valid @ModelAttribute AccountDto accountDto, BindingResult result){
         try {
             Integer userId = (Integer) session.getAttribute("user_id");
-            accountService.updateAccount(avatar, fullName, phone, email, school, gender,userId);
+            String imageURL = fileUpload.uploadFile(multipartFile);
+            model.addAttribute("image", imageURL);
+            accountService.updateAccount(imageURL, fullName, phone, email, school, gender,userId);
+            System.out.println(fullName);
             redirectAttributes.addFlashAttribute("message", "Account updated successfully!");
         } catch (Exception e) {
             e.printStackTrace();
@@ -135,6 +143,19 @@ public class HomeController {
         }
 
         return "redirect:/home/Profile";
+    }
+    @PostMapping("/changePassword")
+    public String changePassword(Model model, HttpSession session, RedirectAttributes redirectAttributes,
+                                 @RequestParam("password") String currentPass,
+                                 @RequestParam("newpassword") String newPass,
+                                 @RequestParam("renewpassword") String renewPass)
+    {
+        // Giả sử bạn đã xác thực người dùng và lấy được userId từ session hoặc security context
+        Integer userId = (Integer) session.getAttribute("user_id"); // Lấy userId thực tế từ session hoặc security context
+
+        String result = accountService.changePassword(userId, currentPass,newPass,renewPass);
+        redirectAttributes.addFlashAttribute("message", result);
+        return "redirect:/home/Profile"; // Redirect để tránh duplicate submission
     }
 
 }

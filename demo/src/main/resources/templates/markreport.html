@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Mark Report</title>
+</head>
+<body>
+<h1>Mark Report</h1>
+
+<form action="#" th:action="@{/markreport/search}" method="get">
+    <label for="email">Email:</label>
+    <input type="text" id="email" name="email" placeholder="Nhập email cần tìm kiếm">
+    <button type="submit">Tìm kiếm</button>
+</form>
+
+</body>
+</html>

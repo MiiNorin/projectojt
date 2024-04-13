@@ -3,6 +3,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.Date;
@@ -18,4 +19,5 @@ public class AccountDto {
     private String fullName;
     private String phone;;
     private String checkPass;
+    private MultipartFile avatar;
 }

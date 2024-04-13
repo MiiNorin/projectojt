@@ -27,13 +27,13 @@
 <!--</body>-->
 <!--</html>-->
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>LIST SUBJECT</title>
+    <title>ADMIN MANAGER</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -66,113 +66,185 @@
     <link href="/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
-    <link href="/assets/css/style.css" rel="stylesheet" />
+    <link href="/assets/css/style.css" rel="stylesheet"/>
 </head>
 
-
-
 <body>
-<th:header th:include="/headerUser.html"></th:header>
 
-<br>
-<br>
-<br>
-<!-- ======= Popular Courses Section ======= -->
-<section id="popular-courses" class="courses">
-    <div class="container" data-aos="fade-up">
+<th:block th:if="${user != null}">
+    <!-- Header for normal users -->
+    <th:block th:if="${user.roleId == 4}" th:include="/headerUser.html"></th:block>
 
-        <div class="section-title " >
-            <p>Các Chủ Đề cơ bản</p>
-            <div style="display: flex">
-                <input type="text" id="searchInput" placeholder="Tìm kiếm mã môn học ">
-                <form action="/Topic/searchByStatus" method="get">
-                    <button type="submit">Search</button>
-                </form>
-            </div>
+    <!-- Header for mentors -->
+    <th:block th:if="${user.roleId == 1 or user.roleId == 2 or user.roleId == 3}"
+              th:include="/headerMentor.html"></th:block>
+</th:block>
 
-        </div>
 
-        <div class="row" data-aos="zoom-in" data-aos-delay="100">
-            <!-- Loop through subjects -->
-            <div class="col-lg-2 col-md-6 d-flex align-items-stretch" th:each="subject : ${subjects}">
-                <div class="course-item">
-                    <img th:src="@{'/subject_images/' + ${subject.imgLink}}" onerror='this.style.display="none"' style="max-width: 100%" />
-                    <div class="course-content">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-center" th:text="${subject.subjectName}"></h4>
+<main>
+    <div class="container">
+        <div class="pagetitle">
+            <h1>Dashboard</h1>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/home/homePage">Home</a></li>
+                    <li class="breadcrumb-item active">List Subject</li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+
+
+        <section id="popular-courses" class="courses">
+            <div class="container" data-aos="fade-up">
+
+                <div class="section-title main-theme">
+                    <div class="factor">
+                        <h3>Các Chủ Đề cơ bản</h3>
+                    </div>
+                    <div class="factor" style="display: flex">
+                        <div class="wrap-search">
+                            <div class="search">
+                                <div class="search-button">
+                                    <input type="text" class="searchTerm" placeholder="What are you looking for?"/>
+                                </div>
+                                <div class="search-button">
+                                    <form action="/Topic/searchByStatus" method="get">
+                                        <button type="submit" class="searchButton">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                        <a th:href="@{'/chapters/chooseChapter?subjectId=' + ${subject.subjectId}}" type="button" class="btn btn-outline-success">Làm bài kiểm tra</a>
+
                     </div>
                 </div>
-            </div> <!-- End Course Item -->
-        </div>
-    </div>
-</section><!-- End Popular Courses Section -->
 
-<!-- ======= Trainers Section ======= -->
+            </div>
+            <hr>
+            <div class="wrapper-subject-for-FA">
+
+                <div class="single-card" data-aos="zoom-in" data-aos-delay="100" th:each="subject : ${subjects}">
+                    <div class="img-area">
+                        <img th:src="@{'/subject_images/' + ${subject.imgLink}}" onerror='this.style.display="none"'
+                             style="max-width: 100%">
+                    </div>
+                    <div class="info">
+                        <h3 th:text="${subject.subjectName}"></h3>
+                        <p><a th:href="@{'/chapters/chooseChapter?subjectId=' + ${subject.subjectId}}" type="button" class="btn btn-outline-success">Làm bài kiểm tra</a>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section><!-- End Popular Courses Section -->
+
+<!--        <div class="clearfix" th:if="${currentPage != null and totalPages > 1}">-->
+<!--            <ul class="pagination">-->
+<!--                &lt;!&ndash; Đầu tiên và trang trước &ndash;&gt;-->
+<!--                <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">-->
+<!--                    <a th:if="${currentPage > 0}" th:href="@{/subject/chooseYourCourses(page=0)}" class="page-link">First</a>-->
+<!--                    <span th:if="${currentPage == 0}" class="page-link">First</span>-->
+<!--                </li>-->
+<!--                <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">-->
+<!--                    <a th:if="${currentPage > 0}" th:href="@{/subject/chooseYourCourses(page=${currentPage - 1})}" class="page-link">Previous</a>-->
+<!--                    <span th:if="${currentPage == 0}" class="page-link">Previous</span>-->
+<!--                </li>-->
+
+<!--                &lt;!&ndash; Hiển thị các số trang &ndash;&gt;-->
+<!--                <li th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}" th:class="${pageNumber == currentPage} ? 'page-item active' : 'page-item'">-->
+<!--                    <a th:href="@{/subject/chooseYourCourses(page=${pageNumber})}" class="page-link" th:text="${pageNumber + 1}"></a>-->
+<!--                </li>-->
+
+<!--                &lt;!&ndash; Tiếp theo và cuối cùng &ndash;&gt;-->
+<!--                <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">-->
+<!--                    <a th:if="${currentPage < totalPages - 1}" th:href="@{/subject/chooseYourCourses(page=${currentPage + 1})}" class="page-link">Next</a>-->
+<!--                    <span th:if="${currentPage == totalPages - 1}" class="page-link">Next</span>-->
+<!--                </li>-->
+<!--                <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">-->
+<!--                    <a th:if="${currentPage < totalPages - 1}" th:href="@{/subject/chooseYourCourses(page=${totalPages - 1})}" class="page-link">Last</a>-->
+<!--                    <span th:if="${currentPage == totalPages - 1}" class="page-link">Last</span>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+        <div class="clearfix" th:if="${currentPage != null}">
+            <ul class="pagination">
+
+                <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
+                    <a th:if="${currentPage > 0}"
+                       th:href="@{/subject/chooseYourCourses(page=0)}"
+                       class="page-link">First</a>
+                    <span th:if="${currentPage == 0}" class="page-link">First</span>
+                </li>
+
+                <li th:class="${currentPage == 0} ? 'page-item disabled' : 'page-item'">
+                    <a th:if="${currentPage > 0}"
+                       th:href="@{/subject/chooseYourCourses(page=${currentPage - 1})}"
+                       class="page-link">Previous</a>
+                    <span th:if="${currentPage == 0}" class="page-link">Previous</span>
+                </li>
+
+                <!-- Hiển thị các số trang -->
+                <li th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+                    th:if="${pageNumber >= currentPage - 1 and pageNumber <= currentPage + 1}"
+                    th:class="${pageNumber == currentPage} ? 'page-item active' : 'page-item'">
+                    <!-- Hiển thị trang -->
+                    <a th:href="@{/subject/chooseYourCourses(page=${pageNumber})}"
+                       class="page-link" th:text="${pageNumber + 1}"></a>
+                </li>
+
+
+                <!-- Nút Next -->
+                <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">
+                    <a th:if="${currentPage < totalPages - 1}"
+                       th:href="@{/subject/chooseYourCourses(page=${currentPage + 1})}"
+                       class="page-link">Next</a>
+                    <span th:if="${currentPage == totalPages - 1}" class="page-link">Next</span>
+                </li>
+                <li th:class="${currentPage == totalPages - 1} ? 'page-item disabled' : 'page-item'">
+                    <a th:if="${currentPage < totalPages - 1}"
+                       th:href="@{/subject/chooseYourCourses(page=${totalPages - 1})}"
+                       class="page-link">Last</a>
+                    <span th:if="${currentPage == totalPages - 1}" class="page-link">Last</span>
+                </li>
+            </ul>
+        </div>
+
+
+        <!--    <form action="/subject/searchByName" method="get">-->
+        <!--        <input type="text" name="searchName" placeholder="Search by name" th:value="${searchName}">-->
+        <!--        <input type="hidden" id="userId" name="userId" th:value="${userId}"/>-->
+        <!--        <button type="submit">Search</button>-->
+        <!--    </form>-->
+    </div>
 
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->
-<footer id="footer">
+<footer id="footer-student-page" class="footer">
 
-    <div class="footer-top">
-        <div class="container">
-            <div class="row">
-
-                <div class="col-lg-3 col-md-6 footer-contact">
-                    <h3>FPT ACADEMY</h3>
-                    <p>
-                    <ul>
-                        <li> Tòa nhà FPT Complex, đường Nam Kỳ Khởi Nghĩa, Quận Ngũ Hành Sơn, TP Đà Nẵng<br></li>
-                        <li> Tòa nhà FPT Massda, đường số 01, KCN An Đồn, Sơn Trà, Đà Nẵng<br>                            </li>
-                    </ul>
-                    <strong>Email:</strong> FA.DN@fpt.com<br>
-                    </p>
-                </div>
-
-                <div class="col-lg-2 col-md-6 footer-links">
-                    <h4>Our Link</h4>
-                    <ul>
-                        <li><i class="bx bx-chevron-right"></i> <a href="#">Trang chủ</a></li>
-                        <li><i class="bx bx-chevron-right"></i> <a href="#">Giới thiệu</a></li>
-                        <li><i class="bx bx-chevron-right"></i> <a href="#">Đào tạo</a></li>
-                        <li><i class="bx bx-chevron-right"></i> <a href="#">Chăm sóc khách hàng</a></li>
-                        <li><i class="bx bx-chevron-right"></i> <a href="#">Chính sách bảo mật</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-3 col-md-6 footer-links">
-                    <h4>Our Services</h4>
-                    <ul>
-                        <li><i class="bx bx-chevron-right"></i> <a href="#">Web Design</a></li>
-                        <li><i class="bx bx-chevron-right"></i> <a href="#">Web Development</a></li>
-                        <li><i class="bx bx-chevron-right"></i> <a href="#">Product Management</a></li>
-                        <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
-                        <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
-                    </ul>
-                </div>
-
-                <div class="col-lg-4 col-md-6 footer-newsletter">
-                    <h4>GIA NHẬP FPT SOFTWARE ACADEMY</h4>
-                    <p>Nhập email của bạn để có thể nhận được thông báo mới nhất của chúng tôi</p>
-                    <form action="" method="post">
-                        <input type="email" name="email"><input type="submit" value="Subscribe">
-                    </form>
-                </div>
-
-            </div>
-        </div>
+    <div class="copyright">
+        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved
     </div>
-
-
-
+    <div class="credits">
+        <!-- All the links in the footer should remain intact. -->
+        <!-- You can delete the links only if you purchased the pro version. -->
+        <!-- Licensing information: https://bootstrapmade.com/license/ -->
+        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
+        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
     </div>
 </footer><!-- End Footer -->
 
-<div id="preloader"></div>
-<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+<!--<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i-->
+<!--        class="bi bi-arrow-up-short"></i></a>-->
 
+<!--<script>-->
+<!--    function removeImage() {-->
+<!--        var imageContainer = document.querySelector('.image-container');-->
+<!--        imageContainer.innerHTML = '';-->
+<!--    }-->
+<!--</script>-->
+<!-- Vendor JS Files -->
 <script src="/assetsAd/vendor/apexcharts/apexcharts.min.js"></script>
 <script src="/assetsAd/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/assetsAd/vendor/chart.js/chart.umd.js"></script>
@@ -184,6 +256,16 @@
 
 <!-- Template Main JS File -->
 <script src="/assetsAd/js/main.js"></script>
+<script src="/assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="/assets/vendor/aos/aos.js"></script>
+<script src="/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/vendor/swiper/swiper-bundle.min.js"></script>
+<script src="/assets/vendor/php-email-form/validate.js"></script>
+
+<!-- Template Main JS File -->
+<!--<script src="/js/main.js"></script>-->
+<script type="text/javascript" th:src="@{/assets/js/main.js}"></script>
+
 
 </body>
 

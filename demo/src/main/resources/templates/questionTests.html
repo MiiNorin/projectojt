@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Tests</title>
+</head>
+<body>
+<h1>List of multiple choice questions students have completed</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>Question</th>
+        <th>Student's Answer</th>
+        <th>Correct Answer</th>
+        <th>Solution</th>
+    </tr>
+    </thead>
+    <!-- Loop through questionInfoList and display data -->
+    <tbody>
+    <tr th:each="questionInfo : ${questionInfoList}">
+        <td th:text="${questionInfo['questionContext']}"></td>
+        <td th:text="${questionInfo['choice']}"></td>
+        <td th:text="${questionInfo['option']}"></td>
+        <td th:text="${questionInfo['questionSolution']}"></td>
+    </tr>
+    </tbody>
+
+</table>
+
+</body>
+</html>

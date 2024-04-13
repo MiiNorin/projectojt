@@ -2,6 +2,8 @@ package demo.service;
 import demo.persistence.entity.Questions;
 import demo.persistence.entity.TopicsEntity;
 import demo.repository.QuestionRepository;
+import demo.repository.QuestionTestRepository;
+import demo.repository.TestDetailRepository;
 import demo.repository.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,14 +18,17 @@ public class TopicService {
     @Autowired
     private TopicRepository topicRepository;
 
-    public List<TopicsEntity> getAllTopics() {
-
-        return topicRepository.findAll();
-    }
-
+    @Autowired
+    private QuestionTestRepository questionTestRepository;
+    @Autowired
+    private TestDetailRepository testDetailRepository;
     @Autowired
     private QuestionRepository questionRepository;
+    public List<TopicsEntity> getAllTopics() {
+        return topicRepository.findAll();
+    }
     public void deleteTopicById(int id) {
+
         topicRepository.deleteById(id);
     }
     public int countTotalQuestionsByChapterId(int chapterId) {
@@ -36,6 +41,14 @@ public class TopicService {
         return totalQuestions;
     }
 
+    public int countQuestionsByTopicId(int topicId) {
+        TopicsEntity topic = topicRepository.findById(topicId).orElse(null);
+        if (topic == null) {
+            return 0;
+        }
+        List<Questions> questions = topic.getQuestions();
+        return questions.size();
+    }
 
 
     public List<Questions> selectRandomQuestions() {

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Subject</title>
+</head>
+<body>
+<th:block th:include="/layouts/Admin/SidebarAdmin.html"></th:block>
+
+<h1>Add Subject</h1>
+<form action="/subject/addSubject" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="userId" id="userId" th:value="${userId}"/>
+
+    <label for="subjectName">Subject Name:</label>
+    <input type="text" id="subjectName" name="subjectName" required>
+
+    <label for="imageFile">Subject Image:</label>
+    <input type="file" id="imageFile" name="imageFile" required>
+
+    <label for="slot">Slot:</label>
+    <input type="number" id="slot" name="slot" required>
+    <button type="submit">Add Subject</button>
+</form>
+</body>
+</html>

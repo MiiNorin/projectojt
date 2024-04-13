@@ -1,13 +1,7 @@
 package demo.controller;
 
-import demo.persistence.entity.ChaptersEntity;
-import demo.persistence.entity.Questions;
-import demo.persistence.entity.SubjectsEntity;
-import demo.persistence.entity.TopicsEntity;
-import demo.repository.ChapterRepository;
-import demo.repository.QuestionRepository;
-import demo.repository.SubjectRepository;
-import demo.repository.TopicRepository;
+import demo.persistence.entity.*;
+import demo.repository.*;
 import demo.service.ChapterService;
 import demo.service.TopicService;
 import jakarta.servlet.http.HttpSession;
@@ -26,6 +20,8 @@ import java.util.*;
 public class TopicController {
 
     @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
     private SubjectRepository subjectRepository;
     @Autowired
     private QuestionRepository questionRepository;
@@ -37,58 +33,7 @@ public class TopicController {
     private ChapterRepository chapterRepository;
     private static final int SOON_SECONDS = 3;
 
-    //    @GetMapping("/showListTopic/{subjectId}/{chapterId}")
-//    public String showTopicByChapterId(@PathVariable("chapterId") Integer chapterId,
-//                                       @PathVariable("subjectId") Integer subjectId,
-//                                       Model model,
-//                                       HttpSession session) {
-//        Integer userId = (Integer) session.getAttribute("user_id");
-//        if (userId == null) {
-//            return "redirect:/home/homePage";
-//        }
-//
-//        List<TopicsEntity> topics = topicRepository.findTopicsEntitiesByChapterChapterId(chapterId);
-//        List<TopicsEntity> accessibleTopics = new ArrayList<>();
-//
-////        for (TopicsEntity topic : topics) {
-////            int userIdInTopic = topic.getChapter().getSubjects().getAccount().getUserId();
-////            if (!userId.equals(userIdInTopic)) {
-////
-////                if (subjectId.equals(topic.getSubjectId())) {
-////                    accessibleTopics.add(topic);
-////                }
-////            }
-////        }
-//        for (TopicsEntity topic : topics) {
-//            int userIdInTopic = topic.getChapter().getSubjects().getAccount().getUserId();
-//            if (!userId.equals(userIdInTopic)) {
-//                return "redirect:/home/homePage";
-//            }
-//        }
-////        if (accessibleTopics.isEmpty()) {
-////
-////        }
-//
-//        LocalDateTime now = LocalDateTime.now();
-//        for (TopicsEntity topic : topics) {
-//            if (now.isBefore(topic.getStartTestDate().minusMinutes(SOON_SECONDS))) {
-//                topic.setStatus("Soon");
-//            } else if (now.isBefore(topic.getFinishTestDate())) {
-//                topic.setStatus("OnGoing");
-//            } else {
-//                topic.setStatus("Finished");
-//            }
-//        }
-//
-//        topicRepository.saveAll(topics);
-//
-//        model.addAttribute("topics", topics);
-//        Optional<ChaptersEntity> chapterOptional = chapterRepository.findById(chapterId);
-//        ChaptersEntity chapter = chapterOptional.get();
-//        model.addAttribute("chapter", chapter);
-//
-//        return "showListTopic";
-//    }
+
     @GetMapping("/showListTopic/{subjectId}/{chapterId}")
     public String showTopicByChapterId(@PathVariable("chapterId") Integer chapterId,
                                        @PathVariable("subjectId") Integer subjectId,
@@ -123,25 +68,36 @@ public class TopicController {
             model.addAttribute("totalQuestions", totalQuestion);
         }
         topicRepository.saveAll(topics);
+        Account account = accountRepository.findById(userId).orElse(null);
+        model.addAttribute("user", account);
         model.addAttribute("topics", topics);
         Optional<ChaptersEntity> chapterOptional = chapterRepository.findById(chapterId);
         ChaptersEntity chapter = chapterOptional.get();
         model.addAttribute("chapter", chapter);
+        model.addAttribute("subject", subjectCheck);
         return "showListTopic";
     }
 
     @GetMapping("/listTest/{subjectId}/{chapterId}")
     public String showTestForStudent(@PathVariable("chapterId") Integer chapterId,
                                      @PathVariable("subjectId") Integer subjectId,
-                                     Model model) {
+                                     Model model,
+                                     HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("user_id");
+        Account account = accountRepository.findById(userId).orElse(null);
+        SubjectsEntity subjects = subjectRepository.findById(subjectId).orElse(null);
         List<TopicsEntity> topics = topicRepository.findTopicsEntitiesByChapterChapterId(chapterId);
         for(TopicsEntity topic: topics){
             int totalQuestion = topic.getTotalQuestion();
             model.addAttribute("totalQuestions", totalQuestion);
         }
+
+        model.addAttribute("subjects", subjects);
         model.addAttribute("subjectId", subjectId);
         model.addAttribute("chapterId", chapterId);
         model.addAttribute("topics", topics);
+        model.addAttribute("user", account);
+        System.out.println(account.getFullName());
         Optional<ChaptersEntity> chapterOptional = chapterRepository.findById(chapterId);
         ChaptersEntity chapter = chapterOptional.get();
         model.addAttribute("chapter", chapter);
@@ -328,7 +284,16 @@ public class TopicController {
         if(userId!=null && (userId!=createdChapterUserId || userId!=createdSubjectUserId || userId!=createdTopicUserId)){
             return "/home/homePage";
         }
+        int count = topicService.countQuestionsByTopicId(topicId);
         topicService.deleteTopicById(topicId);
+        ChaptersEntity chapter = chapterRepository.findById(chapterId).orElse(null);
+        if (chapter != null) {
+            int currentTotalQuestions = chapter.getTotalQuestion();
+            int updatedTotalQuestions = currentTotalQuestions - count;
+            chapter.setTotalQuestion(updatedTotalQuestions);
+            chapterRepository.save(chapter);
+        }
+
         return "redirect:/listTopics/showListTopic/" + subjectId + "/" + chapterId;
     }
 

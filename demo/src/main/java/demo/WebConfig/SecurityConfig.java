@@ -52,8 +52,8 @@ public class SecurityConfig{
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/FAcademy/loginPage", "/FAcademy/login","/FAcademy/forgotPassPage","/FAcademy/registration",
                                 "/FAcademy/verify","/FAcademy/verify","/home/homePage","/home/About", "home/Trainers","/account/Trainers", "/Events","/Course","/home/Contact",
-                                "/css/**", "/js/**", "/vendor/**","/fonts/**", "/images/**",
-                                "/static/**","/static/assets/**", "/assets/**","/assets/vendor/**", "https://**",
+                                "/css/**", "/js/**", "/vendor/**","/fonts/**", "/images/**","/FAcademy/changePassword",
+                                "/static/**","/static/assets/**", "/assets/**","/assets/vendor/**","/homePage",
                                 "/home/assets/**","/home/**")
                         .permitAll()
                         .anyRequest()
